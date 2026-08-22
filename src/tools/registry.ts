@@ -61,4 +61,12 @@ export const tools: Tool[] = [
     keywords: ['uuid', 'guid', 'uuid v4', 'generator', 'random', 'UUID生成', 'GUID生成'],
     path: '/tools/uuid-generator',
   },
+  {
+    id: 'date-calculator',
+    name: '日付・日数計算',
+    description: '2つの日付の間の日数や、指定した日付から○日後・○日前の日付を計算します。',
+    category: 'datetime',
+    keywords: ['日付', '日数', '日数計算', '何日後', '何日前', '期間', 'date', 'days', 'calculator'],
+    path: '/tools/date-calculator',
+  },
 ]

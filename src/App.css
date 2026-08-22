@@ -297,8 +297,65 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.date-calculator-layout {
+  display: grid;
+  gap: 32px;
+}
+
+.date-calculator-pair-grid,
+.offset-input-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.date-calculator-pair-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.offset-input-grid {
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 0.9fr) minmax(0, 0.8fr);
+  align-items: end;
+}
+
+.date-field-group,
+.offset-field-group,
+.offset-direction-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.offset-direction-group {
+  align-items: flex-start;
+}
+
+.offset-direction-group .toggle-group {
+  display: inline-flex;
+  width: fit-content;
+  align-self: flex-start;
+}
+
+.date-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.date-input-row input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+}
+
+.date-input-row button {
+  flex-shrink: 0;
+}
+
 input[type='text'],
-input[type='datetime-local'] {
+input[type='datetime-local'],
+input[type='date'],
+input[type='number'] {
   width: 100%;
   box-sizing: border-box;
   border: 1px solid var(--border-strong);
@@ -323,8 +380,11 @@ input[type='datetime-local'] {
 }
 
 .small-button {
-  padding: 8px 12px;
+  flex-shrink: 0;
+  padding: 9px 12px;
   font-size: 0.8rem;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .result-box {
@@ -476,6 +536,54 @@ button.secondary {
   border: 1px solid var(--border-strong);
 }
 
+.date-calculator-primary-button {
+  --date-calculator-primary: #2563eb;
+  background: var(--date-calculator-primary);
+  color: #ffffff;
+  border: 1px solid var(--date-calculator-primary);
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.28);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.date-calculator-primary-button:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.date-calculator-primary-button:focus-visible,
+.date-calculator-toggle-option:focus-visible,
+button.secondary:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.6);
+  outline-offset: 2px;
+}
+
+.date-calculator-secondary-button {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+}
+
+.date-calculator-toggle-option {
+  background: transparent;
+  color: var(--text-soft);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.date-calculator-toggle-option:hover {
+  background: var(--surface-alt);
+  border-color: var(--border);
+}
+
+.date-calculator-toggle-option.is-selected,
+.date-calculator-toggle-option--selected {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.22);
+}
+
 button[disabled] {
   opacity: 0.55;
   cursor: not-allowed;
@@ -565,6 +673,23 @@ button[disabled] {
   .tool-panel,
   .tool-info {
     padding: 18px;
+  }
+
+  .date-calculator-layout {
+    gap: 24px;
+  }
+
+  .date-calculator-pair-grid,
+  .offset-input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .date-input-row {
+    min-width: 0;
+  }
+
+  .date-input-row input {
+    flex: 1 1 auto;
   }
 
   .action-row {
