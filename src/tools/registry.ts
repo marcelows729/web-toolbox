@@ -79,4 +79,12 @@ export const tools: Tool[] = [
     path: '/tools/japanese-era-converter',
     relatedTools: ['date-calculator'],
   },
+  {
+    id: 'qr-code-generator',
+    name: 'QRコード生成',
+    description: 'URLやテキストからQRコードを生成します。',
+    category: 'general',
+    keywords: ['qr', 'qr code', 'QRコード', 'QR生成', 'URL', 'テキスト', '二次元コード', 'generator'],
+    path: '/tools/qr-code-generator',
+  },
 ]

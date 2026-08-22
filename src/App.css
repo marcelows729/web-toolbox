@@ -422,6 +422,63 @@ select {
   word-break: break-word;
 }
 
+.qr-generator-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 420px);
+  gap: 24px;
+  align-items: start;
+}
+
+.qr-generator-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.qr-preview-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.qr-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qr-preview-shell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 280px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.qr-preview-image {
+  display: block;
+  width: min(100%, 256px);
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.qr-preview-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-muted);
+  min-height: 180px;
+  width: 100%;
+}
+
 .global-clear-row {
   margin-top: 16px;
   display: flex;
@@ -739,6 +796,14 @@ button[disabled] {
 
   .date-input-row input {
     flex: 1 1 auto;
+  }
+
+  .qr-generator-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .qr-preview-shell {
+    min-height: 240px;
   }
 
   .action-row {
