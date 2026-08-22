@@ -2,12 +2,17 @@
   font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #111827;
-  background: #f5f7fb;
+  color: var(--text, #111827);
+  background: var(--page-bg, #f5f7fb);
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 * {
@@ -22,7 +27,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #f5f7fb;
+  background: var(--page-bg, #f5f7fb);
+  color: var(--text, #111827);
 }
 
 button,

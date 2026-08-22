@@ -95,16 +95,16 @@ export default function JsonFormatter() {
           />
 
           <div className="action-row">
-            <button type="button" onClick={handleFormat}>
+            <button type="button" className="primary-button" onClick={handleFormat}>
               Format
             </button>
-            <button type="button" onClick={handleMinify}>
+            <button type="button" className="primary-button" onClick={handleMinify}>
               Minify
             </button>
-            <button type="button" className="secondary" onClick={handleClear}>
+            <button type="button" className="secondary-button" onClick={handleClear}>
               Clear
             </button>
-            <button type="button" className="secondary" onClick={handleCopy} disabled={!hasOutput}>
+            <button type="button" className="secondary-button" onClick={handleCopy} disabled={!hasOutput}>
               Copy
             </button>
           </div>

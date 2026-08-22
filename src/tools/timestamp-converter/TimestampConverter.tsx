@@ -251,10 +251,10 @@ export default function TimestampConverter() {
             </div>
 
             <div className="action-row">
-              <button type="button" onClick={handleTimestampConvert}>
+              <button type="button" className="primary-button" onClick={handleTimestampConvert}>
                 変換
               </button>
-              <button type="button" className="secondary" onClick={handleTimestampClear}>
+              <button type="button" className="secondary-button" onClick={handleTimestampClear}>
                 Clear
               </button>
             </div>
@@ -337,10 +337,10 @@ export default function TimestampConverter() {
             </div>
 
             <div className="action-row">
-              <button type="button" onClick={handleDatetimeConvert}>
+              <button type="button" className="primary-button" onClick={handleDatetimeConvert}>
                 変換
               </button>
-              <button type="button" className="secondary" onClick={handleDatetimeClear}>
+              <button type="button" className="secondary-button" onClick={handleDatetimeClear}>
                 Clear
               </button>
             </div>
@@ -382,7 +382,7 @@ export default function TimestampConverter() {
         </div>
 
         <div className="global-clear-row">
-          <button type="button" className="secondary" onClick={handleClearAll}>
+          <button type="button" className="secondary-button" onClick={handleClearAll}>
             全てクリア
           </button>
         </div>

@@ -105,10 +105,10 @@ export default function CharacterCounter() {
         />
 
         <div className="action-row">
-          <button type="button" className="secondary" onClick={handleClear}>
+          <button type="button" className="secondary-button" onClick={handleClear}>
             Clear
           </button>
-          <button type="button" className="secondary" onClick={handleCopy} disabled={!input.trim()}>
+          <button type="button" className="secondary-button" onClick={handleCopy} disabled={!input.trim()}>
             Copy
           </button>
         </div>

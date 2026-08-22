@@ -150,13 +150,13 @@ export default function SqlInGenerator() {
           </div>
 
           <div className="action-row">
-            <button type="button" onClick={handleGenerate}>
+            <button type="button" className="primary-button" onClick={handleGenerate}>
               Generate
             </button>
-            <button type="button" className="secondary" onClick={handleClear}>
+            <button type="button" className="secondary-button" onClick={handleClear}>
               Clear
             </button>
-            <button type="button" className="secondary" onClick={handleCopy} disabled={!hasOutput}>
+            <button type="button" className="secondary-button" onClick={handleCopy} disabled={!hasOutput}>
               Copy
             </button>
           </div>

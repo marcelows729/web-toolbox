@@ -10,7 +10,9 @@
   --text-muted: #6b7280;
   --primary: #111827;
   --primary-contrast: #ffffff;
-  --accent: #93c5fd;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: rgba(37, 99, 235, 0.1);
   --tag-bg: #eef2ff;
   --tag-text: #3730a3;
   --success-bg: #ecfdf5;
@@ -33,8 +35,10 @@
   --text-soft: #cbd5e1;
   --text-muted: #94a3b8;
   --primary: #e5e7eb;
-  --primary-contrast: #0f172a;
-  --accent: #60a5fa;
+  --primary-contrast: #f8fafc;
+  --accent: #2563eb;
+  --accent-hover: #3b82f6;
+  --accent-soft: rgba(37, 99, 235, 0.22);
   --tag-bg: #1e293b;
   --tag-text: #bfdbfe;
   --success-bg: #052e2b;
@@ -477,17 +481,29 @@ input[type='number'] {
   padding: 4px;
 }
 
-.toggle-option {
+.toggle-option,
+.toggle-button {
   background: transparent;
   color: var(--text-soft);
   border: 1px solid transparent;
   border-radius: 8px;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.toggle-option.is-selected {
+.toggle-option:hover,
+.toggle-button:hover {
   background: var(--surface);
   border-color: var(--border);
-  color: var(--text);
+}
+
+.toggle-option.is-selected,
+.toggle-option[aria-pressed='true'],
+.toggle-button.is-selected,
+.toggle-button[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--primary-contrast);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
 }
 
 .checkbox-row {
@@ -521,19 +537,51 @@ textarea {
 }
 
 button {
-  border: none;
+  border: 1px solid var(--accent);
   border-radius: 10px;
-  background: var(--primary);
+  background: var(--accent);
   color: var(--primary-contrast);
   padding: 10px 16px;
   font-size: 0.95rem;
   cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
-button.secondary {
+button:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.45);
+  outline-offset: 2px;
+}
+
+button.secondary,
+.secondary-button {
   background: var(--surface);
   color: var(--text);
   border: 1px solid var(--border-strong);
+}
+
+button.secondary:hover,
+.secondary-button:hover {
+  background: var(--surface-alt);
+  border-color: var(--border-strong);
+}
+
+.primary-button {
+  background: var(--accent);
+  color: var(--primary-contrast);
+  border-color: var(--accent);
+}
+
+.primary-button:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .date-calculator-primary-button {

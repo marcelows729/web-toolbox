@@ -255,9 +255,141 @@ json-formatter/
 
 ツールページは `docs/screen-design.md` の共通構成に従う。
 
-可能な限り以下の操作感を統一する。
+以下は、ぽけつるで共通に使う基本UIルールとする。
 
-* タイトル
+## 5.1 Button
+
+### Primary Action
+
+主要操作はブランドブルーの背景と白文字で統一する。
+
+例:
+
+* Format
+* Generate
+* Encode
+* Decode
+* 変換
+* 計算
+
+基本ルール:
+
+* 背景: `var(--accent)`
+* 文字: `#FFFFFF`
+* hover: 少し濃い青へ変化
+* focus-visible: 明確なoutline / ringを表示
+* disabled時: 操作不可と分かる低い不透明度を維持
+
+### Secondary Action
+
+補助操作は控えめなデザインを維持する。
+
+例:
+
+* Clear
+* Copy
+* 今日
+
+基本ルール:
+
+* 背景: `var(--surface)`
+* 文字: `var(--text)`
+* border: `var(--border-strong)`
+* Primaryより目立たない
+
+### Selected State
+
+toggle / segmented control の選択中状態はブランドブルー + 白文字で表現する。
+
+例:
+
+* Local / UTC
+* 小文字 / 大文字
+* ○日後 / ○日前
+* 文字列 / 数値
+
+selected state の基本ルール:
+
+* 背景: `var(--accent)`
+* 文字: `var(--primary-contrast)`
+* border: `var(--accent)`
+* unselected state は Theme に馴染む中立色にする
+
+## 5.2 Form
+
+入力フォームは共通の見た目に揃える。
+
+* border-radius: 12px
+* border color: `var(--border-strong)`
+* background: `var(--surface)`
+* text color: `var(--text)`
+* padding: 12px 14px
+* focus-visible: 明確なoutline
+
+label は以下を統一する。
+
+* font-weight: 600
+* 下余白を確保
+* 文字サイズは大きく変えない
+
+## 5.3 Layout
+
+ツール内の基本レイアウトは以下を守る。
+
+* 見出し → 説明
+* 説明 → form
+* form → actions
+* actions → results
+* パネル間: 32px前後の余白
+
+カードやコンテンツのまとまりは、既存の `tool-panel` / `converter-card` と同じ感覚で扱う。
+
+## 5.4 Theme
+
+Colorの基準は CSS variable を利用する。
+
+例:
+
+* `--accent`
+* `--accent-hover`
+* `--surface`
+* `--border`
+* `--text`
+
+Light / Dark の両方でコントラストが十分に取れるようにする。
+
+## 5.5 Accessibility
+
+新しいツールでは以下を必ず守る。
+
+* label を用意する
+* `aria-pressed` などの選択状態を保つ
+* `role="alert"` と `role="status"` を必要に応じて付与する
+* `:focus-visible` を利用してキーボード操作を明確にする
+
+## 5.6 Shared Class
+
+共通UIとして次のCSS classを利用できる。
+
+* `.primary-button`
+* `.secondary-button`
+* `.toggle-group`
+* `.toggle-option`
+* `.tool-panel`
+* `.action-row`
+* `.field-label`
+
+ツールごとに完全に同じレイアウトにする必要はないが、
+同じ意味の操作は同じ見た目に揃える。
+
+---
+
+# 6. 完成後の確認
+
+新しいツールの実装後は、Light / Dark / PC / Smartphone で
+Primary / Secondary / Selected State の見え方と contrast を確認する。
+
+必要な調整を最小限に留め、過度な共通化や大規模なUIリニューアルは行わない。
 * description
 * Input
 * Action

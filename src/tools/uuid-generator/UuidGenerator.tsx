@@ -145,9 +145,9 @@ export default function UuidGenerator() {
           </div>
 
           <div className="action-row">
-            <button type="button" onClick={handleGenerate}>Generate</button>
-            <button type="button" className="secondary" onClick={handleClear}>Clear</button>
-            <button type="button" className="secondary" onClick={handleCopy} disabled={!hasOutput}>Copy</button>
+            <button type="button" className="primary-button" onClick={handleGenerate}>Generate</button>
+            <button type="button" className="secondary-button" onClick={handleClear}>Clear</button>
+            <button type="button" className="secondary-button" onClick={handleCopy} disabled={!hasOutput}>Copy</button>
           </div>
 
           <label className="field-label" htmlFor="uuid-output">
