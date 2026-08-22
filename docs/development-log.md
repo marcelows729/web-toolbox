@@ -19,4 +19,5 @@
 * Timestamp Converterを追加し、Unix Timestampと日時の相互変換をブラウザ内で実装
 * Character Counterを追加し、リアルタイムの文字数・行数・単語数・UTF-8バイト数計算を実装
 * URL Encode / Decodeを追加し、文字列とURLのエンコード・デコードをブラウザ内で実装
+* Base64 Encode / Decodeを追加し、UTF-8テキストとBase64の相互変換をブラウザ内で実装
 * 既存のルーティング・ツール一覧・検索と整合するようにTool Registryを更新

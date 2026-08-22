@@ -42,5 +42,15 @@ export const tools: Tool[] = [
     category: 'developer',
     keywords: ['url', 'encode', 'decode', 'percent', 'encoding', 'URLエンコード', 'URLデコード', 'パーセントエンコード'],
     path: '/tools/url-encode-decode',
+    relatedTools: ['base64-encode-decode'],
+  },
+  {
+    id: 'base64-encode-decode',
+    name: 'Base64 Encode / Decode',
+    description: 'テキストをBase64へエンコード・デコードします。',
+    category: 'developer',
+    keywords: ['base64', 'encode', 'decode', 'encoding', 'Base64エンコード', 'Base64デコード', '変換'],
+    path: '/tools/base64-encode-decode',
+    relatedTools: ['url-encode-decode'],
   },
 ]

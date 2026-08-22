@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
+import Base64EncodeDecode from './tools/base64-encode-decode/Base64EncodeDecode'
 import CharacterCounter from './tools/character-counter/CharacterCounter'
 import JsonFormatter from './tools/json-formatter/JsonFormatter'
 import SqlInGenerator from './tools/sql-in-generator/SqlInGenerator'
@@ -72,6 +73,7 @@ function App() {
           <Route path="/tools/timestamp-converter" element={<TimestampConverter />} />
           <Route path="/tools/character-counter" element={<CharacterCounter />} />
           <Route path="/tools/url-encode-decode" element={<UrlEncodeDecode />} />
+          <Route path="/tools/base64-encode-decode" element={<Base64EncodeDecode />} />
         </Route>
       </Routes>
     </BrowserRouter>
