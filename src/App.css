@@ -267,7 +267,8 @@
   padding: 24px;
 }
 
-.formatter-grid {
+.formatter-grid,
+.generator-grid {
   display: grid;
   gap: 12px;
 }
@@ -275,6 +276,54 @@
 .field-label {
   font-weight: 600;
   color: var(--text);
+}
+
+.option-label {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.generator-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggle-group {
+  display: inline-flex;
+  gap: 8px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.toggle-option {
+  background: transparent;
+  color: var(--text-soft);
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.toggle-option.is-selected {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.checkbox-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-soft);
+}
+
+.checkbox-row input {
+  accent-color: var(--primary);
 }
 
 textarea {

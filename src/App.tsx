@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
 import JsonFormatter from './tools/json-formatter/JsonFormatter'
+import SqlInGenerator from './tools/sql-in-generator/SqlInGenerator'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -64,6 +65,7 @@ function App() {
         <Route element={<Layout theme={theme} setTheme={setTheme} />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/tools/json-formatter" element={<JsonFormatter />} />
+          <Route path="/tools/sql-in-generator" element={<SqlInGenerator />} />
         </Route>
       </Routes>
     </BrowserRouter>

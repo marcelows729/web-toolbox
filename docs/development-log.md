@@ -10,3 +10,10 @@
 * 初期ドキュメント構成を作成
 * 初期ホスティングとしてCloudflare Pagesを採用する方針
 * Backendは必要になるまで導入しない方針
+
+### Tool Additions
+
+* JSON Formatterを追加し、ブラウザ内でJSON整形・圧縮を実装
+* SQL IN Generatorを追加し、改行/カンマ区切り入力からSQLのIN句用リストを生成可能にした
+* 文字列モードと数値モードを切り替え、重褪除去とコピー動作を実装
+* 既存のルーティング・ツール一覧・検索と整合するようにTool Registryを更新

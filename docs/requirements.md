@@ -171,11 +171,26 @@ JSONの解析・変換処理はすべてブラウザ上で実行する。
 
 ---
 
+## SQL IN Generator
+
+複数の値からSQLのIN句で利用できる値リストを生成する。
+
+### Input
+
+改行区切りまたはカンマ区切りの値一覧を入力できる。
+
+### Processing
+
+値の正規化、重複除去、SQL文字列エスケープ、数値バリデーションはすべてブラウザ上で実行する。
+
+入力データをサーバーへ送信しない。
+
+---
+
 # 4. 将来追加するツール候補
 
 以下は候補であり、Version 0.1の実装対象ではない。
 
-* SQL IN Clause Generator
 * Timestamp Converter
 * UUID Generator
 * Text Diff
