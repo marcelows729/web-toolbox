@@ -19,4 +19,12 @@ export const tools: Tool[] = [
     path: '/tools/sql-in-generator',
     relatedTools: ['json-formatter'],
   },
+  {
+    id: 'timestamp-converter',
+    name: 'Timestamp Converter',
+    description: 'Unix Timestampと日時を相互変換します。',
+    category: 'developer',
+    keywords: ['timestamp', 'unix', 'epoch', '日時', '時刻', '変換'],
+    path: '/tools/timestamp-converter',
+  },
 ]

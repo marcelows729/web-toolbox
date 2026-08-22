@@ -4,6 +4,7 @@ import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
 import JsonFormatter from './tools/json-formatter/JsonFormatter'
 import SqlInGenerator from './tools/sql-in-generator/SqlInGenerator'
+import TimestampConverter from './tools/timestamp-converter/TimestampConverter'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -66,6 +67,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/tools/json-formatter" element={<JsonFormatter />} />
           <Route path="/tools/sql-in-generator" element={<SqlInGenerator />} />
+          <Route path="/tools/timestamp-converter" element={<TimestampConverter />} />
         </Route>
       </Routes>
     </BrowserRouter>

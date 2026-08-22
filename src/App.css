@@ -268,7 +268,8 @@
 }
 
 .formatter-grid,
-.generator-grid {
+.generator-grid,
+.timestamp-grid {
   display: grid;
   gap: 12px;
 }
@@ -276,6 +277,89 @@
 .field-label {
   font-weight: 600;
   color: var(--text);
+}
+
+.converter-card {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.converter-card h2 {
+  margin: 0 0 16px;
+  font-size: 1.2rem;
+  color: var(--text);
+}
+
+.timestamp-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+input[type='text'],
+input[type='datetime-local'] {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 12px 14px;
+  font-size: 1rem;
+}
+
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.compact-row {
+  align-items: center;
+}
+
+.small-button {
+  padding: 8px 12px;
+  font-size: 0.8rem;
+}
+
+.result-box {
+  margin-top: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.result-item {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.result-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.result-value-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.result-value-row strong {
+  word-break: break-word;
+}
+
+.global-clear-row {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .option-label {
