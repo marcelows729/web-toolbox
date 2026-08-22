@@ -1,6 +1,18 @@
-# Web Toolbox
+# ぽけつる
+
+ちょっと便利なツールを、ポケットに。
 
 日常業務や開発作業で利用できる、小規模なWebツールをまとめたWebアプリケーションです。
+
+## Brand
+
+- ブランド名: ぽけつる
+- ローマ字表記: POKETSURU
+- キャッチコピー: ちょっと便利なツールを、ポケットに。
+- ドメイン: https://poketsuru.com
+- Theme: Light / Dark
+- 初回表示: OSのテーマ設定を参照
+- Theme保存: LocalStorage (`poketsuru-theme`)
 
 ## 目的
 

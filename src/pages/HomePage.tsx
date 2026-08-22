@@ -37,8 +37,8 @@ export default function HomePage() {
   return (
     <div className="container home-page">
       <section className="hero-section">
-        <h1>Web Toolbox</h1>
-        <p className="subtitle">開発・業務で使える便利なWebツール集</p>
+        <h1>ぽけつる</h1>
+        <p className="subtitle">ちょっと便利なツールを、ポケットに。</p>
       </section>
 
       <section className="toolbar-section" aria-label="ツール検索とカテゴリフィルター">

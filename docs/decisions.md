@@ -69,3 +69,43 @@ React Routerを使用する。
 Version 0.1ではRoutingをTool Registryから自動生成せず、明示的に定義する。
 
 自動生成は必要性が確認された段階で検討する。
+
+## 2026-08-22 Branding
+
+### Decision
+
+サービス名を「ぽけつる」、ローマ字表記を「POKETSURU」とする。
+
+### Brand Information
+
+* ブランド名: ぽけつる
+* ローマ字表記: POKETSURU
+* キャッチコピー: ちょっと便利なツールを、ポケットに。
+* ドメイン: https://poketsuru.com
+
+### Reason
+
+* 初期ツールを「持ち歩ける」感覚で使いやすくしたい
+* 短く覚えやすく、個人開発向けの小規模ツール群に適している
+* 今後のブランド展開とドメインの整合性を保ちやすい
+
+## 2026-08-22 Theme Support
+
+### Decision
+
+UI上は Light / Dark の2種類のみを扱う。
+
+### Reason
+
+* シンプルな切り替えUIにする
+* 初回アクセス時にOSのテーマを考慮できる
+* 手動選択後はLocalStorageを優先して状態を安定させる
+
+### Implementation
+
+* 初回アクセス時のみ OS の `prefers-color-scheme` を参照する
+* OSがDarkの場合は初期Themeを `dark` とする
+* それ以外は `light` とする
+* ユーザーが手動で選択した場合、`poketsuru-theme` に保存する
+* 以後は保存値を優先する
+* テーマとロゴの判定は同じTheme状態を共有する
