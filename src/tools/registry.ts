@@ -35,4 +35,12 @@ export const tools: Tool[] = [
     keywords: ['文字数', '文字数カウント', 'カウンター', '行数', '単語数', 'バイト数', 'character', 'count', 'text'],
     path: '/tools/character-counter',
   },
+  {
+    id: 'url-encode-decode',
+    name: 'URL Encode / Decode',
+    description: '文字列やURLをURLエンコード・デコードします。',
+    category: 'developer',
+    keywords: ['url', 'encode', 'decode', 'percent', 'encoding', 'URLエンコード', 'URLデコード', 'パーセントエンコード'],
+    path: '/tools/url-encode-decode',
+  },
 ]

@@ -6,6 +6,7 @@ import CharacterCounter from './tools/character-counter/CharacterCounter'
 import JsonFormatter from './tools/json-formatter/JsonFormatter'
 import SqlInGenerator from './tools/sql-in-generator/SqlInGenerator'
 import TimestampConverter from './tools/timestamp-converter/TimestampConverter'
+import UrlEncodeDecode from './tools/url-encode-decode/UrlEncodeDecode'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -70,6 +71,7 @@ function App() {
           <Route path="/tools/sql-in-generator" element={<SqlInGenerator />} />
           <Route path="/tools/timestamp-converter" element={<TimestampConverter />} />
           <Route path="/tools/character-counter" element={<CharacterCounter />} />
+          <Route path="/tools/url-encode-decode" element={<UrlEncodeDecode />} />
         </Route>
       </Routes>
     </BrowserRouter>
