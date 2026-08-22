@@ -53,4 +53,12 @@ export const tools: Tool[] = [
     path: '/tools/base64-encode-decode',
     relatedTools: ['url-encode-decode'],
   },
+  {
+    id: 'uuid-generator',
+    name: 'UUID Generator',
+    description: 'UUID v4をブラウザ上で生成します。',
+    category: 'developer',
+    keywords: ['uuid', 'guid', 'uuid v4', 'generator', 'random', 'UUID生成', 'GUID生成'],
+    path: '/tools/uuid-generator',
+  },
 ]

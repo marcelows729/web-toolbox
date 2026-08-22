@@ -8,6 +8,7 @@ import JsonFormatter from './tools/json-formatter/JsonFormatter'
 import SqlInGenerator from './tools/sql-in-generator/SqlInGenerator'
 import TimestampConverter from './tools/timestamp-converter/TimestampConverter'
 import UrlEncodeDecode from './tools/url-encode-decode/UrlEncodeDecode'
+import UuidGenerator from './tools/uuid-generator/UuidGenerator'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -74,6 +75,7 @@ function App() {
           <Route path="/tools/character-counter" element={<CharacterCounter />} />
           <Route path="/tools/url-encode-decode" element={<UrlEncodeDecode />} />
           <Route path="/tools/base64-encode-decode" element={<Base64EncodeDecode />} />
+          <Route path="/tools/uuid-generator" element={<UuidGenerator />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -245,6 +245,20 @@ TextEncoder / TextDecoder と `btoa()` / `atob()` を用いてブラウザ内で
 
 ---
 
+## UUID Generator
+
+UUID v4 をブラウザ上で生成する。
+
+### Input
+
+生成件数と表示形式（小文字 / 大文字）を入力できる。
+
+### Processing
+
+`crypto.randomUUID()` を使用してブラウザ内でUUIDを生成し、入力データをサーバーへ送信しない。
+
+---
+
 # 4. 将来追加するツール候補
 
 以下は候補であり、Version 0.1の実装対象ではない。
