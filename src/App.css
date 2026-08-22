@@ -356,9 +356,51 @@
   flex-shrink: 0;
 }
 
+.date-time-field-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: 12px;
+  align-items: end;
+}
+
+.date-parts-input {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.7fr) minmax(0, 0.7fr) auto;
+  gap: 8px;
+  align-items: end;
+  width: 100%;
+}
+
+.date-parts-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field-label-sm {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.time-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subfield-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
 input[type='text'],
 input[type='datetime-local'],
 input[type='date'],
+input[type='time'],
 input[type='number'],
 select {
   width: 100%;
@@ -390,6 +432,36 @@ select {
   font-size: 0.8rem;
   line-height: 1.2;
   white-space: nowrap;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  flex-shrink: 0;
+  border-radius: 10px;
+}
+
+.calendar-trigger {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+}
+
+.calendar-trigger:hover {
+  background: var(--surface-alt);
+  border-color: var(--border-strong);
+}
+
+.calendar-trigger-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: currentColor;
 }
 
 .result-box {

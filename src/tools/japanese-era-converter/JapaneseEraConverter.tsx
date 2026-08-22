@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+import DatePartsInput, { composeIsoDate, type DatePartsValue } from '../../components/forms/DatePartsInput.tsx'
 import { ERA_DEFINITIONS, gregorianToJapaneseEra, japaneseEraToGregorian, type EraName } from './japaneseEra'
 
 type EraFormState = {
@@ -16,9 +17,12 @@ const initialEraForm: EraFormState = {
 }
 
 export default function JapaneseEraConverter() {
-  const [gregorianInput, setGregorianInput] = useState('')
+  const [gregorianInput, setGregorianInput] = useState<DatePartsValue>({ year: '', month: '', day: '' })
   const [gregorianResult, setGregorianResult] = useState('')
   const [gregorianError, setGregorianError] = useState('')
+
+  const monthInputRef = useRef<HTMLInputElement | null>(null)
+  const dayInputRef = useRef<HTMLInputElement | null>(null)
 
   const [eraForm, setEraForm] = useState<EraFormState>(initialEraForm)
   const [eraResult, setEraResult] = useState('')
@@ -28,7 +32,8 @@ export default function JapaneseEraConverter() {
   const eraHasResult = useMemo(() => eraResult.length > 0, [eraResult])
 
   const handleGregorianConvert = () => {
-    const result = gregorianToJapaneseEra(gregorianInput)
+    const isoDate = composeIsoDate(gregorianInput)
+    const result = gregorianToJapaneseEra(isoDate)
 
     if ('error' in result) {
       setGregorianResult('')
@@ -54,7 +59,7 @@ export default function JapaneseEraConverter() {
   }
 
   const handleGregorianClear = () => {
-    setGregorianInput('')
+    setGregorianInput({ year: '', month: '', day: '' })
     setGregorianResult('')
     setGregorianError('')
   }
@@ -63,14 +68,6 @@ export default function JapaneseEraConverter() {
     setEraForm(initialEraForm)
     setEraResult('')
     setEraError('')
-  }
-
-  const handleToday = () => {
-    const now = new Date()
-    const year = now.getFullYear()
-    const month = String(now.getMonth() + 1).padStart(2, '0')
-    const day = String(now.getDate()).padStart(2, '0')
-    setGregorianInput(`${year}-${month}-${day}`)
   }
 
   const handleCopy = async (text: string) => {
@@ -96,17 +93,11 @@ export default function JapaneseEraConverter() {
             <label className="field-label" htmlFor="gregorian-date-input">
               西暦日付
             </label>
-            <div className="date-input-row">
-              <input
-                id="gregorian-date-input"
-                type="date"
-                value={gregorianInput}
-                onChange={(event) => setGregorianInput(event.target.value)}
-              />
-              <button type="button" className="secondary small-button" onClick={handleToday}>
-                今日
-              </button>
-            </div>
+            <DatePartsInput
+              id="gregorian-date-input"
+              value={gregorianInput}
+              onChange={setGregorianInput}
+            />
 
             <div className="action-row">
               <button type="button" className="primary-button" onClick={handleGregorianConvert}>
@@ -161,11 +152,36 @@ export default function JapaneseEraConverter() {
                 </label>
                 <input
                   id="era-year-input"
-                  type="number"
-                  min={1}
-                  step={1}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={4}
                   value={eraForm.year}
-                  onChange={(event) => setEraForm((current) => ({ ...current, year: event.target.value }))}
+                  onChange={(event) => {
+                    const rawDigits = event.target.value.replace(/\D/g, '')
+                    const yearPart = rawDigits.slice(0, 4)
+                    const monthPart = rawDigits.slice(4, 6)
+                    const dayPart = rawDigits.slice(6, 8)
+
+                    setEraForm((current) => ({
+                      ...current,
+                      year: yearPart,
+                      month: monthPart || current.month,
+                      day: dayPart || current.day,
+                    }))
+
+                    if (yearPart.length === 4) {
+                      window.setTimeout(() => {
+                        monthInputRef.current?.focus()
+                      }, 0)
+                    }
+
+                    if (monthPart.length === 2) {
+                      window.setTimeout(() => {
+                        dayInputRef.current?.focus()
+                      }, 0)
+                    }
+                  }}
                 />
               </div>
 
@@ -174,13 +190,24 @@ export default function JapaneseEraConverter() {
                   月
                 </label>
                 <input
+                  ref={monthInputRef}
                   id="era-month-input"
-                  type="number"
-                  min={1}
-                  max={12}
-                  step={1}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={2}
                   value={eraForm.month}
-                  onChange={(event) => setEraForm((current) => ({ ...current, month: event.target.value }))}
+                  onChange={(event) => {
+                    const nextValue = event.target.value.replace(/\D/g, '').slice(0, 2)
+
+                    setEraForm((current) => ({ ...current, month: nextValue }))
+
+                    if (nextValue.length === 2) {
+                      window.setTimeout(() => {
+                        dayInputRef.current?.focus()
+                      }, 0)
+                    }
+                  }}
                 />
               </div>
 
@@ -189,13 +216,17 @@ export default function JapaneseEraConverter() {
                   日
                 </label>
                 <input
+                  ref={dayInputRef}
                   id="era-day-input"
-                  type="number"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={2}
                   min={1}
                   max={31}
                   step={1}
                   value={eraForm.day}
-                  onChange={(event) => setEraForm((current) => ({ ...current, day: event.target.value }))}
+                  onChange={(event) => setEraForm((current) => ({ ...current, day: event.target.value.replace(/\D/g, '').slice(0, 2) }))}
                 />
               </div>
             </div>

@@ -1,4 +1,6 @@
-import { useMemo, useState, type Dispatch, type SetStateAction } from 'react'
+import { useMemo, useState } from 'react'
+import DatePartsInput, { composeIsoDate, type DatePartsValue } from '../../components/forms/DatePartsInput.tsx'
+import { getFourDigitYearError } from '../../utils/dateInputValidation.ts'
 
 type Direction = 'after' | 'before'
 
@@ -104,13 +106,13 @@ const formatDateWithWeekday = (value: string) => {
 }
 
 export default function DateCalculator() {
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
+  const [startDate, setStartDate] = useState<DatePartsValue>({ year: '', month: '', day: '' })
+  const [endDate, setEndDate] = useState<DatePartsValue>({ year: '', month: '', day: '' })
   const [dateDifferenceResult, setDateDifferenceResult] = useState('')
   const [dateInclusiveResult, setDateInclusiveResult] = useState('')
   const [dateError, setDateError] = useState('')
 
-  const [baseDate, setBaseDate] = useState('')
+  const [baseDate, setBaseDate] = useState<DatePartsValue>({ year: '', month: '', day: '' })
   const [dayOffset, setDayOffset] = useState('0')
   const [direction, setDirection] = useState<Direction>('after')
   const [offsetResult, setOffsetResult] = useState('')
@@ -119,27 +121,41 @@ export default function DateCalculator() {
   const hasDateResult = useMemo(() => dateDifferenceResult.length > 0 || dateInclusiveResult.length > 0, [dateDifferenceResult, dateInclusiveResult])
   const hasOffsetResult = useMemo(() => offsetResult.length > 0, [offsetResult])
 
-  const handleToday = (setter: Dispatch<SetStateAction<string>>) => {
-    const now = new Date()
-    setter(formatLocalDate(now))
-  }
-
   const handleDateDifferenceCalculate = () => {
-    if (!startDate) {
+    const startIso = composeIsoDate(startDate)
+    const endIso = composeIsoDate(endDate)
+
+    if (!startIso) {
       setDateError('開始日を入力してください。')
       setDateDifferenceResult('')
       setDateInclusiveResult('')
       return
     }
 
-    if (!endDate) {
+    if (!endIso) {
       setDateError('終了日を入力してください。')
       setDateDifferenceResult('')
       setDateInclusiveResult('')
       return
     }
 
-    const diff = getSignedDayDifference(startDate, endDate)
+    const startYearError = getFourDigitYearError(startIso)
+    if (startYearError) {
+      setDateError(startYearError)
+      setDateDifferenceResult('')
+      setDateInclusiveResult('')
+      return
+    }
+
+    const endYearError = getFourDigitYearError(endIso)
+    if (endYearError) {
+      setDateError(endYearError)
+      setDateDifferenceResult('')
+      setDateInclusiveResult('')
+      return
+    }
+
+    const diff = getSignedDayDifference(startIso, endIso)
 
     if (diff === null) {
       setDateError('日付の形式が正しくありません。')
@@ -148,7 +164,7 @@ export default function DateCalculator() {
       return
     }
 
-    const inclusive = getInclusiveDayCount(startDate, endDate)
+    const inclusive = getInclusiveDayCount(startIso, endIso)
 
     if (inclusive === null) {
       setDateError('日付の形式が正しくありません。')
@@ -163,8 +179,17 @@ export default function DateCalculator() {
   }
 
   const handleOffsetCalculate = () => {
-    if (!baseDate) {
+    const baseIsoDate = composeIsoDate(baseDate)
+
+    if (!baseIsoDate) {
       setOffsetError('基準日を入力してください。')
+      setOffsetResult('')
+      return
+    }
+
+    const baseYearError = getFourDigitYearError(baseIsoDate)
+    if (baseYearError) {
+      setOffsetError(baseYearError)
       setOffsetResult('')
       return
     }
@@ -176,7 +201,7 @@ export default function DateCalculator() {
       return
     }
 
-    const baseDateValue = parseUtcDate(baseDate)
+    const baseDateValue = parseUtcDate(baseIsoDate)
     if (!baseDateValue) {
       setOffsetError('基準日の形式が正しくありません。')
       setOffsetResult('')
@@ -198,15 +223,15 @@ export default function DateCalculator() {
   }
 
   const handleDateClear = () => {
-    setStartDate('')
-    setEndDate('')
+    setStartDate({ year: '', month: '', day: '' })
+    setEndDate({ year: '', month: '', day: '' })
     setDateDifferenceResult('')
     setDateInclusiveResult('')
     setDateError('')
   }
 
   const handleOffsetClear = () => {
-    setBaseDate('')
+    setBaseDate({ year: '', month: '', day: '' })
     setDayOffset('0')
     setDirection('after')
     setOffsetResult('')
@@ -231,10 +256,11 @@ export default function DateCalculator() {
                   開始日
                 </label>
                 <div className="date-input-row">
-                  <input id="date-start" type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} />
-                  <button type="button" className="secondary small-button" onClick={() => handleToday(setStartDate)} aria-label="開始日の今日を入力">
-                    今日
-                  </button>
+                  <DatePartsInput
+                    id="date-start"
+                    value={startDate}
+                    onChange={setStartDate}
+                  />
                 </div>
               </div>
 
@@ -243,10 +269,11 @@ export default function DateCalculator() {
                   終了日
                 </label>
                 <div className="date-input-row">
-                  <input id="date-end" type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} />
-                  <button type="button" className="secondary small-button" onClick={() => handleToday(setEndDate)} aria-label="終了日の今日を入力">
-                    今日
-                  </button>
+                  <DatePartsInput
+                    id="date-end"
+                    value={endDate}
+                    onChange={setEndDate}
+                  />
                 </div>
               </div>
             </div>
@@ -284,10 +311,11 @@ export default function DateCalculator() {
                   基準日
                 </label>
                 <div className="date-input-row">
-                  <input id="base-date" type="date" value={baseDate} onChange={(event) => setBaseDate(event.target.value)} />
-                  <button type="button" className="secondary small-button" onClick={() => handleToday(setBaseDate)} aria-label="基準日の今日を入力">
-                    今日
-                  </button>
+                  <DatePartsInput
+                    id="base-date"
+                    value={baseDate}
+                    onChange={setBaseDate}
+                  />
                 </div>
               </div>
 

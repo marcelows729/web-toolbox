@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import DatePartsInput, { composeIsoDate, type DatePartsValue } from '../../components/forms/DatePartsInput.tsx'
+import { getFourDigitYearError } from '../../utils/dateInputValidation.ts'
 
 type TimestampUnit = 'seconds' | 'milliseconds'
 type DateInterpretation = 'local' | 'utc'
@@ -23,15 +25,8 @@ const formatDateTime = (date: Date, mode: 'local' | 'utc') => {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
 }
 
-const formatLocalDateTimeInput = (date: Date) => {
-  const year = date.getFullYear()
-  const month = pad(date.getMonth() + 1)
-  const day = pad(date.getDate())
-  const hours = pad(date.getHours())
-  const minutes = pad(date.getMinutes())
-  const seconds = pad(date.getSeconds())
-
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+const formatLocalTimeInput = (date: Date) => {
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
 
 const isNumericString = (value: string) => {
@@ -77,13 +72,16 @@ const parseDatetimeLocalValue = (value: string, interpretation: DateInterpretati
   return new Date(year, month - 1, day, hour, minute, second)
 }
 
+const isValidTimeValue = (value: string) => /^([01]\d|2[0-3]):[0-5]\d$/.test(value.trim())
+
 export default function TimestampConverter() {
   const [timestampInput, setTimestampInput] = useState('')
   const [timestampUnit, setTimestampUnit] = useState<TimestampUnit>('seconds')
   const [timestampResult, setTimestampResult] = useState<TimestampResult | null>(null)
   const [timestampError, setTimestampError] = useState('')
 
-  const [datetimeInput, setDatetimeInput] = useState('')
+  const [datetimeDate, setDatetimeDate] = useState<DatePartsValue>({ year: '', month: '', day: '' })
+  const [datetimeTime, setDatetimeTime] = useState('')
   const [datetimeInterpretation, setDatetimeInterpretation] = useState<DateInterpretation>('local')
   const [datetimeResult, setDatetimeResult] = useState<DatetimeResult | null>(null)
   const [datetimeError, setDatetimeError] = useState('')
@@ -134,15 +132,30 @@ export default function TimestampConverter() {
   }
 
   const handleDatetimeConvert = () => {
-    const trimmed = datetimeInput.trim()
+    const trimmedDate = composeIsoDate(datetimeDate)
+    const trimmedTime = datetimeTime.trim()
 
-    if (!trimmed) {
-      setDatetimeError('日時を入力してください。')
+    if (!trimmedDate || !trimmedTime) {
+      setDatetimeError('日付と時刻を入力してください。')
       setDatetimeResult(null)
       return
     }
 
-    const date = parseDatetimeLocalValue(trimmed, datetimeInterpretation)
+    const yearError = getFourDigitYearError(trimmedDate)
+    if (yearError) {
+      setDatetimeError(yearError)
+      setDatetimeResult(null)
+      return
+    }
+
+    if (!isValidTimeValue(trimmedTime)) {
+      setDatetimeError('時刻は HH:mm 形式で入力してください。')
+      setDatetimeResult(null)
+      return
+    }
+
+    const combinedValue = `${trimmedDate}T${trimmedTime}`
+    const date = parseDatetimeLocalValue(combinedValue, datetimeInterpretation)
 
     if (!date || Number.isNaN(date.getTime())) {
       setDatetimeError('日時の形式が正しくありません。')
@@ -161,7 +174,13 @@ export default function TimestampConverter() {
   }
 
   const handleCurrentTime = () => {
-    setDatetimeInput(formatLocalDateTimeInput(new Date()))
+    const now = new Date()
+    setDatetimeDate({
+      year: String(now.getFullYear()),
+      month: String(now.getMonth() + 1),
+      day: String(now.getDate()),
+    })
+    setDatetimeTime(formatLocalTimeInput(now))
   }
 
   const handleCurrentTimestamp = () => {
@@ -187,7 +206,8 @@ export default function TimestampConverter() {
   }
 
   const handleDatetimeClear = () => {
-    setDatetimeInput('')
+    setDatetimeDate({ year: '', month: '', day: '' })
+    setDatetimeTime('')
     setDatetimeInterpretation('local')
     setDatetimeResult(null)
     setDatetimeError('')
@@ -297,16 +317,34 @@ export default function TimestampConverter() {
           <div className="converter-card">
             <h2>日時 → Timestamp</h2>
 
-            <label className="field-label" htmlFor="datetime-input">
-              Datetime
-            </label>
-            <input
-              id="datetime-input"
-              type="datetime-local"
-              step="1"
-              value={datetimeInput}
-              onChange={(event) => setDatetimeInput(event.target.value)}
-            />
+            <div className="date-time-field-row">
+              <div className="time-field-group">
+                <span className="subfield-label">日付</span>
+                <DatePartsInput
+                  id="datetime-date-input"
+                  value={datetimeDate}
+                  onChange={setDatetimeDate}
+                />
+              </div>
+
+              <div className="time-field-group">
+                <span className="subfield-label">時刻</span>
+                <input
+                  id="datetime-time-input"
+                  type="time"
+                  value={datetimeTime}
+                  onChange={(event) => setDatetimeTime(event.target.value)}
+                  step={60}
+                  aria-label="時刻"
+                />
+              </div>
+            </div>
+
+            <div className="input-row compact-row">
+              <button type="button" className="secondary small-button" onClick={handleCurrentTime}>
+                現在時刻
+              </button>
+            </div>
 
             <div className="input-row compact-row">
               <div className="option-group">
@@ -330,10 +368,6 @@ export default function TimestampConverter() {
                   </button>
                 </div>
               </div>
-
-              <button type="button" className="secondary small-button" onClick={handleCurrentTime}>
-                現在時刻
-              </button>
             </div>
 
             <div className="action-row">

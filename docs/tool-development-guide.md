@@ -192,7 +192,55 @@ Tool Registryから対象ツールを取得して表示する。
 
 ---
 
-# 3. Tool Registry Example
+# 3. Date Input Rules
+
+日付・日時の入力欄では、ネイティブの `input type="date"` / `input type="datetime-local"` だけで年を4桁に制限しない。
+
+- 5桁目以降は入力段階で拒否する
+- 年は最大4桁、月と日は2桁までを基本とする
+- Pasteや直接キーボード入力も同じ制御を適用する
+- 既存のValidation checksは維持する
+- 日付のユーザー入力は年・月・日を分割し、Calendar Pickerは補助操作として利用する
+- 通常の画面上に「今日」ボタンを置かない
+- Calendar Trigger は SVG アイコンボタンを使用する
+- 表示用入力は text input と補助 date input の組み合わせを基本とし、年4桁制限を保証する
+- 画面上で `-`, `/`, `T` を直接入力させない
+
+今後追加する日付系ツールでも、同じ方式を採用する。
+
+native date input だけで年4桁を保証しようとしない。
+
+## 3.1 Date Input Standard
+
+日付入力の標準は、以下の構成を基本とする。
+
+- 年 / 月 / 日の分割入力
+- Calendar Picker はアイコンボタンで起動
+- Calendar Icon は SVG を使用
+- button は Secondary Action として扱う
+- `aria-label` を必須とする
+- 通常の「今日」ボタンは置かない
+- 今日の日付は Calendar Picker 側のブラウザUIから選択する
+- 日時入力で「現在時刻」が必要な場合だけ、個別の補助機能として提供する
+- 内部で必要な場合のみ `YYYY-MM-DD` に組み立てる
+
+## 3.2 Datetime UI Rules
+
+ユーザーに ISO 8601 の `T` を直接入力させない。
+
+- 日付と時刻は UI 上で分離する
+- 西暦日付は年・月・日を分割した入力を基本とする
+- 年は4桁まで、月と日は2桁までを基本とする
+- 日付は共通の DatePartsInput を利用する
+- 時刻は `input type="time"` など自然な UI を使用する
+- 必要な ISO 形式への結合は内部で行う
+- ユーザーは `-`, `T`, `:` といったISO記号を意識しなくても入力できる
+
+今後追加する日付系ツールでも、ユーザーには `YYYY-MM-DD` を1つの入力欄として見せず、年・月・日を分割して入力させる。
+
+---
+
+# 4. Tool Registry Example
 
 概念的には以下のような構造とする。
 
@@ -315,7 +363,17 @@ selected state の基本ルール:
 * border: `var(--accent)`
 * unselected state は Theme に馴染む中立色にする
 
-## 5.2 Form
+## 5.2 Date Input Rules
+
+日付入力では、西暦年は原則として 4 桁の `YYYY` を使用する。
+
+* `type="date"` / `type="datetime-local"` のブラウザUIだけに依存せず、実際の `value` を確認する
+* 年が 4 桁でない値は、入力を受け付けずエラー表示する
+* 不正な年を自動で切り捨てない
+* 日付妥当性チェック（例: 2026-02-30）も併用する
+* 日付系ツールを追加する場合は、同じルールを守る
+
+## 5.3 Form
 
 入力フォームは共通の見た目に揃える。
 

@@ -1,3 +1,5 @@
+import { getFourDigitYearError } from '../../utils/dateInputValidation.ts'
+
 export type EraName = '明治' | '大正' | '昭和' | '平成' | '令和'
 
 export type EraDefinition = {
@@ -87,6 +89,11 @@ export type JapaneseEraToGregorianResult =
 export const gregorianToJapaneseEra = (dateString: string): GregorianToJapaneseEraResult => {
   if (!dateString) {
     return { error: '西暦の日付を入力してください。' }
+  }
+
+  const fourDigitYearError = getFourDigitYearError(dateString)
+  if (fourDigitYearError) {
+    return { error: fourDigitYearError }
   }
 
   const [year, month, day] = dateString.split('-').map(Number)
