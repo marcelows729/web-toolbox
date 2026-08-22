@@ -9,6 +9,7 @@ const filterOptions: Array<'all' | ToolCategory> = [
   'text',
   'datetime',
   'network',
+  'general',
   'other',
 ]
 

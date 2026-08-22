@@ -68,5 +68,15 @@ export const tools: Tool[] = [
     category: 'datetime',
     keywords: ['日付', '日数', '日数計算', '何日後', '何日前', '期間', 'date', 'days', 'calculator'],
     path: '/tools/date-calculator',
+    relatedTools: ['japanese-era-converter'],
+  },
+  {
+    id: 'japanese-era-converter',
+    name: '西暦・和暦変換',
+    description: '西暦と和暦を相互変換します。',
+    category: 'general',
+    keywords: ['西暦', '和暦', '令和', '平成', '昭和', '大正', '明治', '変換', '元号', 'wareki', 'era'],
+    path: '/tools/japanese-era-converter',
+    relatedTools: ['date-calculator'],
   },
 ]

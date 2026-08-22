@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage'
 import Base64EncodeDecode from './tools/base64-encode-decode/Base64EncodeDecode'
 import CharacterCounter from './tools/character-counter/CharacterCounter'
 import DateCalculator from './tools/date-calculator/DateCalculator'
+import JapaneseEraConverter from './tools/japanese-era-converter/JapaneseEraConverter'
 import JsonFormatter from './tools/json-formatter/JsonFormatter'
 import SqlInGenerator from './tools/sql-in-generator/SqlInGenerator'
 import TimestampConverter from './tools/timestamp-converter/TimestampConverter'
@@ -78,6 +79,7 @@ function App() {
           <Route path="/tools/base64-encode-decode" element={<Base64EncodeDecode />} />
           <Route path="/tools/uuid-generator" element={<UuidGenerator />} />
           <Route path="/tools/date-calculator" element={<DateCalculator />} />
+          <Route path="/tools/japanese-era-converter" element={<JapaneseEraConverter />} />
         </Route>
       </Routes>
     </BrowserRouter>

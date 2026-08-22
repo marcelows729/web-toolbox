@@ -1,4 +1,4 @@
-export type ToolCategory = 'developer' | 'text' | 'datetime' | 'network' | 'other'
+export type ToolCategory = 'developer' | 'text' | 'datetime' | 'network' | 'general' | 'other'
 
 export type Tool = {
   id: string
@@ -15,5 +15,6 @@ export const categoryLabels: Record<ToolCategory, string> = {
   text: 'テキスト・変換',
   datetime: '日時',
   network: 'ネットワーク',
+  general: '一般',
   other: 'その他',
 }
