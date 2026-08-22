@@ -269,7 +269,8 @@
 
 .formatter-grid,
 .generator-grid,
-.timestamp-grid {
+.timestamp-grid,
+.stats-grid {
   display: grid;
   gap: 12px;
 }
@@ -360,6 +361,36 @@ input[type='datetime-local'] {
   margin-top: 16px;
   display: flex;
   justify-content: flex-end;
+}
+
+.stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin-top: 20px;
+}
+
+.stat-card {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-card strong {
+  font-size: clamp(1.4rem, 2vw, 2rem);
+  color: var(--text);
+}
+
+.stat-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.stat-card--wide {
+  grid-column: span 2;
 }
 
 .option-label {

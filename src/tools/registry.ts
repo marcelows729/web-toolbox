@@ -27,4 +27,12 @@ export const tools: Tool[] = [
     keywords: ['timestamp', 'unix', 'epoch', '日時', '時刻', '変換'],
     path: '/tools/timestamp-converter',
   },
+  {
+    id: 'character-counter',
+    name: '文字数カウンター',
+    description: '入力したテキストの文字数・行数・単語数・バイト数をリアルタイムで確認します。',
+    category: 'text',
+    keywords: ['文字数', '文字数カウント', 'カウンター', '行数', '単語数', 'バイト数', 'character', 'count', 'text'],
+    path: '/tools/character-counter',
+  },
 ]

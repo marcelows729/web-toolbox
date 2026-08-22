@@ -187,11 +187,40 @@ JSONの解析・変換処理はすべてブラウザ上で実行する。
 
 ---
 
+## Timestamp Converter
+
+Unix Timestamp と日時を相互変換する。
+
+### Input
+
+Timestampまたは日時を入力し、秒/ミリ秒やLocal/UTCを選択して変換する。
+
+### Processing
+
+日時の変換処理はブラウザ内で完結し、入力データをサーバーへ送信しない。
+
+---
+
+## Character Counter
+
+入力テキストの文字数・行数・単語数・UTF-8バイト数をリアルタイムに確認する。
+
+### Input
+
+複数行テキストを入力できる。
+
+### Processing
+
+文字数・空白除外・行数・単語数・UTF-8バイト数の計算はすべてブラウザ上で実行する。
+
+入力データをサーバーへ送信しない。
+
+---
+
 # 4. 将来追加するツール候補
 
 以下は候補であり、Version 0.1の実装対象ではない。
 
-* Timestamp Converter
 * UUID Generator
 * Text Diff
 * Base64 Converter

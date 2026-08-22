@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
+import CharacterCounter from './tools/character-counter/CharacterCounter'
 import JsonFormatter from './tools/json-formatter/JsonFormatter'
 import SqlInGenerator from './tools/sql-in-generator/SqlInGenerator'
 import TimestampConverter from './tools/timestamp-converter/TimestampConverter'
@@ -68,6 +69,7 @@ function App() {
           <Route path="/tools/json-formatter" element={<JsonFormatter />} />
           <Route path="/tools/sql-in-generator" element={<SqlInGenerator />} />
           <Route path="/tools/timestamp-converter" element={<TimestampConverter />} />
+          <Route path="/tools/character-counter" element={<CharacterCounter />} />
         </Route>
       </Routes>
     </BrowserRouter>
