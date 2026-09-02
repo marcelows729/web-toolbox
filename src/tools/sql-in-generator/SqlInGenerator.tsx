@@ -19,6 +19,7 @@ const buildSqlInList = (input: string, quoteMode: QuoteMode, removeDuplicates: b
     return {
       output: '',
       error: '入力値がありません。値を入力してください。',
+      count: null,
     }
   }
 
@@ -31,18 +32,21 @@ const buildSqlInList = (input: string, quoteMode: QuoteMode, removeDuplicates: b
       return {
         output: '',
         error: `数値として扱えない値があります: ${invalidValues.join(', ')}`,
+        count: null,
       }
     }
 
     return {
       output: `(${values.join(', ')})`,
       error: '',
+      count: values.length,
     }
   }
 
   return {
     output: `(${values.map((value) => `'${escapeSqlString(value)}'`).join(', ')})`,
     error: '',
+    count: values.length,
   }
 }
 
@@ -50,6 +54,7 @@ export default function SqlInGenerator() {
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
+  const [resultCount, setResultCount] = useState<number | null>(null)
   const [copyFeedback, setCopyFeedback] = useState('')
   const [quoteMode, setQuoteMode] = useState<QuoteMode>('string')
   const [removeDuplicates, setRemoveDuplicates] = useState(true)
@@ -72,12 +77,14 @@ export default function SqlInGenerator() {
     const result = buildSqlInList(input, quoteMode, removeDuplicates)
     setOutput(result.output)
     setError(result.error)
+    setResultCount(result.count)
   }
 
   const handleClear = () => {
     setInput('')
     setOutput('')
     setError('')
+    setResultCount(null)
     setCopyFeedback('')
     setQuoteMode('string')
     setRemoveDuplicates(true)
@@ -171,6 +178,7 @@ export default function SqlInGenerator() {
             placeholder="生成された値リストがここに表示されます"
             rows={8}
           />
+          {resultCount !== null && <span className="field-label-sm">件数: {resultCount}件</span>}
         </div>
 
         {error && <div className="error-box" role="alert">{error}</div>}
