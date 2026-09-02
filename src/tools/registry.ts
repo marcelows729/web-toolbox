@@ -87,4 +87,13 @@ export const tools: Tool[] = [
     keywords: ['qr', 'qr code', 'QRコード', 'QR生成', 'URL', 'テキスト', '二次元コード', 'generator'],
     path: '/tools/qr-code-generator',
   },
+  {
+    id: 'text-diff',
+    name: 'Text Diff',
+    description: '2つのテキストの差分を確認します。',
+    category: 'text',
+    keywords: ['diff', 'difference', 'text diff', 'テキスト差分', '差分', '比較', 'diff checker'],
+    path: '/tools/text-diff',
+    relatedTools: ['character-counter'],
+  },
 ]

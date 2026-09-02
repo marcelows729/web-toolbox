@@ -9,6 +9,7 @@ import JapaneseEraConverter from './tools/japanese-era-converter/JapaneseEraConv
 import JsonFormatter from './tools/json-formatter/JsonFormatter'
 import QrCodeGenerator from './tools/qr-code-generator/QrCodeGenerator'
 import SqlInGenerator from './tools/sql-in-generator/SqlInGenerator'
+import TextDiff from './tools/text-diff/TextDiff'
 import TimestampConverter from './tools/timestamp-converter/TimestampConverter'
 import UrlEncodeDecode from './tools/url-encode-decode/UrlEncodeDecode'
 import UuidGenerator from './tools/uuid-generator/UuidGenerator'
@@ -82,6 +83,7 @@ function App() {
           <Route path="/tools/date-calculator" element={<DateCalculator />} />
           <Route path="/tools/japanese-era-converter" element={<JapaneseEraConverter />} />
           <Route path="/tools/qr-code-generator" element={<QrCodeGenerator />} />
+          <Route path="/tools/text-diff" element={<TextDiff />} />
         </Route>
       </Routes>
     </BrowserRouter>
