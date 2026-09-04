@@ -8,14 +8,14 @@
 
 ## チーム構成
 
-開発作業は以下4つのサブエージェント（`.claude/agents/`）で分担します。
+開発作業は、AI Company共通基盤（`C:\dev\ai-company`。ユーザーレベル `~/.claude/agents` からのJunction経由で全プロジェクト共通に利用可能）で定義された以下4つのサブエージェントで分担します。プロジェクトローカルの `.claude/agents/` には個別定義を置かず、共通定義をそのまま利用します。
 
-| エージェント | 定義ファイル | 責務 |
+| エージェント | 定義 | 責務 |
 |---|---|---|
-| Product Manager | `.claude/agents/product-manager.md` | 要求整理・requirements/decisionsとの整合確認・スコープ定義・Acceptance Criteria定義 |
-| Engineer | `.claude/agents/engineer.md` | 既存コード調査・実装・lint/build実行・指摘修正 |
-| QA Engineer | `.claude/agents/qa-engineer.md` | 品質確認・問題報告（コード変更なし） |
-| Code Reviewer | `.claude/agents/code-reviewer.md` | `git diff` を中心とした独立レビュー（コード変更なし） |
+| Product Manager | AI Company共通 `agents/product-manager.md` | 要求整理・プロジェクトの既存ドキュメントとの整合確認・スコープ定義・Acceptance Criteria定義 |
+| Engineer | AI Company共通 `agents/engineer.md` | 既存コード調査・実装・lint/build実行・指摘修正 |
+| QA Engineer | AI Company共通 `agents/qa-engineer.md` | 品質確認・問題報告（コード変更なし） |
+| Code Reviewer | AI Company共通 `agents/code-reviewer.md` | `git diff` を中心とした独立レビュー（コード変更なし） |
 
 ## 標準ワークフロー
 
@@ -34,7 +34,7 @@ User Request
   → Final Report
 ```
 
-このフローの実行手順は `.claude/commands/develop.md`（`/develop`）に定義しています。差分だけを確認したい場合は `.claude/commands/review.md`（`/review`）、リリース前の最終確認は `.claude/commands/release-check.md`（`/release-check`）を使用します。
+このフローの実行手順はAI Company共通コマンド `/develop`（`C:\dev\ai-company\commands\develop.md`）に定義しています。差分だけを確認したい場合は `/review`、リリース前の最終確認は `/release-check` を使用します（いずれもAI Company共通基盤で定義され、プロジェクトローカルの `.claude/commands/` には個別定義を置きません）。
 
 ### Multi-agent利用の抑制
 
@@ -81,7 +81,7 @@ User Request
 - GitHub上の変更（Issue/PR作成・編集、リポジトリ設定変更など）
 - Cloudflare上の変更
 
-このうち一部（git commit / push / merge / rebase / reset / clean / ブランチ削除）は `.claude/settings.json` の `permissions.deny` でも技術的に遮断しています。ただし設定で遮断しきれない操作（GitHub/Cloudflareの管理画面・API経由の変更など）についても、このルールに従い実行しないでください。
+このうち一部（git commit / push / merge / rebase / reset / clean / ブランチ削除）は、ユーザーレベル `~/.claude/settings.json`（AI Company共通 `C:\dev\ai-company\config\settings.json` をマージ済み）の `permissions.deny` でも技術的に遮断しています。`permissions.deny` は設定階層上プロジェクト側から再許可できないため、ユーザーレベルに置くことが最も強いガードになります。ただし設定で遮断しきれない操作（GitHub/Cloudflareの管理画面・API経由の変更など）についても、このルールに従い実行しないでください。
 
 ファイルの実装・編集、`npm run lint` / `npm run build` などのローカル確認作業は許可されています。
 
