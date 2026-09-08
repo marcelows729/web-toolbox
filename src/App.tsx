@@ -13,6 +13,11 @@ import TextDiff from './tools/text-diff/TextDiff'
 import TimestampConverter from './tools/timestamp-converter/TimestampConverter'
 import UrlEncodeDecode from './tools/url-encode-decode/UrlEncodeDecode'
 import UuidGenerator from './tools/uuid-generator/UuidGenerator'
+import Ipv4Cidr from './tools/ipv4-cidr/Ipv4Cidr'
+import Sha256 from './tools/sha256/Sha256'
+import RadixConverter from './tools/radix-converter/RadixConverter'
+import HtmlEscape from './tools/html-escape/HtmlEscape'
+import PercentageCalculator from './tools/percentage-calculator/PercentageCalculator'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -84,6 +89,11 @@ function App() {
           <Route path="/tools/japanese-era-converter" element={<JapaneseEraConverter />} />
           <Route path="/tools/qr-code-generator" element={<QrCodeGenerator />} />
           <Route path="/tools/text-diff" element={<TextDiff />} />
+          <Route path="/tools/ipv4-cidr" element={<Ipv4Cidr />} />
+          <Route path="/tools/sha256" element={<Sha256 />} />
+          <Route path="/tools/radix-converter" element={<RadixConverter />} />
+          <Route path="/tools/html-escape" element={<HtmlEscape />} />
+          <Route path="/tools/percentage-calculator" element={<PercentageCalculator />} />
         </Route>
       </Routes>
     </BrowserRouter>
