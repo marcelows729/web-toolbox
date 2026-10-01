@@ -64,7 +64,7 @@ User Request
 
 実際に利用可能なコマンドは `package.json` の `scripts` を Single Source of Truth とします。エージェント定義やコマンド定義にコマンド名を固定的に書かず、都度 `package.json` を確認してください。
 
-現時点（2026-09）で確認済みの利用可能コマンドは `npm run lint` と `npm run build` です。`test` / `typecheck` の単独コマンドや、Prettier等のformatコマンドは現状存在しません。存在しないコマンドは「存在しない」「自動テスト基盤なし」と明示し、実行・成功したかのように報告しないでください。
+品質確認には `npm test`、`npm run lint`、`npm run build` を使用します。`npm test` はNode.js 24で既存の `tests/additional-tools.test.mjs` を実行します。テスト対象と確認範囲は `docs/development-environment.md` を参照してください。テストは型チェックやブラウザ上の動作確認を代替しません。`typecheck` の単独コマンドやPrettier等のformatコマンドは現状存在しません。存在しないコマンドや未実行の検証を成功したかのように報告しないでください。
 
 ## 安全ルール
 
@@ -98,4 +98,4 @@ User Request
 - 未解決事項
 - ユーザー確認事項
 
-テスト自動化基盤が存在しない現状では、「test PASS」のような虚偽の報告をせず、「自動テスト基盤なし」と明示してください。
+テスト結果は実行コマンド、成功・失敗・スキップ件数とともに報告してください。未実行の場合はその旨を明示し、自動テストの対象外であるブラウザ操作・表示の確認結果と区別してください。
