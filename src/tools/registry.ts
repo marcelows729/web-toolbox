@@ -1,6 +1,8 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'holiday-style', name: '休日スタイル診断', description: '今の気分を5つ選んで、今日の過ごし方を楽しむ遊び。', category: 'general', keywords: ['休日', '気分', '診断', '遊び', '過ごし方', 'holiday', 'quiz'], path: '/tools/holiday-style', relatedTools: ['pocket-companion'] },
+  { id: 'pocket-companion', name: 'ポケット相棒診断', description: '空想の旅の5つの選択から、小さな道具の相棒を探す遊び。', category: 'general', keywords: ['相棒', 'ポケット', '診断', '物語', '遊び', 'companion', 'quiz'], path: '/tools/pocket-companion', relatedTools: ['holiday-style'] },
   { id: 'unit-converter', name: '単位変換', description: '長さ・重量・体積・面積・温度を固定換算します。', category: 'general', keywords: ['単位', '長さ', '重量', '体積', '面積', '温度', 'インチ', 'unit', 'convert'], path: '/tools/unit-converter', relatedTools: ['percentage-calculator'] },
   { id: 'bill-splitter', name: '割り勘計算', description: '正確な配分や同額の集金と余りを計算します。', category: 'general', keywords: ['割り勘', '円', '人数', '集金', '会計', 'bill', 'split'], path: '/tools/bill-splitter', relatedTools: ['percentage-calculator'] },
   { id: 'roulette-picker', name: 'ルーレット抽選', description: '候補を同じ確率で選び、選択済みを除外できます。', category: 'general', keywords: ['ルーレット', '抽選', 'くじ', 'ランダム', '選ぶ', 'roulette', 'random'], path: '/tools/roulette-picker' },

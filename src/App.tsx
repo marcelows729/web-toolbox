@@ -22,6 +22,8 @@ import ToolShelfProvider from './state/ToolShelfProvider'
 import UnitConverter from './tools/unit-converter/UnitConverter'
 import BillSplitter from './tools/bill-splitter/BillSplitter'
 import RoulettePicker from './tools/roulette-picker/RoulettePicker'
+import HolidayStyle from './tools/holiday-style/HolidayStyle'
+import PocketCompanion from './tools/pocket-companion/PocketCompanion'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -104,6 +106,8 @@ function App() {
           <Route path="/tools/unit-converter" element={<UnitConverter />} />
           <Route path="/tools/bill-splitter" element={<BillSplitter />} />
           <Route path="/tools/roulette-picker" element={<RoulettePicker />} />
+          <Route path="/tools/holiday-style" element={<HolidayStyle />} />
+          <Route path="/tools/pocket-companion" element={<PocketCompanion />} />
         </Route>
       </Routes>
       </ToolShelfProvider>

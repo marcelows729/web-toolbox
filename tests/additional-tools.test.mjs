@@ -188,10 +188,10 @@ test('割合: ゼロ分母・不正入力・桁数制限', () => {
   for (const places of [-1, 11, 1.5]) assert.throws(() => calculatePercentage('portion', '1', '1', places))
 })
 
-test('登録: 19件、ID・パス重複なし、新規5件に明示的ルートあり', () => {
-  assert.equal(tools.length, 19)
-  assert.equal(new Set(tools.map(tool => tool.id)).size, 19)
-  assert.equal(new Set(tools.map(tool => tool.path)).size, 19)
+test('登録: 21件、ID・パス重複なし、新規5件に明示的ルートあり', () => {
+  assert.equal(tools.length, 21)
+  assert.equal(new Set(tools.map(tool => tool.id)).size, 21)
+  assert.equal(new Set(tools.map(tool => tool.path)).size, 21)
   const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8')
   for (const [id, category, component] of [
     ['ipv4-cidr', 'network', 'Ipv4Cidr'],
@@ -289,13 +289,13 @@ test('道具棚: 保存復元・容量不足・保存拒否を扱い入力内容
   assert.deepEqual(shelf.favorites, ['sha256'])
 })
 
-test('道具棚UI: 19ツールのリンクと独立したお気に入りボタン', async () => {
+test('道具棚UI: 21ツールのリンクと独立したお気に入りボタン', async () => {
   const { MemoryRouter } = await import('react-router-dom')
   const { ToolShelfContext } = await import('../src/state/ToolShelfContext.ts')
   const { default: HomePage } = await import('../src/pages/HomePage.tsx')
   const markup = renderToStaticMarkup(createElement(MemoryRouter, null, createElement(ToolShelfContext.Provider, { value: { shelf: emptyShelf(), unavailable: false, toggleFavorite() {}, visit() {}, clearRecent() {} } }, createElement(HomePage))))
-  assert.equal((markup.match(/class="tool-card"/g) ?? []).length, 19)
-  assert.equal((markup.match(/class="favorite-button"/g) ?? []).length, 19)
+  assert.equal((markup.match(/class="tool-card"/g) ?? []).length, 21)
+  assert.equal((markup.match(/class="favorite-button"/g) ?? []).length, 21)
   for (const tool of tools) assert.ok(markup.includes(`href="${tool.path}"`))
   for (const link of markup.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)) assert.ok(!link[1].includes('<button'), 'ボタンをリンクに入れない')
 })
@@ -402,4 +402,79 @@ test('一般3ツール: メタデータ・ルート・棚への復元', () => {
     assert.ok(app.includes(`<Route path="${tool.path}" element={<${component} />} />`))
   }
   assert.deepEqual(parseShelf(JSON.stringify({ version: 1, favorites: ids, recent: ids })).favorites, ids)
+})
+
+const { calculateQuiz, quizResultText, PLAY_NOTICE } = await import('../src/tools/playful-quiz/quiz.ts')
+const { holidayDefinition } = await import('../src/tools/holiday-style/definition.ts')
+const { companionDefinition } = await import('../src/tools/pocket-companion/definition.ts')
+for (const definition of [holidayDefinition, companionDefinition]) {
+  test(`${definition.title}: 全1024組合せで決定性・全結果到達・回答との一致`, () => {
+    assert.equal(definition.questions.length, 5)
+    const reached = Object.fromEntries(definition.outcomes.map(outcome => [outcome.id, 0]))
+    for (let code = 0; code < 1024; code++) {
+      const answers = definition.questions.map((question, index) => question.choices[(code >> (index * 2)) & 3].id)
+      const result = calculateQuiz(definition, answers)
+      assert.deepEqual(result, calculateQuiz(definition, answers))
+      const chosen = definition.questions.map((question, index) => question.choices.find(choice => choice.id === answers[index]))
+      const counts = Object.fromEntries(definition.outcomes.map(outcome => [outcome.id, chosen.filter(choice => choice.type === outcome.id).length]))
+      assert.deepEqual(result.scores, counts)
+      assert.equal(Object.values(result.scores).reduce((sum, value) => sum + value, 0), 5)
+      const max = Math.max(...Object.values(counts))
+      const leaders = definition.outcomes.filter(outcome => counts[outcome.id] === max)
+      assert.equal(result.outcome.id, leaders[0].id)
+      assert.equal(result.tied, leaders.length > 1)
+      assert.deepEqual(result.matched, chosen.filter(choice => choice.type === result.outcome.id).map(choice => choice.label))
+      const copy = quizResultText(definition, result)
+      assert.ok(copy.includes(result.outcome.title) && copy.includes(result.outcome.action) && copy.includes(PLAY_NOTICE))
+      reached[result.outcome.id]++
+    }
+    for (const count of Object.values(reached)) assert.ok(count > 0)
+    console.log(`${definition.id}: reachable distribution ${JSON.stringify(reached)}`)
+  })
+}
+test('遊びの診断: 定義の完全性と明確な同点ルール', () => {
+  for (const definition of [holidayDefinition, companionDefinition]) {
+    const ids = definition.outcomes.map(outcome => outcome.id)
+    assert.equal(new Set(ids).size, 4)
+    for (const question of definition.questions) {
+      assert.equal(question.choices.length, 4)
+      assert.equal(new Set(question.choices.map(choice => choice.id)).size, 4)
+      assert.deepEqual(new Set(question.choices.map(choice => choice.type)), new Set(ids))
+      assert.ok(question.title && question.note)
+    }
+    const types = [ids[0], ids[1], ids[0], ids[1], ids[2]]
+    const answers = definition.questions.map((question, index) => question.choices.find(choice => choice.type === types[index]).id)
+    const result = calculateQuiz(definition, answers)
+    assert.equal(result.tied, true)
+    assert.equal(result.outcome.id, ids[0])
+    for (const outcome of definition.outcomes) assert.ok(outcome.title && outcome.description && outcome.action && outcome.icon)
+  }
+})
+test('遊びの診断: 未回答・不正回答・過不足を拒否し入力を変更しない', () => {
+  for (const definition of [holidayDefinition, companionDefinition]) {
+    const complete = definition.questions.map(question => question.choices[0].id)
+    for (const answers of [[], complete.slice(0, 4), [...complete, 'a'], ['', ...complete.slice(1)], ['unknown', ...complete.slice(1)], [null, ...complete.slice(1)]]) assert.throws(() => calculateQuiz(definition, answers))
+    const original = [...complete]
+    calculateQuiz(definition, complete)
+    assert.deepEqual(complete, original)
+  }
+})
+test('遊びの診断: 初期画面の免責・プライバシー・独自SVGと登録', async () => {
+  const { default: PlayfulQuiz } = await import('../src/tools/playful-quiz/PlayfulQuiz.tsx')
+  const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8')
+  for (const [definition, component] of [[holidayDefinition, 'HolidayStyle'], [companionDefinition, 'PocketCompanion']]) {
+    const markup = renderToStaticMarkup(createElement(PlayfulQuiz, { definition }))
+    assert.ok(markup.includes(PLAY_NOTICE) && markup.includes('保存・送信・URLへの埋め込みはしません'))
+    assert.ok(markup.includes('<svg') && !markup.includes('<img'))
+    const tool = tools.find(tool => tool.id === definition.id)
+    assert.equal(tool.category, 'general')
+    assert.ok(tool.keywords.includes('診断'))
+    assert.ok(app.includes(`<Route path="${tool.path}" element={<${component} />} />`))
+  }
+  const ids = [holidayDefinition.id, companionDefinition.id]
+  assert.deepEqual(parseShelf(JSON.stringify({ version: 1, favorites: ids, recent: ids })).recent, ids)
+})
+test('遊びの診断: 回答の永続化・送信・HTML挿入を追加しない', () => {
+  const source = readFileSync(new URL('../src/tools/playful-quiz/PlayfulQuiz.tsx', import.meta.url), 'utf8')
+  assert.ok(!/localStorage|sessionStorage|URLSearchParams|fetch\s*\(|sendBeacon|dangerouslySetInnerHTML/.test(source))
 })
