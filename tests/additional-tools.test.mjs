@@ -234,3 +234,68 @@ test('カテゴリ: light/darkの選択・非選択・hoverで文字コントラ
     }
   }
 })
+
+const { emptyShelf, parseShelf, updateShelf, loadShelf, saveShelf, SHELF_KEY, RECENT_LIMIT } = await import('../src/state/toolShelf.ts')
+
+test('道具棚: 不正・未知バージョン・過大な保存データから安全に復元', () => {
+  for (const raw of [null, '', '{', 'null', '[]', '42', '{"version":2}', ' '.repeat(65537)]) assert.deepEqual(parseShelf(raw), emptyShelf())
+  assert.deepEqual(parseShelf(JSON.stringify({ version: 1, favorites: 'json-formatter', recent: null })), emptyShelf())
+  assert.deepEqual(parseShelf(JSON.stringify({ version: 1, favorites: ['sha256', 'unknown', 1, 'sha256', 'json-formatter'], recent: ['unknown', 'json-formatter', 'sha256', 'json-formatter'] })), { version: 1, favorites: ['sha256', 'json-formatter'], recent: ['json-formatter', 'sha256'] })
+})
+
+test('道具棚: お気に入りの追加・解除・再追加と並び順', () => {
+  let shelf = emptyShelf()
+  shelf = updateShelf(shelf, { type: 'favorite', id: 'json-formatter' })
+  shelf = updateShelf(shelf, { type: 'favorite', id: 'sha256' })
+  assert.deepEqual(shelf.favorites, ['sha256', 'json-formatter'])
+  shelf = updateShelf(shelf, { type: 'favorite', id: 'json-formatter' })
+  assert.deepEqual(shelf.favorites, ['sha256'])
+  shelf = updateShelf(shelf, { type: 'favorite', id: 'json-formatter' })
+  assert.deepEqual(shelf.favorites, ['json-formatter', 'sha256'])
+  assert.deepEqual(shelf.recent, [])
+  assert.equal(updateShelf(shelf, { type: 'favorite', id: 'missing' }), shelf)
+})
+
+test('道具棚: 最近使用の上限・重複除去・再訪順・消去', () => {
+  let shelf = emptyShelf()
+  for (const tool of tools) shelf = updateShelf(shelf, { type: 'visit', id: tool.id })
+  assert.deepEqual(shelf.recent, tools.slice(-RECENT_LIMIT).reverse().map(tool => tool.id))
+  const id = shelf.recent[3]
+  shelf = updateShelf(shelf, { type: 'visit', id })
+  assert.equal(shelf.recent[0], id)
+  assert.equal(shelf.recent.filter(value => value === id).length, 1)
+  assert.equal(shelf.recent.length, RECENT_LIMIT)
+  assert.equal(updateShelf(shelf, { type: 'visit', id }), shelf)
+  assert.equal(updateShelf(shelf, { type: 'visit', id: 'missing' }), shelf)
+  shelf = updateShelf(shelf, { type: 'favorite', id })
+  const cleared = updateShelf(shelf, { type: 'clear-recent' })
+  assert.deepEqual(cleared.recent, [])
+  assert.deepEqual(cleared.favorites, [id])
+  assert.equal(updateShelf(cleared, { type: 'clear-recent' }), cleared)
+  assert.equal(parseShelf(JSON.stringify({ version: 1, recent: tools.map(tool => tool.id) })).recent.length, RECENT_LIMIT)
+})
+
+test('道具棚: 保存復元・容量不足・保存拒否を扱い入力内容を保存しない', () => {
+  let stored = null
+  const storage = { getItem(key) { assert.equal(key, SHELF_KEY); return stored }, setItem(key, value) { assert.equal(key, SHELF_KEY); stored = value } }
+  let shelf = updateShelf(emptyShelf(), { type: 'favorite', id: 'sha256' })
+  shelf = updateShelf(shelf, { type: 'visit', id: 'json-formatter' })
+  assert.equal(saveShelf(storage, shelf), true)
+  assert.deepEqual(loadShelf(storage), { shelf, unavailable: false })
+  assert.deepEqual(Object.keys(JSON.parse(stored)), ['version', 'favorites', 'recent'])
+  const denied = { getItem() { throw new Error('denied') }, setItem() { throw new Error('quota') } }
+  assert.deepEqual(loadShelf(denied), { shelf: emptyShelf(), unavailable: true })
+  assert.equal(saveShelf(denied, shelf), false)
+  assert.deepEqual(shelf.favorites, ['sha256'])
+})
+
+test('道具棚UI: 16ツールのリンクと独立したお気に入りボタン', async () => {
+  const { MemoryRouter } = await import('react-router-dom')
+  const { ToolShelfContext } = await import('../src/state/ToolShelfContext.ts')
+  const { default: HomePage } = await import('../src/pages/HomePage.tsx')
+  const markup = renderToStaticMarkup(createElement(MemoryRouter, null, createElement(ToolShelfContext.Provider, { value: { shelf: emptyShelf(), unavailable: false, toggleFavorite() {}, visit() {}, clearRecent() {} } }, createElement(HomePage))))
+  assert.equal((markup.match(/class="tool-card"/g) ?? []).length, 16)
+  assert.equal((markup.match(/class="favorite-button"/g) ?? []).length, 16)
+  for (const tool of tools) assert.ok(markup.includes(`href="${tool.path}"`))
+  for (const link of markup.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)) assert.ok(!link[1].includes('<button'), 'ボタンをリンクに入れない')
+})

@@ -18,6 +18,7 @@ import Sha256 from './tools/sha256/Sha256'
 import RadixConverter from './tools/radix-converter/RadixConverter'
 import HtmlEscape from './tools/html-escape/HtmlEscape'
 import PercentageCalculator from './tools/percentage-calculator/PercentageCalculator'
+import ToolShelfProvider from './state/ToolShelfProvider'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -63,9 +64,11 @@ function App() {
     syncTheme()
 
     const handleSystemThemeChange = () => {
-      if (window.localStorage.getItem(THEME_STORAGE_KEY) === null) {
-        const nextTheme = getSystemTheme()
-        setTheme(nextTheme)
+      try {
+        if (window.localStorage.getItem(THEME_STORAGE_KEY) === null) setTheme(getSystemTheme())
+      } catch {
+        // 保存不可でもOSテーマ変更でアプリを停止しない。
+        setTheme(getSystemTheme())
       }
     }
 
@@ -75,6 +78,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ToolShelfProvider>
       <Routes>
         <Route element={<Layout theme={theme} setTheme={setTheme} />}>
           <Route path="/" element={<HomePage />} />
@@ -96,6 +100,7 @@ function App() {
           <Route path="/tools/percentage-calculator" element={<PercentageCalculator />} />
         </Route>
       </Routes>
+      </ToolShelfProvider>
     </BrowserRouter>
   )
 }
