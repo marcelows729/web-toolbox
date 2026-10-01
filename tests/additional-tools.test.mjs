@@ -188,10 +188,10 @@ test('割合: ゼロ分母・不正入力・桁数制限', () => {
   for (const places of [-1, 11, 1.5]) assert.throws(() => calculatePercentage('portion', '1', '1', places))
 })
 
-test('登録: 21件、ID・パス重複なし、新規5件に明示的ルートあり', () => {
-  assert.equal(tools.length, 21)
-  assert.equal(new Set(tools.map(tool => tool.id)).size, 21)
-  assert.equal(new Set(tools.map(tool => tool.path)).size, 21)
+test('登録: 23件、ID・パス重複なし、新規5件に明示的ルートあり', () => {
+  assert.equal(tools.length, 23)
+  assert.equal(new Set(tools.map(tool => tool.id)).size, 23)
+  assert.equal(new Set(tools.map(tool => tool.path)).size, 23)
   const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8')
   for (const [id, category, component] of [
     ['ipv4-cidr', 'network', 'Ipv4Cidr'],
@@ -289,13 +289,13 @@ test('道具棚: 保存復元・容量不足・保存拒否を扱い入力内容
   assert.deepEqual(shelf.favorites, ['sha256'])
 })
 
-test('道具棚UI: 21ツールのリンクと独立したお気に入りボタン', async () => {
+test('道具棚UI: 23ツールのリンクと独立したお気に入りボタン', async () => {
   const { MemoryRouter } = await import('react-router-dom')
   const { ToolShelfContext } = await import('../src/state/ToolShelfContext.ts')
   const { default: HomePage } = await import('../src/pages/HomePage.tsx')
   const markup = renderToStaticMarkup(createElement(MemoryRouter, null, createElement(ToolShelfContext.Provider, { value: { shelf: emptyShelf(), unavailable: false, toggleFavorite() {}, visit() {}, clearRecent() {} } }, createElement(HomePage))))
-  assert.equal((markup.match(/class="tool-card"/g) ?? []).length, 21)
-  assert.equal((markup.match(/class="favorite-button"/g) ?? []).length, 21)
+  assert.equal((markup.match(/class="tool-card"/g) ?? []).length, 23)
+  assert.equal((markup.match(/class="favorite-button"/g) ?? []).length, 23)
   for (const tool of tools) assert.ok(markup.includes(`href="${tool.path}"`))
   for (const link of markup.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)) assert.ok(!link[1].includes('<button'), 'ボタンをリンクに入れない')
 })
@@ -477,4 +477,88 @@ test('遊びの診断: 初期画面の免責・プライバシー・独自SVGと
 test('遊びの診断: 回答の永続化・送信・HTML挿入を追加しない', () => {
   const source = readFileSync(new URL('../src/tools/playful-quiz/PlayfulQuiz.tsx', import.meta.url), 'utf8')
   assert.ok(!/localStorage|sessionStorage|URLSearchParams|fetch\s*\(|sendBeacon|dangerouslySetInnerHTML/.test(source))
+})
+
+const { inspectImage } = await import('../src/tools/local-image/imageHeader.ts')
+const { resizeDimensions, joinDimensions, checkDimensions, outputFilename, pixelInteger, IMAGE_LIMITS } = await import('../src/tools/local-image/imageMath.ts')
+const { encodeCanvas, abortIfStale, prepareImages } = await import('../src/tools/local-image/imageBrowser.ts')
+const crc32 = data => { let crc = 0xffffffff; for (const byte of data) { crc ^= byte; for (let i=0;i<8;i++) crc=crc&1?0xedb88320^(crc>>>1):crc>>>1 } return (crc^0xffffffff)>>>0 }
+const pngChunk = (name, data = Buffer.alloc(0)) => { const chunk=Buffer.alloc(data.length+12);chunk.writeUInt32BE(data.length);chunk.write(name,4);data.copy(chunk,8);chunk.writeUInt32BE(crc32(chunk.subarray(4,-4)),chunk.length-4);return chunk }
+const headerPng = (width=40,height=20,extra=[]) => { const ihdr=Buffer.alloc(13);ihdr.writeUInt32BE(width);ihdr.writeUInt32BE(height,4);ihdr[8]=8;ihdr[9]=6;return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),pngChunk('IHDR',ihdr),...extra,pngChunk('IDAT',Buffer.from([0])),pngChunk('IEND')]) }
+const webpChunk=(name,data)=>{const chunk=Buffer.alloc(8+data.length+data.length%2);chunk.write(name);chunk.writeUInt32LE(data.length,4);data.copy(chunk,8);return chunk}
+const headerWebp=(chunks)=>{const body=Buffer.concat(chunks);const header=Buffer.alloc(12);header.write('RIFF');header.writeUInt32LE(body.length+4,4);header.write('WEBP',8);return Buffer.concat([header,body])}
+test('画像: PNGチャンク・CRC・APNG・寸法上限', () => {
+  assert.deepEqual(inspectImage(headerPng()),{width:40,height:20,mime:'image/png'})
+  for(const name of ['acTL','fcTL','fdAT'])assert.throws(()=>inspectImage(headerPng(40,20,[pngChunk(name)])),/アニメーション/)
+  const damaged=headerPng();damaged[20]^=1;assert.throws(()=>inspectImage(damaged))
+  assert.throws(()=>inspectImage(headerPng().subarray(0,-1)))
+  assert.throws(()=>inspectImage(Buffer.concat([headerPng(),Buffer.from('extra')])))
+  assert.throws(()=>inspectImage(headerPng(8193,1)))
+  assert.throws(()=>inspectImage(headerPng(4000,4000)))
+})
+test('画像: WebPのVP8・VP8L・VP8Xとアニメ指定', () => {
+  const lossy=Buffer.from([0,0,0,0x9d,1,0x2a,40,0,20,0])
+  const lossless=Buffer.alloc(5);lossless[0]=0x2f;lossless.writeUInt32LE(39+(19<<14),1)
+  const extended=Buffer.alloc(10);extended[4]=39;extended[7]=19
+  for(const chunks of [[webpChunk('VP8 ',lossy)],[webpChunk('VP8L',lossless)],[webpChunk('VP8X',extended),webpChunk('VP8 ',lossy)]])assert.deepEqual(inspectImage(headerWebp(chunks)),{width:40,height:20,mime:'image/webp'})
+  extended[0]=2;assert.throws(()=>inspectImage(headerWebp([webpChunk('VP8X',extended),webpChunk('VP8 ',lossy)])),/アニメーション/)
+  for(const name of ['ANIM','ANMF'])assert.throws(()=>inspectImage(headerWebp([webpChunk('VP8 ',lossy),webpChunk(name,Buffer.alloc(0))])),/アニメーション/)
+  const invalid=headerWebp([webpChunk('VP8 ',lossy)]);invalid.writeUInt32LE(999,4);assert.throws(()=>inspectImage(invalid))
+})
+test('画像: JPEGヘッダ・偽装MIME・未対応形式・破損', () => {
+  const jpeg=Buffer.from([255,216,255,192,0,8,8,0,20,0,40,3,255,218,0,2,255,217])
+  assert.deepEqual(inspectImage(jpeg),{width:40,height:20,mime:'image/jpeg'})
+  assert.throws(()=>inspectImage(jpeg.subarray(0,-2)))
+  assert.throws(()=>inspectImage(headerPng(),'image/jpeg'),/一致/)
+  assert.throws(()=>inspectImage(Buffer.from('GIF89a123456789')))
+  assert.throws(()=>inspectImage(Buffer.alloc(IMAGE_LIMITS.fileBytes+1)))
+})
+test('画像: 縦横比・拡大なし・拡大許可・極端な比率', () => {
+  assert.deepEqual(resizeDimensions({width:400,height:200},100,100),{width:100,height:50})
+  assert.deepEqual(resizeDimensions({width:40,height:20},1200,1200),{width:40,height:20})
+  assert.deepEqual(resizeDimensions({width:40,height:20},100,100,true),{width:100,height:50})
+  assert.deepEqual(resizeDimensions({width:8192,height:1},1,1),{width:1,height:1})
+  for(const size of [{width:0,height:1},{width:8193,height:1},{width:4000,height:4000},{width:Infinity,height:1}])assert.throws(()=>checkDimensions(size))
+  assert.throws(()=>resizeDimensions({width:1,height:1},8192,8192,true))
+})
+test('画像: 横・縦結合の配置・余白・合計と出力上限', () => {
+  const sizes=[{width:40,height:20},{width:20,height:20}]
+  assert.deepEqual(joinDimensions(sizes,'horizontal',800,5),{size:{width:65,height:20},placements:[{width:40,height:20,x:0,y:0},{width:20,height:20,x:45,y:0}]})
+  assert.deepEqual(joinDimensions(sizes,'vertical',800,5),{size:{width:20,height:35},placements:[{width:20,height:10,x:0,y:0},{width:20,height:20,x:0,y:15}]})
+  assert.throws(()=>joinDimensions(sizes,'horizontal',800,201))
+  assert.throws(()=>joinDimensions(sizes.slice(0,1),'horizontal',800,0))
+  assert.throws(()=>joinDimensions(Array(7).fill(sizes[0]),'horizontal',800,0))
+  assert.throws(()=>joinDimensions(Array(2).fill({width:4000,height:3000}),'horizontal',800,0),/合計/)
+  assert.throws(()=>joinDimensions([{width:8192,height:1},{width:8192,height:1}],'horizontal',100,0))
+})
+test('画像: 全角設定・ファイル名・拡張子と制御文字', () => {
+  assert.equal(pixelInteger('１２００',1,8192),1200)
+  for(const text of ['', '1.5', '-1', 'Infinity', '99999'])assert.throws(()=>pixelInteger(text,1,8192))
+  assert.equal(outputFilename('写真🍵.png','resized','image/jpeg'),'写真🍵-resized.jpg')
+  assert.equal(outputFilename('a/b\u0000.webp','resized','image/png'),'a_b_-resized.png')
+  assert.equal(outputFilename('','resized','image/webp'),'image-resized.webp')
+})
+test('画像: toBlobのMIMEフォールバック・失敗・容量超過を拒否', async () => {
+  const canvas=blob=>({toBlob(callback){callback(blob)}})
+  const blob=new Blob(['ok'],{type:'image/png'})
+  assert.equal(await encodeCanvas(canvas(blob),'image/png',1),blob)
+  await assert.rejects(encodeCanvas(canvas(blob),'image/webp',.85),/対応/)
+  await assert.rejects(encodeCanvas(canvas(null),'image/png',1),/書き出/)
+  await assert.rejects(encodeCanvas({toBlob(){throw Error('fail')}},'image/png',1),/失敗/)
+  await assert.rejects(encodeCanvas(canvas(new Blob([new Uint8Array(IMAGE_LIMITS.outputBytes+1)],{type:'image/png'})),'image/png',1),/16 MiB/)
+  await assert.rejects(encodeCanvas(canvas(blob),'image/png',Infinity))
+})
+test('画像: 中断・枚数・容量をデコード前に検査', async () => {
+  assert.throws(()=>abortIfStale(()=>false),{name:'AbortError'})
+  abortIfStale(()=>true)
+  await assert.rejects(prepareImages([],1,1,()=>true))
+  await assert.rejects(prepareImages([new File([new Uint8Array(IMAGE_LIMITS.fileBytes+1)],'large.png',{type:'image/png'})],1,1,()=>true),/8 MiB/)
+  await assert.rejects(prepareImages([new File([headerPng()],'valid.png',{type:'image/png'})],1,1,()=>false),{name:'AbortError'})
+})
+test('画像2ツール: 登録・ルートと画像内容を保存送信しない構成', () => {
+  const app=readFileSync(new URL('../src/App.tsx',import.meta.url),'utf8')
+  for(const[id,component]of[['image-resizer','ImageResizer'],['image-joiner','ImageJoiner']]){
+    const tool=tools.find(tool=>tool.id===id);assert.equal(tool.category,'general');assert.ok(tool.keywords.includes('画像'));assert.ok(app.includes(`<Route path="${tool.path}" element={<${component} />} />`))
+  }
+  for(const file of ['imageBrowser.ts','useImageWork.ts'])assert.ok(!/fetch\s*\(|localStorage|sessionStorage|URLSearchParams|sendBeacon/.test(readFileSync(new URL(`../src/tools/local-image/${file}`,import.meta.url),'utf8')))
 })

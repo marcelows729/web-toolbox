@@ -1,6 +1,8 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'image-resizer', name: '画像サイズ変更・圧縮', description: 'ローカル画像の縦横比を保ち、サイズ・形式・品質を変えます。', category: 'general', keywords: ['画像', '写真', '圧縮', 'サイズ', '縮小', 'JPEG', 'PNG', 'WebP', 'image', 'resize'], path: '/tools/image-resizer', relatedTools: ['image-joiner'] },
+  { id: 'image-joiner', name: '画像を並べる', description: '2〜6枚のローカル画像を横・縦に並べて1枚にします。', category: 'general', keywords: ['画像', '写真', '結合', '並べる', '横', '縦', 'image', 'join'], path: '/tools/image-joiner', relatedTools: ['image-resizer'] },
   { id: 'holiday-style', name: '休日スタイル診断', description: '今の気分を5つ選んで、今日の過ごし方を楽しむ遊び。', category: 'general', keywords: ['休日', '気分', '診断', '遊び', '過ごし方', 'holiday', 'quiz'], path: '/tools/holiday-style', relatedTools: ['pocket-companion'] },
   { id: 'pocket-companion', name: 'ポケット相棒診断', description: '空想の旅の5つの選択から、小さな道具の相棒を探す遊び。', category: 'general', keywords: ['相棒', 'ポケット', '診断', '物語', '遊び', 'companion', 'quiz'], path: '/tools/pocket-companion', relatedTools: ['holiday-style'] },
   { id: 'unit-converter', name: '単位変換', description: '長さ・重量・体積・面積・温度を固定換算します。', category: 'general', keywords: ['単位', '長さ', '重量', '体積', '面積', '温度', 'インチ', 'unit', 'convert'], path: '/tools/unit-converter', relatedTools: ['percentage-calculator'] },

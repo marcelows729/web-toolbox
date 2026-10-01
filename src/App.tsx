@@ -24,6 +24,8 @@ import BillSplitter from './tools/bill-splitter/BillSplitter'
 import RoulettePicker from './tools/roulette-picker/RoulettePicker'
 import HolidayStyle from './tools/holiday-style/HolidayStyle'
 import PocketCompanion from './tools/pocket-companion/PocketCompanion'
+import ImageResizer from './tools/image-resizer/ImageResizer'
+import ImageJoiner from './tools/image-joiner/ImageJoiner'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -108,6 +110,8 @@ function App() {
           <Route path="/tools/roulette-picker" element={<RoulettePicker />} />
           <Route path="/tools/holiday-style" element={<HolidayStyle />} />
           <Route path="/tools/pocket-companion" element={<PocketCompanion />} />
+          <Route path="/tools/image-resizer" element={<ImageResizer />} />
+          <Route path="/tools/image-joiner" element={<ImageJoiner />} />
         </Route>
       </Routes>
       </ToolShelfProvider>
