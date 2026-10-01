@@ -62,10 +62,11 @@ type Props = {
   usage: ReactNode
   children: ReactNode
   result: ReturnType<typeof useToolResult>
+  outputRows?: number
   onClear: () => void
 }
 
-export default function BrowserTool({ title, description, usage, children, result, onClear }: Props) {
+export default function BrowserTool({ title, description, usage, children, result, onClear, outputRows = 8 }: Props) {
   const outputId = useId()
   return (
     <div className="container tool-page">
@@ -81,7 +82,7 @@ export default function BrowserTool({ title, description, usage, children, resul
             <button type="button" className="secondary-button" onClick={() => void result.copy()} disabled={result.output === null || result.busy}>Copy</button>
           </div>
           <label className="field-label" htmlFor={outputId}>Output</label>
-          <textarea id={outputId} value={result.output ?? ''} readOnly rows={8} spellCheck={false} />
+          <textarea id={outputId} value={result.output ?? ''} readOnly rows={outputRows} spellCheck={false} />
         </div>
         {result.error && <div className="error-box" role="alert">{result.error}</div>}
         <div role="status" aria-live="polite">

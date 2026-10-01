@@ -188,10 +188,10 @@ test('割合: ゼロ分母・不正入力・桁数制限', () => {
   for (const places of [-1, 11, 1.5]) assert.throws(() => calculatePercentage('portion', '1', '1', places))
 })
 
-test('登録: 16件、ID・パス重複なし、新規5件に明示的ルートあり', () => {
-  assert.equal(tools.length, 16)
-  assert.equal(new Set(tools.map(tool => tool.id)).size, 16)
-  assert.equal(new Set(tools.map(tool => tool.path)).size, 16)
+test('登録: 19件、ID・パス重複なし、新規5件に明示的ルートあり', () => {
+  assert.equal(tools.length, 19)
+  assert.equal(new Set(tools.map(tool => tool.id)).size, 19)
+  assert.equal(new Set(tools.map(tool => tool.path)).size, 19)
   const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8')
   for (const [id, category, component] of [
     ['ipv4-cidr', 'network', 'Ipv4Cidr'],
@@ -289,13 +289,117 @@ test('道具棚: 保存復元・容量不足・保存拒否を扱い入力内容
   assert.deepEqual(shelf.favorites, ['sha256'])
 })
 
-test('道具棚UI: 16ツールのリンクと独立したお気に入りボタン', async () => {
+test('道具棚UI: 19ツールのリンクと独立したお気に入りボタン', async () => {
   const { MemoryRouter } = await import('react-router-dom')
   const { ToolShelfContext } = await import('../src/state/ToolShelfContext.ts')
   const { default: HomePage } = await import('../src/pages/HomePage.tsx')
   const markup = renderToStaticMarkup(createElement(MemoryRouter, null, createElement(ToolShelfContext.Provider, { value: { shelf: emptyShelf(), unavailable: false, toggleFavorite() {}, visit() {}, clearRecent() {} } }, createElement(HomePage))))
-  assert.equal((markup.match(/class="tool-card"/g) ?? []).length, 16)
-  assert.equal((markup.match(/class="favorite-button"/g) ?? []).length, 16)
+  assert.equal((markup.match(/class="tool-card"/g) ?? []).length, 19)
+  assert.equal((markup.match(/class="favorite-button"/g) ?? []).length, 19)
   for (const tool of tools) assert.ok(markup.includes(`href="${tool.path}"`))
   for (const link of markup.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)) assert.ok(!link[1].includes('<button'), 'ボタンをリンクに入れない')
+})
+
+
+const { convertMeasurement, formatMeasurement, parseMeasurement, unitGroups } = await import('../src/tools/unit-converter/conversion.ts')
+const { splitBill, parseBillInteger, billSummary } = await import('../src/tools/bill-splitter/splitBill.ts')
+const { parseCandidates, remainingCandidates, uniformIndex, wheelRotation } = await import('../src/tools/roulette-picker/roulette.ts')
+test('単位: NISTの定義値・温度・絶対零度', () => {
+  assert.equal(convertMeasurement(1, 'length', 'in', 'cm'), 2.54)
+  assert.equal(convertMeasurement(1, 'mass', 'kg', 'g'), 1000)
+  assert.equal(convertMeasurement(1, 'volume', 'm3', 'L'), 1000)
+  assert.equal(convertMeasurement(1, 'area', 'ha', 'm2'), 10000)
+  assert.equal(convertMeasurement(-40, 'temperature', 'C', 'F'), -40)
+  assert.equal(convertMeasurement(0, 'temperature', 'C', 'F'), 32)
+  assert.equal(convertMeasurement(-459.67, 'temperature', 'F', 'K'), 0)
+  assert.equal(convertMeasurement(-273.15, 'temperature', 'C', 'K'), 0)
+  for (const [from, value] of [['K', -0.001], ['C', -273.151], ['F', -459.671]]) assert.throws(() => convertMeasurement(value, 'temperature', from, from))
+})
+test('単位: 全単位の同一変換・往復・有限値', () => {
+  for (const [group, definition] of Object.entries(unitGroups)) for (const from of definition.units) for (const to of definition.units) {
+    assert.equal(convertMeasurement(123.45, group, from.id, from.id), 123.45)
+    const converted = convertMeasurement(123.45, group, from.id, to.id)
+    const back = convertMeasurement(converted, group, to.id, from.id)
+    assert.ok(Math.abs(back - 123.45) < 1e-8, `${group}: ${from.id}/${to.id}`)
+  }
+})
+test('単位: 全角・空欄・無効値・桁あふれ・負のゼロ', () => {
+  assert.equal(parseMeasurement(' －４０．５ '), -40.5)
+  assert.equal(parseMeasurement('１Ｅ３'), 1000)
+  assert.equal(formatMeasurement(-0), '0')
+  assert.ok(!formatMeasurement(Number.MAX_VALUE).includes('Infinity'))
+  assert.equal(formatMeasurement(1 / 3), '0.333333333333')
+  for (const input of ['', ' ', 'Infinity', 'NaN', '1,000', '1cm', '0x10', '1e309', '1e-999']) assert.throws(() => parseMeasurement(input))
+  assert.throws(() => convertMeasurement(-1, 'length', 'm', 'cm'))
+  assert.throws(() => convertMeasurement(1e308, 'length', 'km', 'mm'))
+  assert.throws(() => convertMeasurement(1, 'length', 'unknown', 'm'))
+  assert.throws(() => formatMeasurement(Infinity))
+})
+test('割り勘: 1000円3人・切り上げ集金・0円・1円', () => {
+  assert.deepEqual(splitBill(1000, 3, 'exact').groups, [{ amount: 334, count: 1 }, { amount: 333, count: 2 }])
+  const rounded = splitBill(1000, 3, '100')
+  assert.deepEqual(rounded.groups, [{ amount: 400, count: 3 }])
+  assert.equal(rounded.change, 200)
+  assert.equal(splitBill(1000, 3, '10').change, 20)
+  assert.deepEqual(splitBill(1, 3, 'exact').groups, [{ amount: 1, count: 1 }, { amount: 0, count: 2 }])
+  for (const mode of ['exact', '10', '100']) assert.equal(splitBill(0, 3, mode).collected, 0)
+  assert.ok(billSummary(rounded).includes('余り：200円'))
+})
+test('割り勘: 人数・集金・余りの保存則と境界', () => {
+  for (const total of [0, 1, 2, 99, 1000, 999999999, 1000000000]) for (let people = 1; people <= 100; people++) for (const mode of ['exact', '10', '100']) {
+    const result = splitBill(total, people, mode)
+    assert.equal(result.groups.reduce((sum, g) => sum + g.count, 0), people)
+    assert.equal(result.groups.reduce((sum, g) => sum + g.amount * g.count, 0), result.collected)
+    assert.equal(result.collected - result.change, total)
+    assert.ok(result.change >= 0)
+    if (mode === 'exact') assert.equal(result.change, 0)
+    else { assert.ok(result.change < people * Number(mode)); assert.equal(result.groups[0].amount % Number(mode), 0) }
+  }
+})
+test('割り勘: 全角と不正な金額・人数を拒否', () => {
+  assert.equal(parseBillInteger('１０００', 0, 1e9, '金額'), 1000)
+  for (const total of [-1, 0.5, 1e9 + 1, Infinity, NaN]) assert.throws(() => splitBill(total, 3, 'exact'))
+  for (const people of [0, -1, 101, 1.5, Infinity, NaN]) assert.throws(() => splitBill(1000, people, 'exact'))
+  for (const text of ['', '1.5', '-1', '1,000', 'Infinity']) assert.throws(() => parseBillInteger(text, 0, 1e9, '金額'))
+})
+test('抽選: 候補境界・空行・重複・Unicode・HTML文字列', () => {
+  assert.deepEqual(parseCandidates(' A \r\n\r\n 🍵\n<img src=x> '), ['A', '🍵', '<img src=x>'])
+  assert.equal(parseCandidates(`${'🍵'.repeat(50)}\nB`)[0].length, 100)
+  assert.throws(() => parseCandidates(`${'🍵'.repeat(51)}\nB`))
+  assert.equal(parseCandidates(Array.from({ length: 20 }, (_, i) => String(i)).join('\n')).length, 20)
+  for (const text of ['', 'A', 'A\n A ', 'é\ne\u0301', Array.from({ length: 21 }, (_, i) => String(i)).join('\n')]) assert.throws(() => parseCandidates(text))
+})
+test('抽選: rejection sampling・等確率の剰余・乱数失敗', () => {
+  let calls = 0
+  assert.equal(uniformIndex(3, () => ++calls === 1 ? 0xffffffff : 4), 1)
+  assert.equal(calls, 2)
+  for (let size = 1; size <= 20; size++) {
+    const counts = Array(size).fill(0)
+    for (let value = 0; value < size * 10; value++) counts[uniformIndex(size, () => value)]++
+    assert.deepEqual(counts, Array(size).fill(10))
+  }
+  assert.throws(() => uniformIndex(3, () => 0xffffffff))
+  for (const value of [-1, 2 ** 32, 0.5, NaN]) assert.throws(() => uniformIndex(2, () => value))
+  for (const size of [0, 21, 1.5]) assert.throws(() => uniformIndex(size))
+})
+test('抽選: 選択済み除外・全件終了・結果と針の一致', () => {
+  assert.deepEqual(remainingCandidates(['A', 'B'], ['A'], true), ['B'])
+  assert.deepEqual(remainingCandidates(['A', 'B'], ['A', 'B'], true), [])
+  assert.deepEqual(remainingCandidates(['A', 'B'], ['A'], false), ['A', 'B'])
+  for (let size = 1; size <= 20; size++) for (let index = 0; index < size; index++) {
+    const rotation = wheelRotation(7560, index, size)
+    assert.ok(rotation >= 9360)
+    assert.ok(Math.abs((rotation + (index + .5) * 360 / size) % 360) < 1e-8)
+  }
+})
+test('一般3ツール: メタデータ・ルート・棚への復元', () => {
+  const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8')
+  const ids = ['unit-converter', 'bill-splitter', 'roulette-picker']
+  for (const [index, component] of ['UnitConverter', 'BillSplitter', 'RoulettePicker'].entries()) {
+    const tool = tools.find(tool => tool.id === ids[index])
+    assert.equal(tool.category, 'general')
+    assert.ok(tool.keywords.length && tool.description)
+    assert.ok(app.includes(`<Route path="${tool.path}" element={<${component} />} />`))
+  }
+  assert.deepEqual(parseShelf(JSON.stringify({ version: 1, favorites: ids, recent: ids })).favorites, ids)
 })

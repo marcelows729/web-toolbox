@@ -1,6 +1,7 @@
 import type { Tool } from '../../types/tool'
 
 const marks: Record<string, string> = {
+  'unit-converter': '↔', 'bill-splitter': '¥', 'roulette-picker': '◎',
   'json-formatter': '{ }', 'sql-in-generator': 'IN', 'timestamp-converter': '01:',
   'character-counter': 'Aa', 'url-encode-decode': '%', 'base64-encode-decode': '64',
   'uuid-generator': '#', 'date-calculator': '31', 'japanese-era-converter': '暦',

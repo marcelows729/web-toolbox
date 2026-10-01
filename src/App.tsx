@@ -19,6 +19,9 @@ import RadixConverter from './tools/radix-converter/RadixConverter'
 import HtmlEscape from './tools/html-escape/HtmlEscape'
 import PercentageCalculator from './tools/percentage-calculator/PercentageCalculator'
 import ToolShelfProvider from './state/ToolShelfProvider'
+import UnitConverter from './tools/unit-converter/UnitConverter'
+import BillSplitter from './tools/bill-splitter/BillSplitter'
+import RoulettePicker from './tools/roulette-picker/RoulettePicker'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -98,6 +101,9 @@ function App() {
           <Route path="/tools/radix-converter" element={<RadixConverter />} />
           <Route path="/tools/html-escape" element={<HtmlEscape />} />
           <Route path="/tools/percentage-calculator" element={<PercentageCalculator />} />
+          <Route path="/tools/unit-converter" element={<UnitConverter />} />
+          <Route path="/tools/bill-splitter" element={<BillSplitter />} />
+          <Route path="/tools/roulette-picker" element={<RoulettePicker />} />
         </Route>
       </Routes>
       </ToolShelfProvider>

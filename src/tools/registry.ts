@@ -1,6 +1,9 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'unit-converter', name: '単位変換', description: '長さ・重量・体積・面積・温度を固定換算します。', category: 'general', keywords: ['単位', '長さ', '重量', '体積', '面積', '温度', 'インチ', 'unit', 'convert'], path: '/tools/unit-converter', relatedTools: ['percentage-calculator'] },
+  { id: 'bill-splitter', name: '割り勘計算', description: '正確な配分や同額の集金と余りを計算します。', category: 'general', keywords: ['割り勘', '円', '人数', '集金', '会計', 'bill', 'split'], path: '/tools/bill-splitter', relatedTools: ['percentage-calculator'] },
+  { id: 'roulette-picker', name: 'ルーレット抽選', description: '候補を同じ確率で選び、選択済みを除外できます。', category: 'general', keywords: ['ルーレット', '抽選', 'くじ', 'ランダム', '選ぶ', 'roulette', 'random'], path: '/tools/roulette-picker' },
   {
     id: 'json-formatter',
     name: 'JSON Formatter',

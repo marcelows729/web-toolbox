@@ -29,9 +29,9 @@ export default function HomePage() {
           <h1>ちいさな手間を、<br /><span>さっと、ひとつに。</span></h1>
           <p className="subtitle">ちょっと便利なツールを、ポケットに。<br />変換も、計算も、ひと息で。いつもの作業に余裕を。</p>
           <a href="#tool-search" className="hero-cta">道具を探す <span aria-hidden="true">↓</span></a>
-          <div className="hero-facts"><span><strong>16</strong> の小さな道具</span><span>登録不要</span><span>ブラウザ内で処理</span></div>
+          <div className="hero-facts"><span><strong>{tools.length}</strong> の小さな道具</span><span>登録不要</span><span>ブラウザ内で処理</span></div>
         </div>
-        <div className="pocket-scene"><div className="pocket-label"><span>IN YOUR POCKET</span><span>01 — 16</span></div>
+        <div className="pocket-scene"><div className="pocket-label"><span>IN YOUR POCKET</span><span>01 — {tools.length}</span></div>
           <div className="pocket-stack">{['json-formatter', 'character-counter', 'date-calculator'].map((id, index) => {
             const tool = tools.find(item => item.id === id)!
             return <Link to={tool.path} key={id} className={`pocket-ticket pocket-ticket--${index}`}>
