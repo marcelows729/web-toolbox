@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
+import NotFoundPage from './pages/NotFoundPage'
 import Base64EncodeDecode from './tools/base64-encode-decode/Base64EncodeDecode'
 import CharacterCounter from './tools/character-counter/CharacterCounter'
 import DateCalculator from './tools/date-calculator/DateCalculator'
@@ -112,6 +113,7 @@ function App() {
           <Route path="/tools/pocket-companion" element={<PocketCompanion />} />
           <Route path="/tools/image-resizer" element={<ImageResizer />} />
           <Route path="/tools/image-joiner" element={<ImageJoiner />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
       </ToolShelfProvider>

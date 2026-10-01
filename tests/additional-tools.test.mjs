@@ -37,11 +37,11 @@ registerHooks({
   },
 })
 
-const { calculateCidr } = await import('../src/tools/ipv4-cidr/Ipv4Cidr.tsx')
-const { sha256Bytes, sha256Text, validateHashSize, normalizeExpected, MAX_HASH_BYTES } = await import('../src/tools/sha256/Sha256.tsx')
-const { convertRadix } = await import('../src/tools/radix-converter/RadixConverter.tsx')
-const { escapeHtml, unescapeHtml } = await import('../src/tools/html-escape/HtmlEscape.tsx')
-const { calculatePercentage } = await import('../src/tools/percentage-calculator/PercentageCalculator.tsx')
+const { calculateCidr } = await import('../src/tools/ipv4-cidr/cidr.ts')
+const { sha256Bytes, sha256Text, validateHashSize, normalizeExpected, MAX_HASH_BYTES } = await import('../src/tools/sha256/hash.ts')
+const { convertRadix } = await import('../src/tools/radix-converter/radix.ts')
+const { escapeHtml, unescapeHtml } = await import('../src/tools/html-escape/htmlEntities.ts')
+const { calculatePercentage } = await import('../src/tools/percentage-calculator/percentage.ts')
 const { default: BrowserTool } = await import('../src/components/tools/BrowserTool.tsx')
 const { tools } = await import('../src/tools/registry.ts')
 
@@ -561,4 +561,32 @@ test('画像2ツール: 登録・ルートと画像内容を保存送信しな�
     const tool=tools.find(tool=>tool.id===id);assert.equal(tool.category,'general');assert.ok(tool.keywords.includes('画像'));assert.ok(app.includes(`<Route path="${tool.path}" element={<${component} />} />`))
   }
   for(const file of ['imageBrowser.ts','useImageWork.ts'])assert.ok(!/fetch\s*\(|localStorage|sessionStorage|URLSearchParams|sendBeacon/.test(readFileSync(new URL(`../src/tools/local-image/${file}`,import.meta.url),'utf8')))
+})
+
+const { normalizeToolSearch, filterToolList } = await import('../src/utils/toolSearch.ts')
+const { tools: searchTools } = await import('../src/tools/registry.ts')
+test('Search normalizes width, case, kana and whitespace', () => {
+  assert.equal(normalizeToolSearch(' ＱＲ　ﾊｯｼｭ '), 'qr はっしゅ')
+  assert.equal(filterToolList(searchTools, '　 ', 'all').length, 23)
+})
+test('Japanese purpose aliases find all 23 tools', () => {
+  const cases = [["ジェイソン","json-formatter"],["エスキューエル","sql-in-generator"],["ﾀｲﾑｽﾀﾝﾌﾟ","timestamp-converter"],["文字を数える","character-counter"],["ＵＲＬ　エンコード","url-encode-decode"],["ベース６４","base64-encode-decode"],["識別子","uuid-generator"],["日にち","date-calculator"],["元号","japanese-era-converter"],["ＱＲ　コード","qr-code-generator"],["文章比較","text-diff"],["サブネット計算","ipv4-cidr"],["ﾊｯｼｭ","sha256"],["十六進数","radix-converter"],["タグを文字に","html-escape"],["百分率","percentage-calculator"],["写真を小さく","image-resizer"],["写真をまとめる","image-joiner"],["休みの日","holiday-style"],["相棒を選ぶ","pocket-companion"],["重さ","unit-converter"],["わりかん","bill-splitter"],["くじ引き","roulette-picker"]]
+  for (const [query,id] of cases) assert.ok(filterToolList(searchTools,query,'all').some(tool=>tool.id===id),query)
+})
+test('Search intersects words/category/shelf without changing order or source', () => {
+  const shelf = ['sha256','json-formatter','image-resizer'].map(id=>searchTools.find(tool=>tool.id===id))
+  const before = [...shelf]
+  assert.deepEqual(filterToolList(shelf,'','all'),before)
+  assert.deepEqual(filterToolList(shelf,'ＪＳＯＮ　整形','developer').map(tool=>tool.id),['json-formatter'])
+  assert.deepEqual(filterToolList(shelf,'JSON','general'),[])
+  assert.deepEqual(filterToolList(shelf,'unlikely-query-xyz','all'),[])
+  assert.deepEqual(shelf,before)
+})
+test('Unknown routes offer Japanese home guidance and three existing tools', async () => {
+  const { MemoryRouter } = await import('react-router-dom')
+  const { default: NotFoundPage } = await import('../src/pages/NotFoundPage.tsx')
+  const markup = renderToStaticMarkup(createElement(MemoryRouter,null,createElement(NotFoundPage)))
+  assert.ok(markup.includes('このページは見つかりませんでした'))
+  assert.ok(markup.includes('href="/"'))
+  for (const id of ['character-counter','image-resizer','date-calculator']) assert.ok(markup.includes('href="/tools/'+id+'"'))
 })

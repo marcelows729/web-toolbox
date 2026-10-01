@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useToolResult } from '../../components/tools/BrowserTool'
+import { useToolResult } from '../../components/tools/useToolResult'
 import { calculateQuiz, PLAY_NOTICE, quizResultText } from './quiz'
 import type { QuizDefinition, QuizResult } from './quiz'
 import QuizIllustration from './QuizIllustration'

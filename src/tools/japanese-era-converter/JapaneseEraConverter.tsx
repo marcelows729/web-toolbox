@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
-import DatePartsInput, { composeIsoDate, type DatePartsValue } from '../../components/forms/DatePartsInput.tsx'
+import DatePartsInput from '../../components/forms/DatePartsInput.tsx'
+import { composeIsoDate, type DatePartsValue } from '../../components/forms/dateParts'
 import { ERA_DEFINITIONS, gregorianToJapaneseEra, japaneseEraToGregorian, type EraName } from './japaneseEra'
 
 type EraFormState = {

@@ -1101,3 +1101,9 @@ button[disabled] { transform: none; }
 .image-result a.primary-button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 12px 20px; border-radius: 12px; text-decoration: none; font-weight: 600; color: var(--primary-contrast); }
 .image-result a.primary-button:hover { background: var(--accent-hover); }
 .image-result a.primary-button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.empty-recovery { justify-content: center; }
+.not-found-panel h1 { font-size: clamp(24px, 4vw, 38px); line-height: 1.6; }
+.not-found-panel h2 { margin-top: 36px; }
+.not-found-links { padding-left: 24px; }
+.not-found-links li { margin: 24px 0; line-height: 1.8; }
+.not-found-links p { color: var(--text-soft); font-size: 13px; }

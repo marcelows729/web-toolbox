@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import DatePartsInput, { composeIsoDate, type DatePartsValue } from '../../components/forms/DatePartsInput.tsx'
+import DatePartsInput from '../../components/forms/DatePartsInput.tsx'
+import { composeIsoDate, type DatePartsValue } from '../../components/forms/dateParts'
 import { getFourDigitYearError } from '../../utils/dateInputValidation.ts'
 
 type TimestampUnit = 'seconds' | 'milliseconds'

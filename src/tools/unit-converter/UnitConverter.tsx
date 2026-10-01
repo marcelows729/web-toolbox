@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import BrowserTool, { useToolResult } from '../../components/tools/BrowserTool'
+import BrowserTool from '../../components/tools/BrowserTool'
+import { useToolResult } from '../../components/tools/useToolResult'
 import { convertMeasurement, formatMeasurement, parseMeasurement, unitGroups } from './conversion'
 import type { UnitGroup } from './conversion'
 
