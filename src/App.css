@@ -195,12 +195,13 @@
 }
 
 .category-filter:hover {
+  background: var(--surface-alt);
   border-color: var(--accent);
 }
 
 .category-filter.is-selected {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--accent);
+  border-color: var(--accent);
   color: var(--primary-contrast);
 }
 

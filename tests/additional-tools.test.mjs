@@ -211,3 +211,26 @@ test('登録: 16件、ID・パス重複なし、新規5件に明示的ルート�
     for (const related of tool.relatedTools ?? []) assert.ok(tools.some(entry => entry.id === related))
   }
 })
+
+test('カテゴリ: light/darkの選択・非選択・hoverで文字コントラストを保つ', () => {
+  const css = readFileSync(new URL('../src/App.css', import.meta.url), 'utf8')
+  const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((m, order) => ({ selector: m[1].trim(), body: m[2], order }))
+  const declarations = body => Object.fromEntries([...body.matchAll(/([\w-]+)\s*:\s*([^;]+);/g)].map(m => [m[1], m[2].trim()]))
+  const luminance = hex => {
+    assert.match(hex, /^#[0-9a-f]{6}$/i)
+    const rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
+    return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722
+  }
+  for (const theme of ['light', 'dark']) {
+    const variables = Object.assign({}, ...rules.filter(r => r.selector === ':root' || (theme === 'dark' && r.selector === ":root[data-theme='dark']")).map(r => declarations(r.body)))
+    const resolve = value => value.replace(/var\((--[\w-]+)\)/g, (_, key) => variables[key])
+    for (const selected of [false, true]) for (const hover of [false, true]) {
+      const applicable = new Set(['button', '.category-filter', ...(hover ? ['button:hover', '.category-filter:hover'] : []), ...(selected ? ['.category-filter.is-selected'] : [])])
+      const matches = rules.filter(r => applicable.has(r.selector)).map(r => ({ ...r, specificity: (r.selector.match(/[.:]/g) ?? []).length * 100 + (r.selector.startsWith('button') ? 1 : 0) })).sort((a, b) => a.specificity - b.specificity || a.order - b.order)
+      const style = Object.assign({}, ...matches.map(r => declarations(r.body)))
+      const bg = luminance(resolve(style.background))
+      const fg = luminance(resolve(style.color))
+      assert.ok((Math.max(bg, fg) + 0.05) / (Math.min(bg, fg) + 0.05) >= 4.5, `${theme}, selected=${selected}, hover=${hover}`)
+    }
+  }
+})
