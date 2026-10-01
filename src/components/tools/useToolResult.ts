@@ -54,4 +54,3 @@ export function useToolResult() {
 
   return { output, error, feedback, busy, reset, run, copy }
 }
-

@@ -43,4 +43,3 @@ export const parseIsoDateToParts = (value: string): DatePartsValue => {
     day: day.slice(0, 2),
   }
 }
-

@@ -17,4 +17,3 @@ export function convertRadix(input: string, radix: number): string {
   const value = negative ? -absolute : absolute
   return [2, 8, 10, 16].map(base => `${base}進数: ${value.toString(base)}`).join('\n')
 }
-

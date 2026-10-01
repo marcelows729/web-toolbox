@@ -32,4 +32,3 @@ export async function sha256Text(text: string): Promise<string> {
   validateHashSize(bytes.byteLength)
   return sha256Bytes(bytes.buffer)
 }
-

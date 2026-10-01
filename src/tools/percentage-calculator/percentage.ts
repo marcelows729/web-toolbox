@@ -44,4 +44,3 @@ export function calculatePercentage(mode: PercentageMode, first: string, second:
       throw new Error('計算方法を選択してください。')
   }
 }
-

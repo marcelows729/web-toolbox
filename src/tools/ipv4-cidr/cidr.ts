@@ -31,4 +31,3 @@ export function calculateCidr(address: string, prefixText: string) {
     prefix,
   }
 }
-
