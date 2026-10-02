@@ -7,13 +7,13 @@ import { tools } from '../src/tools/registry.ts'
 import { HOME_DESCRIPTION, HOME_TITLE, pageMetadata } from '../src/utils/pageMetadata.ts'
 import DatePartsInput from '../src/components/forms/DatePartsInput.tsx'
 import UuidGenerator from '../src/tools/uuid-generator/UuidGenerator.tsx'
-test('ページ情報: 全30ツールの名称と説明、URL大小文字と末尾スラッシュ',()=>{
+test('ページ情報: 全31ツールの名称と説明、URL大小文字と末尾スラッシュ',()=>{
  const titles=new Set()
  for(const tool of tools){
    for(const path of [tool.path,tool.path+'/',tool.path.toUpperCase()])assert.deepEqual(pageMetadata(path),{title:tool.name+' | ぽけつる',description:tool.description})
    titles.add(pageMetadata(tool.path).title)
  }
- assert.equal(titles.size, 30)
+ assert.equal(titles.size, 31)
 })
 test('ページ情報: トップと未知URLを独立した内容に戻す',()=>{
  assert.deepEqual(pageMetadata('/'),{title:HOME_TITLE,description:HOME_DESCRIPTION})

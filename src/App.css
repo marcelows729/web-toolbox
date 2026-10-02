@@ -1236,3 +1236,15 @@ button, a, input, select, textarea { scroll-margin: 24px; }
 @media (max-width: 600px) { .image-rotate-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .text-replace-field + .text-replace-field { margin-top: 20px; }
+
+.aspect-presets { flex-wrap: wrap; margin: 20px 0; }
+.aspect-result dl { margin: 0; }
+.aspect-result dl > div + div { margin-top: 18px; }
+.aspect-result dt { color: var(--text-soft); font-size: 13px; }
+.aspect-result dd { margin: 6px 0 0; font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+.aspect-presets .is-selected { background: var(--accent); color: var(--primary-contrast); border-color: var(--accent); }
+@media (max-width: 600px) {
+  .aspect-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #aspect-swap { grid-column: 1 / -1; }
+}
