@@ -1,5 +1,6 @@
 export const IMAGE_LIMITS = { fileBytes: 8 * 1024 * 1024, totalBytes: 24 * 1024 * 1024, imagePixels: 12000000, totalPixels: 20000000, outputPixels: 12000000, side: 8192, outputBytes: 16 * 1024 * 1024 }
 export type ImageMime = 'image/jpeg' | 'image/png' | 'image/webp'
+export type ImageTransform = { a: number; b: number; c: number; d: number; e: number; f: number }
 export type ImageSize = { width: number; height: number }
 export const imageExtensions: Record<ImageMime, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }
 export function checkDimensions(size: ImageSize, maxPixels = IMAGE_LIMITS.imagePixels): void {

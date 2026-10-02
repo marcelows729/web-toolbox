@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { prepareImages } from './imageBrowser'
 import type { ImageOutput, LocalImage } from './imageBrowser'
 let workQueue: Promise<unknown> = Promise.resolve()
@@ -15,14 +15,14 @@ export function useImageWork() {
   useEffect(() => { mounted.current = true; const dispose = () => { mounted.current = false; revision.current++ }; return dispose }, [])
   const resetResult = () => { revision.current++; setOutput(null); setBusy(false); setLoading(false); setError('') }
   const clear = () => { resetResult(); setImages([]) }
-  const run = async (task: (isCurrent: () => boolean) => Promise<ImageOutput>) => {
+  const run = useCallback(async (task: (isCurrent: () => boolean) => Promise<ImageOutput>) => {
     const token = ++revision.current
     const isCurrent = () => mounted.current && revision.current === token
     setOutput(null); setError(''); setBusy(true); setLoading(false)
     try { const next = await enqueue(() => task(isCurrent)); if (isCurrent()) setOutput(next) }
     catch (cause) { if (isCurrent()) setError(cause instanceof Error ? cause.message : '画像処理に失敗しました。') }
     finally { if (isCurrent()) { setBusy(false); setLoading(false) } }
-  }
+  }, [])
   const load = async (files: File[], min: number, max: number) => {
     const token = ++revision.current
     const isCurrent = () => mounted.current && revision.current === token

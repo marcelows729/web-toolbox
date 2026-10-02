@@ -33,6 +33,7 @@ const UnitPriceComparison = lazy(() => import('./tools/unit-price-comparison/Uni
 const RecipeScaler = lazy(() => import('./tools/recipe-scaler/RecipeScaler'))
 const TextFormatter = lazy(() => import('./tools/text-formatter/TextFormatter'))
 const DurationCalculator = lazy(() => import('./tools/duration-calculator/DurationCalculator'))
+const ImageRotate = lazy(() => import('./tools/image-rotate/ImageRotate'))
 const RandomGrouping = lazy(() => import('./tools/random-grouping/RandomGrouping'))
 
 type ThemeMode = 'light' | 'dark'
@@ -117,6 +118,7 @@ function App() {
           <Route path="/tools/roulette-picker" element={<RoulettePicker />} />
           <Route path="/tools/holiday-style" element={<HolidayStyle />} />
           <Route path="/tools/pocket-companion" element={<PocketCompanion />} />
+          <Route path="/tools/image-rotate" element={<ImageRotate />} />
           <Route path="/tools/image-resizer" element={<ImageResizer />} />
           <Route path="/tools/image-joiner" element={<ImageJoiner />} />
           <Route path="/tools/unit-price-comparison" element={<UnitPriceComparison />} />

@@ -1,6 +1,6 @@
 import { inspectImage } from './imageHeader'
 import { checkDimensions, IMAGE_LIMITS, outputFilename } from './imageMath'
-import type { ImageMime, ImagePlacement, ImageSize } from './imageMath'
+import type { ImageMime, ImagePlacement, ImageSize, ImageTransform } from './imageMath'
 export type LocalImage = ImageSize & { file: File; mime: ImageMime; thumbnail: Blob }
 export type ImageOutput = ImageSize & { blob: Blob; name: string; mime: ImageMime }
 export function abortIfStale(isCurrent: () => boolean): void { if (!isCurrent()) throw new DOMException('中断しました。', 'AbortError') }
@@ -55,8 +55,9 @@ export async function prepareImages(files: File[], min: number, max: number, isC
   }
   return prepared
 }
-export async function renderImages(images: LocalImage[], placements: ImagePlacement[], size: ImageSize, mime: ImageMime, quality: number, background: 'transparent' | 'white' | 'black', isCurrent: () => boolean): Promise<ImageOutput> {
+export async function renderImages(images: LocalImage[], placements: ImagePlacement[], size: ImageSize, mime: ImageMime, quality: number, background: 'transparent' | 'white' | 'black', isCurrent: () => boolean, options?: { transform: ImageTransform; suffix: string }): Promise<ImageOutput> {
   checkDimensions(size, IMAGE_LIMITS.outputPixels)
+  if (options && images.length !== 1) throw new Error('回転・反転は1枚の画像だけに使えます。')
   abortIfStale(isCurrent)
   const canvas = document.createElement('canvas'); canvas.width = size.width; canvas.height = size.height
   try {
@@ -67,11 +68,11 @@ export async function renderImages(images: LocalImage[], placements: ImagePlacem
     for (const [index, image] of images.entries()) {
       abortIfStale(isCurrent)
       const bitmap = await decode(image.file)
-      try { abortIfStale(isCurrent); checkDimensions(bitmap); if (bitmap.width !== image.width || bitmap.height !== image.height) throw new Error('画像の読み込み寸法が変わりました。画像を選び直してください。'); const place = placements[index]; context.drawImage(bitmap, place.x, place.y, place.width, place.height) }
+      try { abortIfStale(isCurrent); checkDimensions(bitmap); if (bitmap.width !== image.width || bitmap.height !== image.height) throw new Error('画像の読み込み寸法が変わりました。画像を選び直してください。'); const place = placements[index]; if (options) { const { a,b,c,d,e,f } = options.transform; context.setTransform(a,b,c,d,e,f); context.imageSmoothingEnabled = false } context.drawImage(bitmap, place.x, place.y, place.width, place.height) }
       finally { bitmap.close() }
     }
     const blob = await encodeCanvas(canvas, mime, quality)
     abortIfStale(isCurrent)
-    return { ...size, blob, mime, name: images.length === 1 ? outputFilename(images[0].file.name, 'resized', mime) : `poketsuru-joined.${mime === 'image/jpeg' ? 'jpg' : mime === 'image/webp' ? 'webp' : 'png'}` }
+    return { ...size, blob, mime, name: images.length === 1 ? outputFilename(images[0].file.name, options?.suffix ?? 'resized', mime) : `poketsuru-joined.${mime === 'image/jpeg' ? 'jpg' : mime === 'image/webp' ? 'webp' : 'png'}` }
   } finally { canvas.width = 0; canvas.height = 0 }
 }
