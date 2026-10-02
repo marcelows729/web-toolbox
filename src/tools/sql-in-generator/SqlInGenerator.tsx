@@ -1,106 +1,33 @@
-import { useEffect, useMemo, useState } from 'react'
-
-type QuoteMode = 'string' | 'number'
-
-const normalizeInput = (value: string): string[] =>
-  value
-    .split(/[\n,]+/)
-    .map((item) => item.trim())
-    .filter((item) => item.length > 0)
-
-const escapeSqlString = (value: string) => value.replace(/'/g, "''")
-
-const isValidSqlNumberLiteral = (value: string) => /^[-+]?(?:\d+\.\d+|\d+|\.\d+)$/.test(value)
-
-const buildSqlInList = (input: string, quoteMode: QuoteMode, removeDuplicates: boolean) => {
-  const normalizedValues = normalizeInput(input)
-
-  if (normalizedValues.length === 0) {
-    return {
-      output: '',
-      error: '入力値がありません。値を入力してください。',
-      count: null,
-    }
-  }
-
-  const values = removeDuplicates ? Array.from(new Set(normalizedValues)) : normalizedValues
-
-  if (quoteMode === 'number') {
-    const invalidValues = values.filter((value) => !isValidSqlNumberLiteral(value))
-
-    if (invalidValues.length > 0) {
-      return {
-        output: '',
-        error: `数値として扱えない値があります: ${invalidValues.join(', ')}`,
-        count: null,
-      }
-    }
-
-    return {
-      output: `(${values.join(', ')})`,
-      error: '',
-      count: values.length,
-    }
-  }
-
-  return {
-    output: `(${values.map((value) => `'${escapeSqlString(value)}'`).join(', ')})`,
-    error: '',
-    count: values.length,
-  }
-}
+import { useState } from 'react'
+import { useToolResult } from '../../components/tools/useToolResult'
+import { buildSqlInList, type QuoteMode } from './conversion'
 
 export default function SqlInGenerator() {
   const [input, setInput] = useState('')
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState('')
+  const result = useToolResult()
+  const output = result.output ?? ''
+  const error = result.error
+  const copyFeedback = result.feedback
+  const hasOutput = output.trim().length > 0
+  const handleCopy = () => { if (hasOutput) void result.copy() }
   const [resultCount, setResultCount] = useState<number | null>(null)
-  const [copyFeedback, setCopyFeedback] = useState('')
   const [quoteMode, setQuoteMode] = useState<QuoteMode>('string')
   const [removeDuplicates, setRemoveDuplicates] = useState(true)
-
-  const hasOutput = useMemo(() => output.trim().length > 0, [output])
-
-  useEffect(() => {
-    if (!copyFeedback) {
-      return
-    }
-
-    const timer = window.setTimeout(() => {
-      setCopyFeedback('')
-    }, 1800)
-
-    return () => window.clearTimeout(timer)
-  }, [copyFeedback])
-
+  const resetResult = () => { result.reset(); setResultCount(null) }
+  const changeQuoteMode = (mode: QuoteMode) => {
+    if (mode !== quoteMode) { setQuoteMode(mode); resetResult() }
+  }
   const handleGenerate = () => {
-    const result = buildSqlInList(input, quoteMode, removeDuplicates)
-    setOutput(result.output)
-    setError(result.error)
-    setResultCount(result.count)
-  }
-
-  const handleClear = () => {
-    setInput('')
-    setOutput('')
-    setError('')
     setResultCount(null)
-    setCopyFeedback('')
-    setQuoteMode('string')
-    setRemoveDuplicates(true)
+    void result.run(() => {
+      const generated = buildSqlInList(input, quoteMode, removeDuplicates)
+      if (generated.error) throw new Error(generated.error)
+      setResultCount(generated.count)
+      return generated.output
+    })
   }
-
-  const handleCopy = async () => {
-    if (!hasOutput) {
-      return
-    }
-
-    try {
-      await navigator.clipboard.writeText(output)
-      setCopyFeedback('コピーしました')
-    } catch {
-      setCopyFeedback('コピーに失敗しました')
-    }
+  const handleClear = () => {
+    setInput(''); resetResult(); setQuoteMode('string'); setRemoveDuplicates(true)
   }
 
   return (
@@ -118,7 +45,7 @@ export default function SqlInGenerator() {
           <textarea
             id="sql-in-input"
             value={input}
-            onChange={(event) => setInput(event.target.value)}
+            onChange={(event) => { setInput(event.target.value); resetResult() }}
             placeholder="apple\nbanana\norange\nまたは apple,banana,orange"
             rows={12}
           />
@@ -130,7 +57,7 @@ export default function SqlInGenerator() {
                 <button
                   type="button"
                   className={`toggle-option ${quoteMode === 'string' ? 'is-selected' : ''}`}
-                  onClick={() => setQuoteMode('string')}
+                  onClick={() => changeQuoteMode('string')}
                   aria-pressed={quoteMode === 'string'}
                 >
                   文字列
@@ -138,7 +65,7 @@ export default function SqlInGenerator() {
                 <button
                   type="button"
                   className={`toggle-option ${quoteMode === 'number' ? 'is-selected' : ''}`}
-                  onClick={() => setQuoteMode('number')}
+                  onClick={() => changeQuoteMode('number')}
                   aria-pressed={quoteMode === 'number'}
                 >
                   数値
@@ -150,7 +77,7 @@ export default function SqlInGenerator() {
               <input
                 type="checkbox"
                 checked={removeDuplicates}
-                onChange={(event) => setRemoveDuplicates(event.target.checked)}
+                onChange={(event) => { setRemoveDuplicates(event.target.checked); resetResult() }}
               />
               <span>重複を除外する</span>
             </label>
@@ -178,7 +105,7 @@ export default function SqlInGenerator() {
             placeholder="生成された値リストがここに表示されます"
             rows={8}
           />
-          {resultCount !== null && <span className="field-label-sm">件数: {resultCount}件</span>}
+          {hasOutput && resultCount !== null && <span className="field-label-sm">件数: {resultCount}件</span>}
         </div>
 
         {error && <div className="error-box" role="alert">{error}</div>}

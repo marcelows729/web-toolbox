@@ -1,92 +1,27 @@
-import { useMemo, useState } from 'react'
-
-const toBase64 = (text: string) => {
-  const bytes = new TextEncoder().encode(text)
-  let binary = ''
-
-  bytes.forEach((byte) => {
-    binary += String.fromCharCode(byte)
-  })
-
-  return btoa(binary)
-}
-
-const fromBase64 = (base64Text: string) => {
-  const normalized = base64Text.replace(/\s+/g, '')
-  const binary = atob(normalized)
-  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0))
-
-  return new TextDecoder('utf-8', { fatal: true }).decode(bytes)
-}
-
-const getEmptyStateError = (action: 'encode' | 'decode') => {
-  if (action === 'encode') {
-    return '入力が空のため、エンコード結果はありません。'
-  }
-
-  return '入力が空のため、デコード結果はありません。'
-}
+import { useState } from 'react'
+import { useToolResult } from '../../components/tools/useToolResult'
+import { toBase64, fromBase64, getEmptyStateError } from './conversion'
 
 export default function Base64EncodeDecode() {
   const [input, setInput] = useState('')
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState('')
-  const [copyFeedback, setCopyFeedback] = useState('')
-
-  const hasOutput = useMemo(() => output.trim().length > 0, [output])
-
-  const handleEncode = () => {
-    if (!input) {
-      setOutput('')
-      setError(getEmptyStateError('encode'))
-      return
-    }
-
-    try {
-      setError('')
-      setOutput(toBase64(input))
-    } catch {
-      setOutput('')
-      setError('Base64への変換に失敗しました。')
-    }
-  }
-
-  const handleDecode = () => {
-    if (!input) {
-      setOutput('')
-      setError(getEmptyStateError('decode'))
-      return
-    }
-
-    try {
-      const normalized = input.replace(/\s+/g, '')
-      setError('')
-      setOutput(fromBase64(normalized))
-    } catch {
-      setOutput('')
-      setError('正しいBase64形式を入力してください。')
-    }
-  }
-
-  const handleClear = () => {
-    setInput('')
-    setOutput('')
-    setError('')
-    setCopyFeedback('')
-  }
-
-  const handleCopy = async () => {
-    if (!hasOutput) {
-      return
-    }
-
-    try {
-      await navigator.clipboard.writeText(output)
-      setCopyFeedback('コピーしました')
-    } catch {
-      setCopyFeedback('コピーに失敗しました')
-    }
-  }
+  const result = useToolResult()
+  const output = result.output ?? ''
+  const error = result.error
+  const copyFeedback = result.feedback
+  const hasOutput = output.trim().length > 0
+  const handleCopy = () => { if (hasOutput) void result.copy() }
+  const resetResult = result.reset
+  const handleEncode = () => { void result.run(() => {
+    if (!input) throw new Error(getEmptyStateError('encode'))
+    try { return toBase64(input) }
+    catch { throw new Error('Base64への変換に失敗しました。') }
+  }) }
+  const handleDecode = () => { void result.run(() => {
+    if (!input) throw new Error(getEmptyStateError('decode'))
+    try { return fromBase64(input.replace(/\s+/g, '')) }
+    catch { throw new Error('正しいBase64形式を入力してください。') }
+  }) }
+  const handleClear = () => { setInput(''); resetResult() }
 
   return (
     <div className="container tool-page">
@@ -103,7 +38,7 @@ export default function Base64EncodeDecode() {
           <textarea
             id="base64-input"
             value={input}
-            onChange={(event) => setInput(event.target.value)}
+            onChange={(event) => { setInput(event.target.value); resetResult() }}
             placeholder="テキストまたはBase64を入力してください。"
             rows={12}
           />

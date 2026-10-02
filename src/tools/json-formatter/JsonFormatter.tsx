@@ -1,78 +1,26 @@
-import { useEffect, useMemo, useState } from 'react'
-
-const formatJson = (value: string) => {
-  const parsed = JSON.parse(value)
-  return JSON.stringify(parsed, null, 2)
-}
-
-const minifyJson = (value: string) => {
-  const parsed = JSON.parse(value)
-  return JSON.stringify(parsed)
-}
+import { useState } from 'react'
+import { useToolResult } from '../../components/tools/useToolResult'
+import { formatJson, minifyJson } from './conversion'
 
 export default function JsonFormatter() {
   const [input, setInput] = useState('')
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState('')
-  const [copyFeedback, setCopyFeedback] = useState('')
-
-  const hasOutput = useMemo(() => output.trim().length > 0, [output])
-
-  useEffect(() => {
-    if (!copyFeedback) {
-      return
-    }
-
-    const timer = window.setTimeout(() => {
-      setCopyFeedback('')
-    }, 1800)
-
-    return () => window.clearTimeout(timer)
-  }, [copyFeedback])
-
-  const handleFormat = () => {
-    try {
-      const formatted = formatJson(input)
-      setOutput(formatted)
-      setError('')
-    } catch (err) {
+  const result = useToolResult()
+  const output = result.output ?? ''
+  const error = result.error
+  const copyFeedback = result.feedback
+  const hasOutput = output.trim().length > 0
+  const handleCopy = () => { if (hasOutput) void result.copy() }
+  const resetResult = result.reset
+  const convert = (calculate: (value: string) => string) => result.run(() => {
+    try { return calculate(input) }
+    catch (err) {
       const message = err instanceof Error ? err.message : 'JSONの解析に失敗しました。'
-      setError(`JSONの解析に失敗しました: ${message}`)
-      setOutput('')
+      throw new Error(`JSONの解析に失敗しました: ${message}`)
     }
-  }
-
-  const handleMinify = () => {
-    try {
-      const minified = minifyJson(input)
-      setOutput(minified)
-      setError('')
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'JSONの解析に失敗しました。'
-      setError(`JSONの解析に失敗しました: ${message}`)
-      setOutput('')
-    }
-  }
-
-  const handleClear = () => {
-    setInput('')
-    setOutput('')
-    setError('')
-    setCopyFeedback('')
-  }
-
-  const handleCopy = async () => {
-    if (!hasOutput) {
-      return
-    }
-
-    try {
-      await navigator.clipboard.writeText(output)
-      setCopyFeedback('コピーしました')
-    } catch {
-      setCopyFeedback('コピーに失敗しました')
-    }
-  }
+  })
+  const handleFormat = () => { void convert(formatJson) }
+  const handleMinify = () => { void convert(minifyJson) }
+  const handleClear = () => { setInput(''); resetResult() }
 
   return (
     <div className="container tool-page">
@@ -89,7 +37,7 @@ export default function JsonFormatter() {
           <textarea
             id="json-input"
             value={input}
-            onChange={(event) => setInput(event.target.value)}
+            onChange={(event) => { setInput(event.target.value); resetResult() }}
             placeholder="JSONを入力してください"
             rows={12}
           />

@@ -1,86 +1,34 @@
-import { useMemo, useState } from 'react'
-
-type EncodeMode = 'component' | 'full-url'
-
-const getEncodedValue = (text: string, mode: EncodeMode) =>
-  mode === 'component' ? encodeURIComponent(text) : encodeURI(text)
-
-const getDecodedValue = (text: string, mode: EncodeMode) => {
-  if (mode === 'component') {
-    return decodeURIComponent(text)
-  }
-
-  return decodeURI(text)
-}
-
-const getEmptyStateError = (action: 'encode' | 'decode') => {
-  if (action === 'encode') {
-    return '入力が空のため、エンコード結果はありません。'
-  }
-
-  return '入力が空のため、デコード結果はありません。'
-}
+import { useState } from 'react'
+import { useToolResult } from '../../components/tools/useToolResult'
+import { getEncodedValue, getDecodedValue, getEmptyStateError, type EncodeMode } from './conversion'
 
 export default function UrlEncodeDecode() {
   const [input, setInput] = useState('')
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState('')
-  const [copyFeedback, setCopyFeedback] = useState('')
+  const result = useToolResult()
+  const output = result.output ?? ''
+  const error = result.error
+  const copyFeedback = result.feedback
+  const hasOutput = output.trim().length > 0
+  const handleCopy = () => { if (hasOutput) void result.copy() }
   const [encodeMode, setEncodeMode] = useState<EncodeMode>('component')
-
-  const hasOutput = useMemo(() => output.trim().length > 0, [output])
-
-  const handleEncode = () => {
-    if (!input) {
-      setOutput('')
-      setError(getEmptyStateError('encode'))
-      return
-    }
-
-    setError('')
-    setOutput(getEncodedValue(input, encodeMode))
+  const resetResult = result.reset
+  const changeEncodeMode = (mode: EncodeMode) => {
+    if (mode !== encodeMode) { setEncodeMode(mode); resetResult() }
   }
-
-  const handleDecode = () => {
-    if (!input) {
-      setOutput('')
-      setError(getEmptyStateError('decode'))
-      return
-    }
-
-    try {
-      setError('')
-      setOutput(getDecodedValue(input, encodeMode))
-    } catch (caughtError) {
-      const errorMessage = caughtError instanceof URIError
+  const handleEncode = () => { void result.run(() => {
+    if (!input) throw new Error(getEmptyStateError('encode'))
+    return getEncodedValue(input, encodeMode)
+  }) }
+  const handleDecode = () => { void result.run(() => {
+    if (!input) throw new Error(getEmptyStateError('decode'))
+    try { return getDecodedValue(input, encodeMode) }
+    catch (caughtError) {
+      throw new Error(caughtError instanceof URIError
         ? '正しくないURLエンコード形式が含まれています。'
-        : 'URLのデコード中にエラーが発生しました。'
-
-      setOutput('')
-      setError(errorMessage)
+        : 'URLのデコード中にエラーが発生しました。')
     }
-  }
-
-  const handleClear = () => {
-    setInput('')
-    setOutput('')
-    setError('')
-    setCopyFeedback('')
-    setEncodeMode('component')
-  }
-
-  const handleCopy = async () => {
-    if (!hasOutput) {
-      return
-    }
-
-    try {
-      await navigator.clipboard.writeText(output)
-      setCopyFeedback('コピーしました')
-    } catch {
-      setCopyFeedback('コピーに失敗しました')
-    }
-  }
+  }) }
+  const handleClear = () => { setInput(''); resetResult(); setEncodeMode('component') }
 
   return (
     <div className="container tool-page">
@@ -97,7 +45,7 @@ export default function UrlEncodeDecode() {
           <textarea
             id="url-encode-input"
             value={input}
-            onChange={(event) => setInput(event.target.value)}
+            onChange={(event) => { setInput(event.target.value); resetResult() }}
             placeholder="変換したい文字列またはURLを入力してください。"
             rows={12}
           />
@@ -109,7 +57,7 @@ export default function UrlEncodeDecode() {
                 <button
                   type="button"
                   className={`toggle-option ${encodeMode === 'component' ? 'is-selected' : ''}`}
-                  onClick={() => setEncodeMode('component')}
+                  onClick={() => changeEncodeMode('component')}
                   aria-pressed={encodeMode === 'component'}
                 >
                   文字列 / パラメータ
@@ -117,7 +65,7 @@ export default function UrlEncodeDecode() {
                 <button
                   type="button"
                   className={`toggle-option ${encodeMode === 'full-url' ? 'is-selected' : ''}`}
-                  onClick={() => setEncodeMode('full-url')}
+                  onClick={() => changeEncodeMode('full-url')}
                   aria-pressed={encodeMode === 'full-url'}
                 >
                   URL全体
