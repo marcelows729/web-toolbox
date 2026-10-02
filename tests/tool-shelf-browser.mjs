@@ -41,7 +41,7 @@ await navigate('/')
  await click('.collection-button:nth-child(3)')
  assert.deepEqual(await visible(),[ids[1],ids[0]])
  await evaluate(`localStorage.removeItem('${key}')`);await navigate('/')
- console.log('PASS: all34 favorites order/remove/readd/reload; recent max8/dedup/revisit/clear; corrupt/version/oversize/deleted IDs')
+ console.log('PASS: all35 favorites order/remove/readd/reload; recent max8/dedup/revisit/clear; corrupt/version/oversize/deleted IDs')
 }
 await click('.collection-button:nth-child(1)')
 const created=await send('Target.createTarget',{url:'about:blank'})
