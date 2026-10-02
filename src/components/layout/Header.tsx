@@ -1,12 +1,13 @@
+import type { MouseEventHandler } from 'react'
 import { Link } from 'react-router-dom'
 import brandIcon from '../../assets/brand/icon.png'
 
-type HeaderProps = { theme: 'light' | 'dark'; setTheme: (nextTheme: 'light' | 'dark') => void }
-export default function Header({ theme, setTheme }: HeaderProps) {
+type HeaderProps = { theme: 'light' | 'dark'; homeState?: unknown; onHomeClick?: MouseEventHandler<HTMLAnchorElement>; setTheme: (nextTheme: 'light' | 'dark') => void }
+export default function Header({ theme, setTheme, homeState, onHomeClick }: HeaderProps) {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link to="/" className="brand-link" aria-label="ぽけつるへ戻る">
+        <Link to="/" state={homeState} onClick={onHomeClick} className="brand-link" aria-label="ぽけつるへ戻る">
           <img src={brandIcon} alt="" className="brand-symbol" />
           <span className="brand-wordmark">ぽけつる<small>POKETSURU</small></span>
         </Link>

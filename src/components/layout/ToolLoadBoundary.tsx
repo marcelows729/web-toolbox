@@ -1,8 +1,8 @@
 import { Component } from 'react'
-import type { ReactNode } from 'react'
+import type { ReactNode, MouseEventHandler } from 'react'
 import { Link } from 'react-router-dom'
 
-export default class ToolLoadBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+export default class ToolLoadBoundary extends Component<{ children: ReactNode; homeState?: unknown; onHomeClick?: MouseEventHandler<HTMLAnchorElement> }, { failed: boolean }> {
   state = { failed: false }
   static getDerivedStateFromError() { return { failed: true } }
   render() {
@@ -14,7 +14,7 @@ export default class ToolLoadBoundary extends Component<{ children: ReactNode },
       </div>
       <div className="action-row">
         <button type="button" className="primary-button" onClick={() => window.location.reload()}>再読み込み</button>
-        <Link className="secondary-button tool-load-return" to="/">道具一覧に戻る</Link>
+        <Link className="secondary-button tool-load-return" to="/" state={this.props.homeState} onClick={this.props.onHomeClick}>道具一覧に戻る</Link>
       </div>
     </section>
   }

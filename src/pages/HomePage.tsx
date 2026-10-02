@@ -1,5 +1,7 @@
-import { useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useMemo, useRef } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { readCatalogue, catalogueReturnState } from '../state/catalogueState'
+import type { CatalogueState } from '../state/catalogueState'
 import ToolCard from '../components/tools/ToolCard'
 import ToolMark from '../components/tools/ToolMark'
 import { tools } from '../tools/registry'
@@ -11,9 +13,14 @@ const filterOptions: Array<'all' | ToolCategory> = ['all', 'developer', 'text', 
 type Collection = 'all' | 'favorites' | 'recent'
 const collectionLabels = { all: 'すべての道具', favorites: 'お気に入り', recent: '最近使った道具' }
 export default function HomePage() {
-  const [searchText, setSearchText] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<'all' | ToolCategory>('all')
-  const [collection, setCollection] = useState<Collection>('all')
+  const location = useLocation()
+  const navigate = useNavigate()
+  const catalogue = useMemo(() => readCatalogue(location.state), [location.state])
+  const { query: searchText, category: selectedCategory, collection } = catalogue
+  const updateCatalogue = (patch: Partial<CatalogueState>) => navigate({ pathname: location.pathname, search: location.search, hash: location.hash }, { replace: true, state: { catalogue: { ...catalogue, ...patch } } })
+  const setSearchText = (query: string) => updateCatalogue({ query })
+  const setSelectedCategory = (category: CatalogueState['category']) => updateCatalogue({ category })
+  const setCollection = (next: Collection) => updateCatalogue({ collection: next })
   const { shelf, clearRecent } = useToolShelf()
   const filteredTools = useMemo(() => {
     const ordered = collection === 'all' ? tools : shelf[collection === 'favorites' ? 'favorites' : 'recent'].flatMap(id => tools.filter(tool => tool.id === id))
@@ -22,7 +29,7 @@ export default function HomePage() {
   const searchInput = useRef<HTMLInputElement>(null)
   const clearSearch = () => { setSearchText(''); searchInput.current?.focus() }
   const clearCategory = () => { setSelectedCategory('all'); searchInput.current?.focus() }
-  const showAll = () => { setSearchText(''); setSelectedCategory('all'); setCollection('all'); searchInput.current?.focus() }
+  const showAll = () => { updateCatalogue({ query: '', category: 'all', collection: 'all' }); searchInput.current?.focus() }
   const hasFilters = normalizeToolSearch(searchText).length > 0 || selectedCategory !== 'all'
   const counts = { all: tools.length, favorites: shelf.favorites.length, recent: shelf.recent.length }
   return (
@@ -37,7 +44,7 @@ export default function HomePage() {
         <div className="pocket-scene"><h2 className="quick-tools-title">よく使うツール</h2>
           <div className="pocket-stack">{['json-formatter', 'character-counter', 'date-calculator'].map((id, index) => {
             const tool = tools.find(item => item.id === id)!
-            return <Link to={tool.path} key={id} className={`pocket-ticket pocket-ticket--${index}`}>
+            return <Link to={tool.path} state={catalogueReturnState(catalogue)} key={id} className={`pocket-ticket pocket-ticket--${index}`}>
               <ToolMark tool={tool} /><div><span>{['整える', '数える', '計算する'][index]}</span><strong>{tool.name}</strong></div><span className="ticket-arrow" aria-hidden="true">↗</span>
             </Link>
           })}</div>
@@ -61,7 +68,7 @@ export default function HomePage() {
           {collection === 'recent' && shelf.recent.length > 0 && <button type="button" className="text-button" onClick={clearRecent}>履歴を消去</button>}
           {collection !== 'all' && <span className="collection-order">{collection === 'recent' ? '最後に開いた順 · 最大8件' : '新しく登録した順'}</span>}
         </div>
-        {filteredTools.length ? <div className="tool-grid">{filteredTools.map(tool => <ToolCard key={tool.id} tool={tool} index={tools.indexOf(tool)} />)}</div> :
+        {filteredTools.length ? <div className="tool-grid">{filteredTools.map(tool => <ToolCard key={tool.id} catalogue={catalogue} tool={tool} index={tools.indexOf(tool)} />)}</div> :
           <div className="empty-state"><span aria-hidden="true">{collection === 'favorites' ? '☆' : '⌕'}</span><h3>{hasFilters ? 'ぴったりの道具が見つかりませんでした' : collection === 'favorites' ? 'いつもの道具に、星をひとつ。' : '使った道具が、ここに並びます。'}</h3>
             <p>{hasFilters ? 'キーワードやカテゴリを変えて探してみてください。' : collection === 'favorites' ? '各道具の星ボタンで、お気に入りに登録できます。' : '道具を開くと、次回はここからすぐに使えます。'}</p>
             <div className="action-row empty-recovery">{searchText && <button type="button" className="secondary-button" onClick={clearSearch}>検索をクリア</button>}{selectedCategory !== 'all' && <button type="button" className="secondary-button" onClick={clearCategory}>カテゴリを解除</button>}<button type="button" className="secondary-button" onClick={showAll}>すべての道具を見る</button></div>

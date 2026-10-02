@@ -1,9 +1,11 @@
+import { catalogueReturnState } from '../../state/catalogueState'
+import type { CatalogueState } from '../../state/catalogueState'
 import { Link } from 'react-router-dom'
 import { categoryLabels, type Tool } from '../../types/tool'
 import ToolMark from './ToolMark'
 import { useToolShelf } from '../../state/ToolShelfContext'
 
-export default function ToolCard({ tool }: { tool: Tool; index?: number }) {
+export default function ToolCard({ tool, catalogue }: { tool: Tool; index?: number; catalogue?: CatalogueState }) {
   const { shelf, toggleFavorite } = useToolShelf()
   const favorite = shelf.favorites.includes(tool.id)
   return (
@@ -17,7 +19,7 @@ export default function ToolCard({ tool }: { tool: Tool; index?: number }) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.3.9-4.5 4.4 1.1 6.2-5.7-3-5.7 3 1.1-6.2L3.2 9.6l6-.9Z" /></svg>
         </button>
       </div>
-      <Link to={tool.path} className="tool-card__link" aria-label={`${tool.name} を開く`}>
+      <Link to={tool.path} state={catalogue ? catalogueReturnState(catalogue) : undefined} className="tool-card__link" aria-label={`${tool.name} を開く`}>
         <div className="tool-card__content"><h3>{tool.name}</h3><p>{tool.description}</p></div>
         <div className="tool-card__bottom"><span className="tool-card__category">{categoryLabels[tool.category]}</span></div>
       </Link>
