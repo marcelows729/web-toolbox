@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "node --test tests/additional-tools.test.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:browser": "node tests/browser-regressions.mjs"
   },
   "dependencies": {
     "qrcode": "^1.5.4",

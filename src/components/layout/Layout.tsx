@@ -1,14 +1,14 @@
 import { useEffect } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import Header from './Header'
-import { tools } from '../../tools/registry'
+import { findToolByPath } from '../../utils/toolRoute'
 import { useToolShelf } from '../../state/ToolShelfContext'
 
 type LayoutProps = { theme: 'light' | 'dark'; setTheme: (nextTheme: 'light' | 'dark') => void }
 export default function Layout({ theme, setTheme }: LayoutProps) {
   const { pathname } = useLocation()
   const { shelf, unavailable, visit, toggleFavorite } = useToolShelf()
-  const currentTool = tools.find(tool => tool.path === pathname)
+  const currentTool = findToolByPath(pathname)
   useEffect(() => {
     if (currentTool) visit(currentTool.id)
     window.scrollTo(0, 0)

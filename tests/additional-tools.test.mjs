@@ -590,3 +590,25 @@ test('Unknown routes offer Japanese home guidance and three existing tools', asy
   assert.ok(markup.includes('href="/"'))
   for (const id of ['character-counter','image-resizer','date-calculator']) assert.ok(markup.includes('href="/tools/'+id+'"'))
 })
+
+const { findToolByPath } = await import('../src/utils/toolRoute.ts')
+const { matchRoutes } = await import('react-router-dom')
+test('道具判定: 全23ルートの大小文字・末尾スラッシュはルーターと一致', () => {
+  const routes = tools.map(tool => ({ path: tool.path, id: tool.id }))
+  for (const tool of tools) for (const pathname of [tool.path, tool.path+'/', tool.path.toUpperCase(), tool.path.toUpperCase()+'/']) {
+    assert.equal(findToolByPath(pathname)?.id, tool.id, pathname)
+    assert.equal(findToolByPath(pathname)?.id, matchRoutes(routes, pathname)?.at(-1).route.id, pathname)
+  }
+})
+test('道具判定: 不明・部分一致・外部URLを道具として扱わない', () => {
+  for (const pathname of ['/', '/tools/not-real', '/tools/image-resizer/missing', '/tools/image-resizer-extra', '//evil.example/tools/image-resizer', 'https://evil.example/tools/image-resizer']) assert.equal(findToolByPath(pathname), undefined, pathname)
+})
+test('画像の状態通知: 読み込みの制約と書き出し処理を区別する', async () => {
+  const { default: ImageToolShell } = await import('../src/tools/local-image/ImageToolShell.tsx')
+  const props = {title:'画像',description:'',originalBytes:0,busy:true,error:'',output:null}
+  const loading = renderToStaticMarkup(createElement(ImageToolShell,{...props,loading:true}))
+  assert.ok(loading.includes('読み込みが終わるまで設定は変更できません'))
+  const processing = renderToStaticMarkup(createElement(ImageToolShell,{...props,loading:false}))
+  assert.ok(processing.includes('画像を確認・処理しています'))
+  assert.ok(!processing.includes('設定は変更できません'))
+})
