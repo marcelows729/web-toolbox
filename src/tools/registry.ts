@@ -1,6 +1,7 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'stopwatch', name: 'ストップウォッチ', description: '経過時間を計り、最大100件のラップと区間時間を記録します。', category: 'general', keywords: ['ストップウォッチ', '時間', '経過時間', 'ラップ', '計測', '勉強', '作業', '運動', 'stopwatch', 'lap', '時間を計る'], path: '/tools/stopwatch', relatedTools: ['duration-calculator', 'date-calculator'] },
   { id: 'width-converter', name: '英数字の全角・半角変換', description: '英字・数字・記号・スペースを選んで、全角と半角を変換します。', category: 'text', keywords: ['全角', '半角', '英字', '数字', '英数字', '記号', 'スペース', '文書', 'フォーム', 'width', 'zenkaku', 'hankaku', '英数字を揃える'], path: '/tools/width-converter', relatedTools: ['text-formatter', 'text-replace', 'character-counter'] },
   { id: 'aspect-ratio', name: '縦横比・サイズ計算', description: '幅と高さの比率を約分し、同じ比率の新しい寸法を計算します。', category: 'general', keywords: ['縦横比', '比率', 'サイズ', '幅', '高さ', '寸法', '画像', '動画', '印刷', 'aspect ratio', 'ratio', '16:9', '画像なしでサイズ計算'], path: '/tools/aspect-ratio', relatedTools: ['image-resizer', 'unit-converter', 'percentage-calculator'] },
   { id: 'text-replace', name: '文字列の一括置換', description: '本文中の文字列を完全一致でまとめて置換・削除します。', category: 'text', keywords: ['文字列', '一括置換', '置換', '置き換え', '検索', '削除', '文章', '文書', 'replace', 'find', '文字を置き換える'], path: '/tools/text-replace', relatedTools: ['text-formatter', 'character-counter', 'text-diff'] },

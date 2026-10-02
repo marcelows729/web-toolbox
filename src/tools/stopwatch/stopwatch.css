@@ -1,0 +1,12 @@
+.stopwatch-time { margin: 0.6rem 0; color: var(--text); font-size: clamp(1.6rem, 7vw, 3.5rem); font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -0.025em; white-space: nowrap; }
+.stopwatch-state { margin: 0; font-weight: 600; }
+.stopwatch-laps { margin-top: 1.5rem; }
+.stopwatch-laps h2 { font-size: 1.1rem; }
+.stopwatch-laps h2 span { font-size: 0.9rem; font-weight: 400; }
+.stopwatch-laps ol { list-style: none; padding: 0; margin: 1rem 0 0; }
+.stopwatch-laps li { padding: 0.85rem 0; border-top: 1px solid var(--border); }
+.stopwatch-laps dl { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin: 0.4rem 0 0; font-variant-numeric: tabular-nums; }
+.stopwatch-laps dl div { display: flex; gap: 0.65rem; }
+.stopwatch-laps dt { font-size: 0.9rem; }
+.stopwatch-laps dd { margin: 0; }
+.stopwatch-copy { margin-top: 1rem; }
