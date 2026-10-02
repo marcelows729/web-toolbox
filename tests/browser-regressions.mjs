@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { checkQuizLayout } from './quiz-layout-browser.mjs'
 import { tools } from '../src/tools/registry.ts'
 import { navigate, evaluate, send, input, click, viewport, wait, assertNoOverflow, finish } from './browser-client.mjs'
 
@@ -149,5 +150,6 @@ for (const theme of ['light','dark']) {
     await click('#image-process'); await idle(); await assertNoOverflow(); mobileChecks+=2
   }
 }
+await checkQuizLayout()
 finish()
 console.log(`PASS: ${mobileChecks} light/dark mobile layout checks; no runtime exceptions/unexpected requests`)
