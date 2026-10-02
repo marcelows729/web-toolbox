@@ -25,3 +25,9 @@ node tests/public-catalogue-browser.mjs
 ## 本番での確認
 
 https://poketsuru.com/ の「画像」で切り抜き・回転・リサイズ・結合が表示され、「日付・時間」で日付計算・タイマー・ストップウォッチ等の6件が表示されることを確認する。検索やお気に入り棚を選んだ状態から「文字数」を開き、戻ると条件が保持されること、用途ボタンを押すと全ツールからその用途を探せることを確認する。キーボードと各幅のlight/darkも確認する。
+
+## 用途導線の状態別コントラスト修正
+
+共通button:hoverの背景だけが用途ボタンへ適用される不具合を修正。3導線共通でhover/focus-visible/activeの背景をsurface-alt、文字をtext、ラベルと境界線をaccentに指定する。機能・検索条件は変更しない。tests/home-use-case-contrast-browser.mjsで通常/hover/focus-visible/active/hover+focusを3導線×2テーマ×4幅の120組合せで測定。文字・説明・矢印の最低値5.28:1、focus枠5.28:1。実ポインターhoverも確認し、320/1280pxの状態別画像を目視した。既存のkeyboard/履歴ブラウザ検証、156件のテスト、lint/build/差分チェックも通過。
+
+追加検証: node tests/home-use-case-contrast-browser.mjs
