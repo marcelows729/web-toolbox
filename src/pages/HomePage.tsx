@@ -28,24 +28,24 @@ export default function HomePage() {
   return (
     <div className="container home-page">
       <section className="hero-section">
-        <div className="hero-copy"><p className="eyebrow"><span /> YOUR EVERYDAY TOOLBOX</p>
+        <div className="hero-copy">
           <h1>ちいさな手間を、<br /><span>さっと、ひとつに。</span></h1>
           <p className="subtitle">ちょっと便利なツールを、ポケットに。<br />変換も、計算も、ひと息で。いつもの作業に余裕を。</p>
           <a href="#tool-search" className="hero-cta">道具を探す <span aria-hidden="true">↓</span></a>
           <div className="hero-facts"><span><strong>{tools.length}</strong> の小さな道具</span><span>登録不要</span><span>ブラウザ内で処理</span></div>
         </div>
-        <div className="pocket-scene"><div className="pocket-label"><span>IN YOUR POCKET</span><span>01 — {tools.length}</span></div>
+        <div className="pocket-scene"><h2 className="quick-tools-title">よく使うツール</h2>
           <div className="pocket-stack">{['json-formatter', 'character-counter', 'date-calculator'].map((id, index) => {
             const tool = tools.find(item => item.id === id)!
             return <Link to={tool.path} key={id} className={`pocket-ticket pocket-ticket--${index}`}>
               <ToolMark tool={tool} /><div><span>{['整える', '数える', '計算する'][index]}</span><strong>{tool.name}</strong></div><span className="ticket-arrow" aria-hidden="true">↗</span>
             </Link>
           })}</div>
-          <div className="pocket-bottom"><span aria-hidden="true">✳</span><p>道具は小さく。<br />できることは、いろいろ。</p></div>
+
         </div>
       </section>
       <section className="toolbox" aria-labelledby="toolbox-title">
-        <div className="section-heading"><div><p className="eyebrow">PICK A TOOL</p><h2 id="toolbox-title">あなたの道具棚</h2></div><span className="section-note">よく使う道具は、星をつけて手元に。</span></div>
+        <div className="section-heading"><div><h2 id="toolbox-title">あなたの道具棚</h2></div><span className="section-note">よく使う道具は、星をつけて手元に。</span></div>
         <div className="collection-switcher" role="group" aria-label="道具の表示範囲">
           {(['all', 'favorites', 'recent'] as const).map(value => <button key={value} type="button" className="collection-button"
             aria-pressed={collection === value} onClick={() => setCollection(value)}><span aria-hidden="true">{value === 'all' ? '▦' : value === 'favorites' ? '☆' : '◷'}</span>{collectionLabels[value]}<small>{counts[value]}</small></button>)}
