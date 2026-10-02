@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { checkStopwatch } from './stopwatch-browser.mjs'
 import { checkWidthConverter } from './width-converter-browser.mjs'
 import { checkCharacterCounter } from './character-counter-browser.mjs'
 import { checkAspectRatio } from './aspect-ratio-browser.mjs'
@@ -154,6 +155,7 @@ for (const theme of ['light','dark']) {
     await click('#image-process'); await idle(); await assertNoOverflow(); mobileChecks+=2
   }
 }
+await checkStopwatch()
 await checkWidthConverter()
 await checkCharacterCounter()
 await checkAspectRatio()
