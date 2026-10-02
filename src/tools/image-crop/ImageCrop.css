@@ -1,0 +1,11 @@
+.crop-controls { padding: 0; margin: 24px 0; border: 0; min-width: 0; }
+.crop-controls legend { font-size: 1.08rem; font-weight: 650; margin-bottom: 16px; }
+.crop-controls > .field-label { display: block; max-width: 320px; }
+.crop-numbers { margin-top: 16px; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.crop-source-name { overflow-wrap: anywhere; line-height: 1.8; margin: 20px 0; }
+.crop-stage { width: min(100%, 640px); max-height: none; position: relative; overflow: hidden; background: repeating-conic-gradient(var(--surface) 0% 25%, var(--border) 0% 50%) 50% / 16px 16px; touch-action: none; cursor: crosshair; margin: 18px 0; border: 1px solid var(--border-strong); }
+.crop-stage img { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: fill; pointer-events: none; user-select: none; }
+.crop-selection { position: absolute; border: 2px solid #fff; outline: 1px solid #163e75; outline-offset: -3px; box-shadow: 0 0 0 10000px #08142680; pointer-events: none; }
+.crop-stage:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.crop-numbers input[readonly] { background: var(--surface-alt); }
+@media (min-width: 700px) { .crop-numbers { grid-template-columns: repeat(4,minmax(0,1fr)); } }

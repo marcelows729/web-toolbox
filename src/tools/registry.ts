@@ -1,6 +1,15 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  {
+    id: 'image-crop',
+    name: '画像の切り抜き',
+    description: '写真の必要な範囲を、自由な矩形や固定比率で切り抜いてPNG保存します。',
+    category: 'general',
+    keywords: ['画像', '写真', '切り抜き', 'トリミング', 'クロップ', '正方形', 'crop', 'trim', '1:1', '4:3', '16:9'],
+    path: '/tools/image-crop',
+    relatedTools: ['image-resizer', 'image-rotate', 'image-joiner'],
+  },
   { id: 'countdown-timer', name: 'カウントダウンタイマー', description: '1秒〜24時間の残り時間を、音なしで画面に表示します。', category: 'general', keywords: ['カウントダウン', 'タイマー', '残り時間', '時間', '分', '秒', '作業', 'countdown', 'timer', '残り時間を計る'], path: '/tools/countdown-timer', relatedTools: ['stopwatch', 'duration-calculator'] },
   { id: 'stopwatch', name: 'ストップウォッチ', description: '経過時間を計り、最大100件のラップと区間時間を記録します。', category: 'general', keywords: ['ストップウォッチ', '時間', '経過時間', 'ラップ', '計測', '勉強', '作業', '運動', 'stopwatch', 'lap', '時間を計る'], path: '/tools/stopwatch', relatedTools: ['duration-calculator', 'date-calculator'] },
   { id: 'width-converter', name: '英数字の全角・半角変換', description: '英字・数字・記号・スペースを選んで、全角と半角を変換します。', category: 'text', keywords: ['全角', '半角', '英字', '数字', '英数字', '記号', 'スペース', '文書', 'フォーム', 'width', 'zenkaku', 'hankaku', '英数字を揃える'], path: '/tools/width-converter', relatedTools: ['text-formatter', 'text-replace', 'character-counter'] },

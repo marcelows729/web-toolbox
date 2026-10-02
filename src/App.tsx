@@ -38,6 +38,7 @@ const AspectRatio = lazy(() => import('./tools/aspect-ratio/AspectRatio'))
 const TextReplace = lazy(() => import('./tools/text-replace/TextReplace'))
 const TextFormatter = lazy(() => import('./tools/text-formatter/TextFormatter'))
 const DurationCalculator = lazy(() => import('./tools/duration-calculator/DurationCalculator'))
+const ImageCrop = lazy(() => import('./tools/image-crop/ImageCrop'))
 const ImageRotate = lazy(() => import('./tools/image-rotate/ImageRotate'))
 const RandomGrouping = lazy(() => import('./tools/random-grouping/RandomGrouping'))
 
@@ -123,6 +124,7 @@ function App() {
           <Route path="/tools/roulette-picker" element={<RoulettePicker />} />
           <Route path="/tools/holiday-style" element={<HolidayStyle />} />
           <Route path="/tools/pocket-companion" element={<PocketCompanion />} />
+          <Route path="/tools/image-crop" element={<ImageCrop />} />
           <Route path="/tools/image-rotate" element={<ImageRotate />} />
           <Route path="/tools/image-resizer" element={<ImageResizer />} />
           <Route path="/tools/image-joiner" element={<ImageJoiner />} />
