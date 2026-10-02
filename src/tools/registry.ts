@@ -1,6 +1,8 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'unit-price-comparison', name: '買い物の単価比較', description: '2〜4商品の価格を100g・100mL・1個など同じ量で比べます。', category: 'general', keywords: ['単価', '買い物', '価格', '比較', '安い', 'お得', '送料', '100g', '100mL', '個数', 'unit price', 'price comparison', 'どっちが安い', '値段'], path: '/tools/unit-price-comparison', relatedTools: ['bill-splitter', 'unit-converter', 'recipe-scaler'] },
+  { id: 'recipe-scaler', name: 'レシピの分量調整', description: '人数や倍率に合わせて、材料の量をまとめて調整します。', category: 'general', keywords: ['レシピ', '料理', '材料', '分量', '人数', '倍率', '半分', '倍量', 'recipe', 'scale', '何人分', 'お菓子', 'りょうり'], path: '/tools/recipe-scaler', relatedTools: ['unit-price-comparison', 'unit-converter', 'percentage-calculator'] },
   { id: 'image-resizer', name: '画像サイズ変更・圧縮', description: 'ローカル画像の縦横比を保ち、サイズ・形式・品質を変えます。', category: 'general', keywords: ['画像', '写真', '圧縮', 'サイズ', '縮小', 'JPEG', 'PNG', 'WebP', 'image', 'resize', "リサイズ", "画像を小さく", "写真を小さく"], path: '/tools/image-resizer', relatedTools: ['image-joiner'] },
   { id: 'image-joiner', name: '画像を並べる', description: '2〜6枚のローカル画像を横・縦に並べて1枚にします。', category: 'general', keywords: ['画像', '写真', '結合', '並べる', '横', '縦', 'image', 'join', "写真をまとめる", "連結"], path: '/tools/image-joiner', relatedTools: ['image-resizer'] },
   { id: 'holiday-style', name: '休日スタイル診断', description: '今の気分を5つ選んで、今日の過ごし方を楽しむ遊び。', category: 'general', keywords: ['休日', '気分', '診断', '遊び', '過ごし方', 'holiday', 'quiz', "休みの日", "休日の過ごし方"], path: '/tools/holiday-style', relatedTools: ['pocket-companion'] },

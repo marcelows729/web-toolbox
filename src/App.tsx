@@ -27,6 +27,8 @@ import HolidayStyle from './tools/holiday-style/HolidayStyle'
 import PocketCompanion from './tools/pocket-companion/PocketCompanion'
 import ImageResizer from './tools/image-resizer/ImageResizer'
 import ImageJoiner from './tools/image-joiner/ImageJoiner'
+import UnitPriceComparison from './tools/unit-price-comparison/UnitPriceComparison'
+import RecipeScaler from './tools/recipe-scaler/RecipeScaler'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -113,6 +115,8 @@ function App() {
           <Route path="/tools/pocket-companion" element={<PocketCompanion />} />
           <Route path="/tools/image-resizer" element={<ImageResizer />} />
           <Route path="/tools/image-joiner" element={<ImageJoiner />} />
+          <Route path="/tools/unit-price-comparison" element={<UnitPriceComparison />} />
+          <Route path="/tools/recipe-scaler" element={<RecipeScaler />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

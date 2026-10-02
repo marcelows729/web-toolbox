@@ -1138,3 +1138,55 @@ button, a, input, select, textarea { scroll-margin: 24px; }
 :root[data-theme='dark'] .primary-button, :root[data-theme='dark'] .hero-cta { color: #0b1426; }
 @media (max-width: 600px) { .hero-section { padding: 32px 0; gap: 28px; } .pocket-scene { padding: 18px; } .quiz-actions { flex-wrap: wrap; } .quiz-panel { padding: 20px 16px; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
+
+/* Shopping and cooking calculations use the existing blue surfaces. */
+.everyday-calculation form { display: grid; gap: 20px; }
+.calculation-help { color: var(--text-soft); font-size: 13px; line-height: 1.8; margin: 0; }
+.calculation-rows { display: grid; gap: 20px; }
+.calculation-row { min-width: 0; margin: 0; padding: 20px; border: 1px solid var(--border); border-radius: 10px; display: grid; gap: 16px; }
+.calculation-row legend, .recipe-mode legend { padding: 0 6px; font-weight: 600; font-size: 14px; }
+.product-numbers { display: grid; grid-template-columns: 1fr 1fr 100px; gap: 16px; }
+.ingredient-fields { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 16px; }
+.everyday-calculation .field-label { display: flex; flex-direction: column; gap: 8px; margin: 0; min-width: 0; }
+.everyday-calculation input, .everyday-calculation select { width: 100%; min-width: 0; }
+.everyday-calculation button { min-height: 44px; }
+.calculation-row .row-remove { justify-self: end; padding: 8px 18px; }
+.calculation-row-actions, .calculation-actions { margin: 0; }
+.calculation-basis { max-width: 380px; }
+.everyday-calculation form > .primary-button { justify-self: start; }
+.recipe-mode { margin: 0; padding: 0; border: 0; min-width: 0; }
+.recipe-mode legend { margin-bottom: 12px; padding: 0; }
+.recipe-scale-inputs { max-width: 600px; }
+.calculation-result { margin: 28px 0; padding: 24px; background: var(--surface-alt); border-radius: 10px; }
+.calculation-result h2 { font-size: 20px; line-height: 1.6; margin: 0 0 16px; }
+.price-results { list-style: none; margin: 0 0 16px; padding: 0; }
+.price-results li { display: flex; align-items: start; justify-content: space-between; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.price-results li:first-child { padding-top: 0; }
+.price-results small { display: block; margin-top: 8px; font-size: 12px; color: var(--text-soft); }
+.price-results strong, .recipe-results dt { overflow-wrap: anywhere; }
+.price-result-value { text-align: right; flex-shrink: 0; }
+.price-result-value > strong { display: block; font-size: 22px; font-variant-numeric: tabular-nums; }
+.price-result-value > span { display: block; color: var(--text-soft); font-size: 13px; margin-top: 6px; }
+.recipe-results { margin: 20px 0; }
+.recipe-results > div { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.recipe-results dd { margin: 0; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.calculation-related { display: flex; flex-wrap: wrap; gap: 16px 24px; }
+.calculation-related a { color: var(--text-soft); text-underline-offset: 4px; }
+.calculation-copy-details summary { cursor: pointer; font-size: 14px; }
+.calculation-copy-details textarea { width: 100%; margin-top: 16px; }
+.calculation-status { min-height: 24px; color: var(--text-soft); font-size: 13px; }
+@media (max-width: 760px) {
+  .product-numbers { grid-template-columns: 1fr 1fr; }
+  .product-numbers > label:last-child { grid-column: 1 / -1; }
+  .ingredient-fields { grid-template-columns: 1fr 1fr; }
+  .ingredient-fields > label:first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 440px) {
+  .calculation-row { padding: 16px; }
+  .product-numbers, .ingredient-fields { grid-template-columns: 1fr; }
+  .calculation-result { padding: 18px; }
+  .price-results li { flex-direction: column; gap: 12px; }
+  .price-result-value { text-align: left; max-width: 100%; flex-shrink: 1; }
+  .price-result-value strong { font-size: 20px; }
+  .calculation-related { flex-direction: column; }
+}
