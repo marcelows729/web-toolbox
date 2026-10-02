@@ -31,6 +31,7 @@ const ImageResizer = lazy(() => import('./tools/image-resizer/ImageResizer'))
 const ImageJoiner = lazy(() => import('./tools/image-joiner/ImageJoiner'))
 const UnitPriceComparison = lazy(() => import('./tools/unit-price-comparison/UnitPriceComparison'))
 const RecipeScaler = lazy(() => import('./tools/recipe-scaler/RecipeScaler'))
+const WidthConverter = lazy(() => import('./tools/width-converter/WidthConverter'))
 const AspectRatio = lazy(() => import('./tools/aspect-ratio/AspectRatio'))
 const TextReplace = lazy(() => import('./tools/text-replace/TextReplace'))
 const TextFormatter = lazy(() => import('./tools/text-formatter/TextFormatter'))
@@ -125,6 +126,7 @@ function App() {
           <Route path="/tools/image-joiner" element={<ImageJoiner />} />
           <Route path="/tools/unit-price-comparison" element={<UnitPriceComparison />} />
           <Route path="/tools/recipe-scaler" element={<RecipeScaler />} />
+          <Route path="/tools/width-converter" element={<WidthConverter />} />
           <Route path="/tools/aspect-ratio" element={<AspectRatio />} />
           <Route path="/tools/text-replace" element={<TextReplace />} />
           <Route path="/tools/text-formatter" element={<TextFormatter />} />
