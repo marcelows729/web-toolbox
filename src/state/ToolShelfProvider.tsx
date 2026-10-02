@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { ToolShelfContext } from './ToolShelfContext'
-import { emptyShelf, loadShelf, parseShelf, saveShelf, SHELF_KEY, updateShelf } from './toolShelf'
+import { emptyShelf, loadShelf, saveShelf, SHELF_KEY, updateShelf } from './toolShelf'
 import type { ShelfAction } from './toolShelf'
 
 export default function ToolShelfProvider({ children }: { children: ReactNode }) {
@@ -27,10 +27,17 @@ export default function ToolShelfProvider({ children }: { children: ReactNode })
     const sync = (event: StorageEvent) => {
       try { if (event.storageArea !== window.localStorage) return } catch { return }
       if (event.key !== SHELF_KEY && event.key !== null) return
-      const next = parseShelf(event.key === null ? null : event.newValue)
-      current.current = next
-      setShelf(next)
-      setUnavailable(false)
+      // Storage events can arrive after a newer save in this tab. Read the
+      // current stored snapshot rather than replaying the event's old value.
+      const latest = loadShelf(window.localStorage)
+      if (latest.unavailable) {
+        setUnavailable(true)
+        return
+      }
+      current.current = latest.shelf
+      setShelf(latest.shelf)
+      // A successful read does not establish that this tab can write. The
+      // next successful local save clears a previous failure notice.
     }
     window.addEventListener('storage', sync)
     return () => window.removeEventListener('storage', sync)
