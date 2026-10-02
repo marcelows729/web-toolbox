@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { checkAspectRatio } from './aspect-ratio-browser.mjs'
 import { checkTextReplace } from './text-replace-browser.mjs'
 import { checkQuizLayout } from './quiz-layout-browser.mjs'
 import { tools } from '../src/tools/registry.ts'
@@ -151,6 +152,7 @@ for (const theme of ['light','dark']) {
     await click('#image-process'); await idle(); await assertNoOverflow(); mobileChecks+=2
   }
 }
+await checkAspectRatio()
 await checkTextReplace()
 await checkQuizLayout()
 finish()
