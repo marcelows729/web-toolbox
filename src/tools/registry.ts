@@ -1,6 +1,7 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'sequence-generator', name: '連番作成', description: '開始番号・件数・増分を指定して、番号やラベルを1行ずつ作ります。', category: 'general', keywords: ['連番', '番号', '一覧', '受付番号', 'ファイル名', 'ラベル', 'ゼロ埋め', '増分', 'sequence', 'number', 'serial', 'リスト'], path: '/tools/sequence-generator', relatedTools: ['text-formatter', 'sql-in-generator'] },
   {
     id: 'image-crop',
     name: '画像の切り抜き',

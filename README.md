@@ -67,7 +67,7 @@
 レジストリから生成しています。ツール追加時は `node scripts/sync-catalogue.mjs`、確認は `node scripts/sync-catalogue.mjs --check` を実行してください。サイトマップも同時に更新します。
 
 <!-- public-tools:start -->
-公開ツール：35件。現在ツールが登録されているカテゴリ：5種類。
+公開ツール：36件。現在ツールが登録されているカテゴリ：5種類。
 
 ### 開発
 
@@ -99,6 +99,7 @@
 
 ### 一般
 
+- [連番作成](https://poketsuru.com/tools/sequence-generator)
 - [画像の切り抜き](https://poketsuru.com/tools/image-crop)
 - [カウントダウンタイマー](https://poketsuru.com/tools/countdown-timer)
 - [ストップウォッチ](https://poketsuru.com/tools/stopwatch)
