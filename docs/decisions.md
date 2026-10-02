@@ -341,3 +341,7 @@ crypto.getRandomValuesの32bit整数から棄却法で偏りのない添字を�
 ## 2026-10-02: カラーコード変換
 
 同等機能のない37ツールへcolor-converterを一般カテゴリで追加し38件。HEX #RGB/#RRGGBB、RGB整数0〜255、HSL小数6桁・H±360000度/S・L0〜100%を相互変換。360度循環、8bit RGBへの四捨五入後に全形式/色見本を生成し、HSL表示4桁・無彩色H/S0を明記。各形式コピーは既存useClipboardFeedbackを使い編集/形式変更/再変換/リセット/離脱後の古い通知を抑止。明示的lazyルート/共通UI/登録/検索/棚/README/sitemapを同期し、入力保存/送信、新依存/API/設定追加なし。詳細docs/color-converter.md。
+
+## 2026-10-02: 分数計算
+
+既存38ツールに2分数の四則演算がないためfraction-calculatorをgeneralへ追加し39件。符号を除いて18桁以内・1欄32文字の整数をBigIntで正確に計算し、分母正・既約分数・0と整数の正規化、仮分数の帯分数表示を行う。負の帯分数は全体に負号を掛け、小数表示を付けず丸めの混同を避ける。過大な編集/貼付は直前入力を保持して拒否する。既存CalculationPage/useToolResult、HTMLラベルとfieldset、lazy・検索・棚・公開一覧を使い、入力保存/送信・新依存/API/配信設定は追加しない。詳細docs/fraction-calculator.md。

@@ -1,6 +1,7 @@
 import type { Tool } from '../../types/tool'
 
 const marks: Record<string, string> = {
+  'fraction-calculator': '1/2',
   'color-converter': '#',
   'image-crop': '⌗',
   'image-rotate': '↻',
