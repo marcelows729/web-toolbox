@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import {checkSequenceGenerator} from './sequence-generator-browser.mjs'
 import { checkPublicCatalogue } from './public-catalogue-browser.mjs'
 import { checkCountdownTimer } from './countdown-timer-browser.mjs'
 import { checkStopwatch } from './stopwatch-browser.mjs'
@@ -165,5 +166,6 @@ await checkCharacterCounter()
 await checkAspectRatio()
 await checkTextReplace()
 await checkQuizLayout()
+await checkSequenceGenerator()
 finish()
 console.log(`PASS: ${mobileChecks} light/dark mobile layout checks; no runtime exceptions/unexpected requests`)
