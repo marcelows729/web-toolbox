@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { readCatalogue, catalogueReturnState } from '../state/catalogueState'
 import type { CatalogueState } from '../state/catalogueState'
 import ToolCard from '../components/tools/ToolCard'
-import ToolMark from '../components/tools/ToolMark'
 import { tools } from '../tools/registry'
 import { categoryLabels, type ToolCategory } from '../types/tool'
 import { useToolShelf } from '../state/ToolShelfContext'
@@ -30,6 +29,12 @@ export default function HomePage() {
   const clearSearch = () => { setSearchText(''); searchInput.current?.focus() }
   const clearCategory = () => { setSelectedCategory('all'); searchInput.current?.focus() }
   const showAll = () => { updateCatalogue({ query: '', category: 'all', collection: 'all' }); searchInput.current?.focus() }
+  const explore = (patch: Partial<CatalogueState>) => {
+    updateCatalogue({ query: '', category: 'all', collection: 'all', ...patch })
+    searchInput.current?.focus({ preventScroll: true })
+    searchInput.current?.scrollIntoView({ block: 'center', behavior: 'instant' })
+  }
+  const characterCounter = tools.find(tool => tool.id === 'character-counter')!
   const hasFilters = normalizeToolSearch(searchText).length > 0 || selectedCategory !== 'all'
   const counts = { all: tools.length, favorites: shelf.favorites.length, recent: shelf.recent.length }
   return (
@@ -41,15 +46,12 @@ export default function HomePage() {
           <a href="#tool-search" className="hero-cta">道具を探す <span aria-hidden="true">↓</span></a>
           <div className="hero-facts"><span><strong>{tools.length}</strong> の小さな道具</span><span>登録不要</span><span>ブラウザ内で処理</span></div>
         </div>
-        <div className="pocket-scene"><h2 className="quick-tools-title">よく使うツール</h2>
-          <div className="pocket-stack">{['json-formatter', 'character-counter', 'date-calculator'].map((id, index) => {
-            const tool = tools.find(item => item.id === id)!
-            return <Link to={tool.path} state={catalogueReturnState(catalogue)} key={id} className={`pocket-ticket pocket-ticket--${index}`}>
-              <ToolMark tool={tool} /><div><span>{['整える', '数える', '計算する'][index]}</span><strong>{tool.name}</strong></div><span className="ticket-arrow" aria-hidden="true">↗</span>
-            </Link>
-          })}</div>
-
-        </div>
+        <nav className="home-use-cases" aria-labelledby="use-cases-title">
+          <h2 id="use-cases-title">用途から探す</h2>
+          <Link to={characterCounter.path} state={catalogueReturnState(catalogue)} className="home-use-case" id="home-characters"><span><strong>文字数</strong><small>文字数・行数を確認</small></span><span aria-hidden="true">↗</span></Link>
+          <button type="button" className="home-use-case" id="home-images" onClick={() => explore({ query: '画像' })}><span><strong>画像</strong><small>切り抜き・サイズ変更など</small></span><span aria-hidden="true">↓</span></button>
+          <button type="button" className="home-use-case" id="home-datetime" onClick={() => explore({ query: '日付・時間' })}><span><strong>日付・時間</strong><small>日数計算・タイマーなど</small></span><span aria-hidden="true">↓</span></button>
+        </nav>
       </section>
       <section className="toolbox" aria-labelledby="toolbox-title">
         <div className="section-heading"><div><h2 id="toolbox-title">あなたの道具棚</h2></div><span className="section-note">よく使う道具は、星をつけて手元に。</span></div>

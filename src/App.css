@@ -1248,3 +1248,15 @@ button, a, input, select, textarea { scroll-margin: 24px; }
   .aspect-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   #aspect-swap { grid-column: 1 / -1; }
 }
+
+/* Compact everyday entry points reuse the catalogue's filters and history. */
+.home-use-cases { min-width: 0; }
+.home-use-cases h2 { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
+.home-use-case { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; padding: 16px 0; border: 0; border-bottom: 1px solid var(--border-strong); border-radius: 0; background: transparent; color: var(--text); text-align: left; text-decoration: none; cursor: pointer; }
+.home-use-case strong, .home-use-case small { display: block; }
+.home-use-case strong { font-size: 16px; font-weight: 600; }
+.home-use-case small { color: var(--text-soft); font-size: 13px; margin-top: 4px; }
+.home-use-case > span:last-child { color: var(--accent); }
+.home-use-case:hover strong { color: var(--accent); }
+.home-use-case:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 3px; }
+@media (max-width: 760px) { .hero-section { gap: 24px; } .home-use-case { padding: 13px 0; } }

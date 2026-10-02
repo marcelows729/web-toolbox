@@ -646,3 +646,8 @@ await import('./countdown-timer.test.mjs')
 await import('./public-catalogue.test.mjs')
 
 await import('./image-crop.test.mjs')
+
+test('日常用途: 日付・時間の共通検索語で6ツールを探せる', () => {
+  const expected = ['countdown-timer','stopwatch','duration-calculator','timestamp-converter','date-calculator','japanese-era-converter']
+  assert.deepEqual(filterToolList(searchTools,'日付・時間','all').map(tool=>tool.id).sort(),expected.sort())
+})
