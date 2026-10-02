@@ -31,6 +31,7 @@ const ImageResizer = lazy(() => import('./tools/image-resizer/ImageResizer'))
 const ImageJoiner = lazy(() => import('./tools/image-joiner/ImageJoiner'))
 const UnitPriceComparison = lazy(() => import('./tools/unit-price-comparison/UnitPriceComparison'))
 const RecipeScaler = lazy(() => import('./tools/recipe-scaler/RecipeScaler'))
+const CountdownTimer = lazy(() => import('./tools/countdown-timer/CountdownTimer'))
 const Stopwatch = lazy(() => import('./tools/stopwatch/Stopwatch'))
 const WidthConverter = lazy(() => import('./tools/width-converter/WidthConverter'))
 const AspectRatio = lazy(() => import('./tools/aspect-ratio/AspectRatio'))
@@ -127,6 +128,7 @@ function App() {
           <Route path="/tools/image-joiner" element={<ImageJoiner />} />
           <Route path="/tools/unit-price-comparison" element={<UnitPriceComparison />} />
           <Route path="/tools/recipe-scaler" element={<RecipeScaler />} />
+          <Route path="/tools/countdown-timer" element={<CountdownTimer />} />
           <Route path="/tools/stopwatch" element={<Stopwatch />} />
           <Route path="/tools/width-converter" element={<WidthConverter />} />
           <Route path="/tools/aspect-ratio" element={<AspectRatio />} />
