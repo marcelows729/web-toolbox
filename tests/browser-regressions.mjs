@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { checkCountdownTimer } from './countdown-timer-browser.mjs'
 import { checkStopwatch } from './stopwatch-browser.mjs'
 import { checkWidthConverter } from './width-converter-browser.mjs'
 import { checkCharacterCounter } from './character-counter-browser.mjs'
@@ -155,6 +156,7 @@ for (const theme of ['light','dark']) {
     await click('#image-process'); await idle(); await assertNoOverflow(); mobileChecks+=2
   }
 }
+await checkCountdownTimer()
 await checkStopwatch()
 await checkWidthConverter()
 await checkCharacterCounter()
