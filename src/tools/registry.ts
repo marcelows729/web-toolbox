@@ -1,6 +1,7 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'color-converter', name: 'カラーコード変換', description: 'HEX・RGB・HSLを相互変換し、色見本を確認できます。', category: 'general', keywords: ['カラーコード', 'カラー', '色', '色変換', '色見本', 'hex', 'rgb', 'hsl', 'color', 'colour', 'convert', '16進数'], path: '/tools/color-converter' },
   { id: 'age-calculator', name: '経過年月・年齢計算', description: '誕生日や記念日から、基準日までの年・月・日と総日数を計算します。', category: 'datetime', keywords: ['日付・時間', '年齢', '経過', '年月', '何歳', '誕生日', '記念日', '満年齢', '期間', 'age', 'elapsed', 'birthday'], path: '/tools/age-calculator', relatedTools: ['date-calculator'] },
   { id: 'sequence-generator', name: '連番作成', description: '開始番号・件数・増分を指定して、番号やラベルを1行ずつ作ります。', category: 'general', keywords: ['連番', '番号', '一覧', '受付番号', 'ファイル名', 'ラベル', 'ゼロ埋め', '増分', 'sequence', 'number', 'serial', 'リスト'], path: '/tools/sequence-generator', relatedTools: ['text-formatter', 'sql-in-generator'] },
   {

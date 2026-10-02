@@ -1261,3 +1261,17 @@ button, a, input, select, textarea { scroll-margin: 24px; }
 .home-use-case:is(:hover, :focus-visible, :active) strong { color: var(--accent); }
 .home-use-case:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 3px; }
 @media (max-width: 760px) { .hero-section { gap: 24px; } .home-use-case { padding: 13px 0; } }
+
+/* Color codes share the existing form, result, and theme surfaces. */
+.color-format { border: 0; padding: 0; margin: 0; min-width: 0; }
+.color-format legend { font-weight: 600; margin-bottom: 10px; padding: 0; }
+.color-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.color-preview { margin: 0 0 20px; }
+.color-swatch { height: 80px; border: 1px solid var(--border-strong); border-radius: 8px; }
+.color-preview figcaption { font-size: 13px; color: var(--text-soft); margin-top: 8px; }
+.color-outputs { display: grid; gap: 16px; }
+.color-output-row { display: flex; gap: 10px; margin-top: 8px; }
+.color-output-row input { font-family: Consolas, monospace; flex: 1; min-width: 0; }
+.color-output-row button { flex-shrink: 0; }
+.color-converter .calculation-status { margin-bottom: 0; }
+@media (max-width: 480px) { .color-fields { gap: 8px; } .color-output-row { flex-wrap: wrap; } .color-output-row input { flex-basis: 100%; } }

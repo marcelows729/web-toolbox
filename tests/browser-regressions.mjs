@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { checkColorConverter } from './color-converter-browser.mjs'
 import {checkAgeCalculator} from './age-calculator-browser.mjs'
 import {checkSequenceGenerator} from './sequence-generator-browser.mjs'
 import { checkPublicCatalogue } from './public-catalogue-browser.mjs'
@@ -169,5 +170,6 @@ await checkTextReplace()
 await checkQuizLayout()
 await checkSequenceGenerator()
 await checkAgeCalculator()
+await checkColorConverter()
 finish()
 console.log(`PASS: ${mobileChecks} light/dark mobile layout checks; no runtime exceptions/unexpected requests`)
