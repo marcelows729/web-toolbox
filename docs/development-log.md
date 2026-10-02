@@ -117,3 +117,7 @@ main 7aabc49を基準に22ツールとBrowserTool/useToolResultを横断点検�
 ## 2026-10-02: カウントダウンタイマー
 
 既存33ツールに同等機能がないことを確認し、1件だけ追加して34ツール。単調時計の起点差分、1秒〜24h、pause/resume/reset、残り0の終了、入力固定と明示再開始を実装。音・通知・振動・権限なし、メモリのみ、離脱消去。142テスト/lint/build、headless全体170ルート/76明暗モバイル/診断80画面とストップウォッチ回帰成功。追加で再現した開発Strict Mode初期化を修正し、dev専用全ケースと最終dev/公開ビルドの開始/終了/resetを確認。背景は注入時計とvisibilityシミュレーション、実背景と本番UIは親担当。新依存・配信設定・既存時計実装変更なし。詳細docs/countdown-timer.md。
+
+## 2026-10-02: 公開一覧・サイトマップ整合点検
+
+本番/sitemap.xmlと/robots.txtが200 text/htmlのSPA本文で、リポジトリにも実ファイルなしと確認。レジストリを正としてXML35 URLとREADMEの全34ツール/使用中5カテゴリを生成し、Sitemap行だけのrobotsを追加。150テスト/lint/build/XML解析、headlessで全34画面の現在名・タイトル・内部リンク、ホーム件数とカテゴリ、明暗320px、XML MIME/解析とrobots text/plainを確認。既存src・UI・計算・入力privacy・package/vite/Cloudflare/redirect設定変更なし。手書きREADME案内と歴史的記録の当時の数値は保持。生成・検査手順はツール開発ガイドとREADME。

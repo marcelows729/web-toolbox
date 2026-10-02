@@ -642,3 +642,5 @@ await import('./width-converter.test.mjs')
 await import('./stopwatch.test.mjs')
 
 await import('./countdown-timer.test.mjs')
+
+await import('./public-catalogue.test.mjs')
