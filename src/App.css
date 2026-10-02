@@ -1208,3 +1208,11 @@ button, a, input, select, textarea { scroll-margin: 24px; }
 .text-formatter .action-row { flex-wrap: wrap; }
 .text-formatter .action-row button { min-height: 44px; }
 @media (max-width: 600px) { .text-format-counts { grid-template-columns: 1fr; gap: 12px; } .text-format-options { padding: 16px; } }
+
+.duration-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+.duration-fields input { min-width: 0; width: 100%; }
+.duration-row > .field-label { max-width: 220px; }
+.duration-total { font-size: 1.5rem; font-weight: 700; overflow-wrap: anywhere; }
+@media (max-width: 480px) { .duration-fields { gap: 8px; } .duration-total { font-size: 1.25rem; } }
+
+@media (min-width: 768px) { .duration-row { display: grid; grid-template-columns: 180px minmax(0, 1fr) auto; gap: 20px; align-items: end; } .duration-row .duration-fields { margin-top: 0; } .duration-row .row-remove { margin-top: 0; } }
