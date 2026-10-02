@@ -18,7 +18,7 @@ for(const theme of ['light','dark'])for(const width of [320,375,768,1280]){
  for(const id of ['image-crop','image-resizer','image-rotate','image-joiner'])assert.ok(selected.ids.includes(id))
  await enter('.tool-card[data-tool-id="image-crop"] a');await poll(`!!document.querySelector('.tool-header')`);await back();assert.deepEqual(await view(),selected)
  await evaluate('history.forward()');await poll(`!!document.querySelector('.tool-header')`);await click('.tool-navigation a');assert.deepEqual(await view(),selected)
- await enter('#home-datetime');selected=await view();assert.equal(selected.query,'日付・時間');assert.equal(selected.category,'すべて');assert.deepEqual(selected.ids,tools.filter(t=>['countdown-timer','stopwatch','duration-calculator','timestamp-converter','date-calculator','japanese-era-converter'].includes(t.id)).map(t=>t.id));assert.equal(await evaluate('document.activeElement.id'),'tool-search')
+ await enter('#home-datetime');selected=await view();assert.equal(selected.query,'日付・時間');assert.equal(selected.category,'すべて');assert.deepEqual(selected.ids,tools.filter(t=>['age-calculator','countdown-timer','stopwatch','duration-calculator','timestamp-converter','date-calculator','japanese-era-converter'].includes(t.id)).map(t=>t.id));assert.equal(await evaluate('document.activeElement.id'),'tool-search')
  await enter('.tool-card[data-tool-id="date-calculator"] a');await poll(`!!document.querySelector('.tool-header')`);await back();assert.deepEqual(await view(),selected);await assertNoOverflow()
 }
 // Direct character shortcut keeps the user's current search/category/shelf for return.
