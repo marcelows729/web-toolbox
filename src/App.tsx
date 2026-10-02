@@ -31,6 +31,7 @@ const ImageResizer = lazy(() => import('./tools/image-resizer/ImageResizer'))
 const ImageJoiner = lazy(() => import('./tools/image-joiner/ImageJoiner'))
 const UnitPriceComparison = lazy(() => import('./tools/unit-price-comparison/UnitPriceComparison'))
 const RecipeScaler = lazy(() => import('./tools/recipe-scaler/RecipeScaler'))
+const TextReplace = lazy(() => import('./tools/text-replace/TextReplace'))
 const TextFormatter = lazy(() => import('./tools/text-formatter/TextFormatter'))
 const DurationCalculator = lazy(() => import('./tools/duration-calculator/DurationCalculator'))
 const ImageRotate = lazy(() => import('./tools/image-rotate/ImageRotate'))
@@ -123,6 +124,7 @@ function App() {
           <Route path="/tools/image-joiner" element={<ImageJoiner />} />
           <Route path="/tools/unit-price-comparison" element={<UnitPriceComparison />} />
           <Route path="/tools/recipe-scaler" element={<RecipeScaler />} />
+          <Route path="/tools/text-replace" element={<TextReplace />} />
           <Route path="/tools/text-formatter" element={<TextFormatter />} />
           <Route path="/tools/duration-calculator" element={<DurationCalculator />} />
           <Route path="/tools/random-grouping" element={<RandomGrouping />} />

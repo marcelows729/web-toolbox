@@ -1,6 +1,7 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'text-replace', name: '文字列の一括置換', description: '本文中の文字列を完全一致でまとめて置換・削除します。', category: 'text', keywords: ['文字列', '一括置換', '置換', '置き換え', '検索', '削除', '文章', '文書', 'replace', 'find', '文字を置き換える'], path: '/tools/text-replace', relatedTools: ['text-formatter', 'character-counter', 'text-diff'] },
   { id: 'image-rotate', name: '画像の回転・反転', description: '写真を90度ずつ回転、または左右・上下に反転してPNGで保存します。', category: 'general', keywords: ['画像', '写真', '回転', '反転', '向き', '左右', '上下', 'rotate', 'flip', 'mirror', '写真の向き', '鏡像'], path: '/tools/image-rotate', relatedTools: ['image-resizer', 'image-joiner'] },
   { id: 'random-grouping', name: 'ランダム組み分け', description: 'イベントやゲームの候補全員を、人数差1以内の組に分けます。', category: 'general', keywords: ['組み分け', 'グループ分け', 'チーム分け', '班分け', 'ランダム', '抽選', 'イベント', 'ゲーム', 'random', 'group', 'team'], path: '/tools/random-grouping', relatedTools: ['roulette-picker'] },
   { id: 'duration-calculator', name: '時間の足し算・引き算', description: '動画や作業の時間を足し引きし、合計時間・分・秒を計算します。', category: 'general', keywords: ['時間', '足し算', '引き算', '時間計算', '動画時間', '作業時間', 'duration', 'hours', 'minutes', 'seconds'], path: '/tools/duration-calculator', relatedTools: ['date-calculator', 'timestamp-converter', 'unit-converter'] },
