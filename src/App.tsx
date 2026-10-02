@@ -29,6 +29,7 @@ import ImageResizer from './tools/image-resizer/ImageResizer'
 import ImageJoiner from './tools/image-joiner/ImageJoiner'
 import UnitPriceComparison from './tools/unit-price-comparison/UnitPriceComparison'
 import RecipeScaler from './tools/recipe-scaler/RecipeScaler'
+import TextFormatter from './tools/text-formatter/TextFormatter'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -117,6 +118,7 @@ function App() {
           <Route path="/tools/image-joiner" element={<ImageJoiner />} />
           <Route path="/tools/unit-price-comparison" element={<UnitPriceComparison />} />
           <Route path="/tools/recipe-scaler" element={<RecipeScaler />} />
+          <Route path="/tools/text-formatter" element={<TextFormatter />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

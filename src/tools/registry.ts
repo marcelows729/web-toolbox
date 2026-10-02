@@ -1,6 +1,7 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'text-formatter', name: 'テキスト整形', description: '文章や一覧の空白・空行・重複を、選んだ操作だけで整えます。', category: 'text', keywords: ['テキスト', '文章', '整形', '空白', '空行', '重複', '改行', '削除', 'trim', 'format', 'dedupe', '空白を消す', '行をまとめる', '文章整理'], path: '/tools/text-formatter', relatedTools: ['character-counter', 'text-diff', 'html-escape'] },
   { id: 'unit-price-comparison', name: '買い物の単価比較', description: '2〜4商品の価格を100g・100mL・1個など同じ量で比べます。', category: 'general', keywords: ['単価', '買い物', '価格', '比較', '安い', 'お得', '送料', '100g', '100mL', '個数', 'unit price', 'price comparison', 'どっちが安い', '値段'], path: '/tools/unit-price-comparison', relatedTools: ['bill-splitter', 'unit-converter', 'recipe-scaler'] },
   { id: 'recipe-scaler', name: 'レシピの分量調整', description: '人数や倍率に合わせて、材料の量をまとめて調整します。', category: 'general', keywords: ['レシピ', '料理', '材料', '分量', '人数', '倍率', '半分', '倍量', 'recipe', 'scale', '何人分', 'お菓子', 'りょうり'], path: '/tools/recipe-scaler', relatedTools: ['unit-price-comparison', 'unit-converter', 'percentage-calculator'] },
   { id: 'image-resizer', name: '画像サイズ変更・圧縮', description: 'ローカル画像の縦横比を保ち、サイズ・形式・品質を変えます。', category: 'general', keywords: ['画像', '写真', '圧縮', 'サイズ', '縮小', 'JPEG', 'PNG', 'WebP', 'image', 'resize', "リサイズ", "画像を小さく", "写真を小さく"], path: '/tools/image-resizer', relatedTools: ['image-joiner'] },

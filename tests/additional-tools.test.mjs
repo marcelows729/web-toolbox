@@ -188,10 +188,10 @@ test('割合: ゼロ分母・不正入力・桁数制限', () => {
   for (const places of [-1, 11, 1.5]) assert.throws(() => calculatePercentage('portion', '1', '1', places))
 })
 
-test('登録: 25件、ID・パス重複なし、新規5件に明示的ルートあり', () => {
-  assert.equal(tools.length, 25)
-  assert.equal(new Set(tools.map(tool => tool.id)).size, 25)
-  assert.equal(new Set(tools.map(tool => tool.path)).size, 25)
+test('登録: 26件、ID・パス重複なし、新規5件に明示的ルートあり', () => {
+  assert.equal(tools.length, 26)
+  assert.equal(new Set(tools.map(tool => tool.id)).size, 26)
+  assert.equal(new Set(tools.map(tool => tool.path)).size, 26)
   const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8')
   for (const [id, category, component] of [
     ['ipv4-cidr', 'network', 'Ipv4Cidr'],
@@ -289,13 +289,13 @@ test('道具棚: 保存復元・容量不足・保存拒否を扱い入力内容
   assert.deepEqual(shelf.favorites, ['sha256'])
 })
 
-test('道具棚UI: 25ツールのリンクと独立したお気に入りボタン', async () => {
+test('道具棚UI: 26ツールのリンクと独立したお気に入りボタン', async () => {
   const { MemoryRouter } = await import('react-router-dom')
   const { ToolShelfContext } = await import('../src/state/ToolShelfContext.ts')
   const { default: HomePage } = await import('../src/pages/HomePage.tsx')
   const markup = renderToStaticMarkup(createElement(MemoryRouter, null, createElement(ToolShelfContext.Provider, { value: { shelf: emptyShelf(), unavailable: false, toggleFavorite() {}, visit() {}, clearRecent() {} } }, createElement(HomePage))))
-  assert.equal((markup.match(/class="tool-card"/g) ?? []).length, 25)
-  assert.equal((markup.match(/class="favorite-button"/g) ?? []).length, 25)
+  assert.equal((markup.match(/class="tool-card"/g) ?? []).length, 26)
+  assert.equal((markup.match(/class="favorite-button"/g) ?? []).length, 26)
   for (const tool of tools) assert.ok(markup.includes(`href="${tool.path}"`))
   for (const link of markup.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)) assert.ok(!link[1].includes('<button'), 'ボタンをリンクに入れない')
 })
@@ -569,10 +569,10 @@ const { normalizeToolSearch, filterToolList } = await import('../src/utils/toolS
 const { tools: searchTools } = await import('../src/tools/registry.ts')
 test('Search normalizes width, case, kana and whitespace', () => {
   assert.equal(normalizeToolSearch(' ＱＲ　ﾊｯｼｭ '), 'qr はっしゅ')
-  assert.equal(filterToolList(searchTools, '　 ', 'all').length, 25)
+  assert.equal(filterToolList(searchTools, '　 ', 'all').length, 26)
 })
-test('Japanese purpose aliases find all 25 tools', () => {
-  const cases = [["ジェイソン","json-formatter"],["エスキューエル","sql-in-generator"],["ﾀｲﾑｽﾀﾝﾌﾟ","timestamp-converter"],["文字を数える","character-counter"],["ＵＲＬ　エンコード","url-encode-decode"],["ベース６４","base64-encode-decode"],["識別子","uuid-generator"],["日にち","date-calculator"],["元号","japanese-era-converter"],["ＱＲ　コード","qr-code-generator"],["文章比較","text-diff"],["サブネット計算","ipv4-cidr"],["ﾊｯｼｭ","sha256"],["十六進数","radix-converter"],["タグを文字に","html-escape"],["百分率","percentage-calculator"],["写真を小さく","image-resizer"],["写真をまとめる","image-joiner"],["休みの日","holiday-style"],["相棒を選ぶ","pocket-companion"],["重さ","unit-converter"],["わりかん","bill-splitter"],["くじ引き","roulette-picker"],["どっちが安い","unit-price-comparison"],["何人分","recipe-scaler"]]
+test('Japanese purpose aliases find all 26 tools', () => {
+  const cases = [["ジェイソン","json-formatter"],["エスキューエル","sql-in-generator"],["ﾀｲﾑｽﾀﾝﾌﾟ","timestamp-converter"],["文字を数える","character-counter"],["ＵＲＬ　エンコード","url-encode-decode"],["ベース６４","base64-encode-decode"],["識別子","uuid-generator"],["日にち","date-calculator"],["元号","japanese-era-converter"],["ＱＲ　コード","qr-code-generator"],["文章比較","text-diff"],["サブネット計算","ipv4-cidr"],["ﾊｯｼｭ","sha256"],["十六進数","radix-converter"],["タグを文字に","html-escape"],["百分率","percentage-calculator"],["写真を小さく","image-resizer"],["写真をまとめる","image-joiner"],["休みの日","holiday-style"],["相棒を選ぶ","pocket-companion"],["重さ","unit-converter"],["わりかん","bill-splitter"],["くじ引き","roulette-picker"],["どっちが安い","unit-price-comparison"],["何人分","recipe-scaler"],["文章整理","text-formatter"]]
   for (const [query,id] of cases) assert.ok(filterToolList(searchTools,query,'all').some(tool=>tool.id===id),query)
 })
 test('Search intersects words/category/shelf without changing order or source', () => {
@@ -595,7 +595,7 @@ test('Unknown routes offer Japanese home guidance and three existing tools', asy
 
 const { findToolByPath } = await import('../src/utils/toolRoute.ts')
 const { matchRoutes } = await import('react-router-dom')
-test('道具判定: 全25ルートの大小文字・末尾スラッシュはルーターと一致', () => {
+test('道具判定: 全26ルートの大小文字・末尾スラッシュはルーターと一致', () => {
   const routes = tools.map(tool => ({ path: tool.path, id: tool.id }))
   for (const tool of tools) for (const pathname of [tool.path, tool.path+'/', tool.path.toUpperCase(), tool.path.toUpperCase()+'/']) {
     assert.equal(findToolByPath(pathname)?.id, tool.id, pathname)
@@ -616,3 +616,5 @@ test('画像の状態通知: 読み込みの制約と書き出し処理を区別
 })
 
 await import('./everyday-calculations.test.mjs')
+
+await import('./text-formatting.test.mjs')

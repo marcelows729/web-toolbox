@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { countLines, getGraphemeLength } from './count'
 
 type CountSummary = {
   totalCharacters: number
@@ -8,19 +9,6 @@ type CountSummary = {
   utf8Bytes: number
 }
 
-const getGraphemeLength = (text: string) => {
-  if (typeof Intl !== 'undefined' && 'Segmenter' in Intl) {
-    try {
-      const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' })
-      return Array.from(segmenter.segment(text), (segment) => segment.segment).length
-    } catch {
-      // Fallback to Array.from when Segmenter is unavailable or rejected.
-    }
-  }
-
-  return Array.from(text).length
-}
-
 const countWords = (text: string) => {
   const trimmed = text.trim()
   if (!trimmed) {
@@ -28,16 +16,6 @@ const countWords = (text: string) => {
   }
 
   return trimmed.split(/\s+/).filter((word) => word.length > 0).length
-}
-
-const countLines = (text: string) => {
-  if (!text) {
-    return 0
-  }
-
-  const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
-  const newlineCount = (normalized.match(/\n/g) || []).length
-  return newlineCount + 1
 }
 
 const countWithoutWhitespace = (text: string) => {
