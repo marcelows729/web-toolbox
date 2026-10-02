@@ -223,7 +223,7 @@ export default function TimestampConverter() {
             <label className="field-label" htmlFor="timestamp-input">
               Timestamp
             </label>
-            <input
+            <input aria-describedby={timestampError ? 'timestamp-error' : undefined}
               id="timestamp-input"
               type="text"
               value={timestampInput}
@@ -268,7 +268,7 @@ export default function TimestampConverter() {
               </button>
             </div>
 
-            {timestampError && <div className="error-box" role="alert">{timestampError}</div>}
+            {timestampError && <div className="error-box" role="alert" id="timestamp-error">{timestampError}</div>}
 
             {timestampResult && (
               <div className="result-box">
@@ -308,9 +308,9 @@ export default function TimestampConverter() {
 
             <div className="date-time-field-row">
               <div className="time-field-group">
-                <span className="subfield-label">日付</span>
+                <span className="subfield-label" id="datetime-date-label">日付</span>
                 <DatePartsInput
-                  id="datetime-date-input"
+                  id="datetime-date-input" labelledBy="datetime-date-label" describedBy={datetimeError ? 'datetime-error' : undefined}
                   value={datetimeDate}
                   onChange={(next) => { if (next.year !== datetimeDate.year || next.month !== datetimeDate.month || next.day !== datetimeDate.day) resetDatetimeResult(); setDatetimeDate(next) }}
                 />
@@ -318,7 +318,7 @@ export default function TimestampConverter() {
 
               <div className="time-field-group">
                 <span className="subfield-label">時刻</span>
-                <input
+                <input aria-describedby={datetimeError ? 'datetime-error' : undefined}
                   id="datetime-time-input"
                   type="time"
                   value={datetimeTime}
@@ -368,7 +368,7 @@ export default function TimestampConverter() {
               </button>
             </div>
 
-            {datetimeError && <div className="error-box" role="alert">{datetimeError}</div>}
+            {datetimeError && <div className="error-box" role="alert" id="datetime-error">{datetimeError}</div>}
 
             {datetimeResult && (
               <div className="result-box">

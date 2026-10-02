@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import Header from './Header'
+import { pageMetadata } from '../../utils/pageMetadata'
 import { findToolByPath } from '../../utils/toolRoute'
 import { useToolShelf } from '../../state/ToolShelfContext'
 
@@ -9,6 +10,12 @@ export default function Layout({ theme, setTheme }: LayoutProps) {
   const { pathname } = useLocation()
   const { shelf, unavailable, visit, toggleFavorite } = useToolShelf()
   const currentTool = findToolByPath(pathname)
+  useEffect(() => {
+    const metadata = pageMetadata(pathname)
+    document.title = metadata.title
+    const description = document.querySelector<HTMLMetaElement>('meta[name="description"]')
+    if (description) description.content = metadata.description
+  }, [pathname])
   useEffect(() => {
     if (currentTool) visit(currentTool.id)
     window.scrollTo(0, 0)

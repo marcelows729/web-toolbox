@@ -94,11 +94,11 @@ export default function JapaneseEraConverter() {
           <div className="converter-card">
             <h2>西暦 → 和暦</h2>
 
-            <label className="field-label" htmlFor="gregorian-date-input">
+            <label className="field-label" htmlFor="gregorian-date-input-year" id="gregorian-date-input-label">
               西暦日付
             </label>
             <DatePartsInput
-              id="gregorian-date-input"
+              id="gregorian-date-input" labelledBy="gregorian-date-input-label" describedBy={gregorianError ? 'gregorian-error' : undefined}
               value={gregorianInput}
               onChange={(next) => { if (next.year !== gregorianInput.year || next.month !== gregorianInput.month || next.day !== gregorianInput.day) resetGregorianResult(); setGregorianInput(next) }}
             />
@@ -112,7 +112,7 @@ export default function JapaneseEraConverter() {
               </button>
             </div>
 
-            {gregorianError && <div className="error-box" role="alert">{gregorianError}</div>}
+            {gregorianError && <div className="error-box" role="alert" id="gregorian-error">{gregorianError}</div>}
 
             {gregorianHasResult && (
               <div className="result-box" role="status" aria-live="polite">
@@ -137,7 +137,7 @@ export default function JapaneseEraConverter() {
                 <label className="field-label" htmlFor="era-select">
                   元号
                 </label>
-                <select
+                <select aria-describedby={eraError ? 'era-error' : undefined}
                   id="era-select"
                   value={eraForm.era}
                   onChange={(event) => { setEraForm((current) => ({ ...current, era: event.target.value as EraName })); resetEraResult() }}
@@ -154,7 +154,7 @@ export default function JapaneseEraConverter() {
                 <label className="field-label" htmlFor="era-year-input">
                   年
                 </label>
-                <input
+                <input aria-describedby={eraError ? 'era-error' : undefined}
                   id="era-year-input"
                   type="text"
                   inputMode="numeric"
@@ -194,7 +194,7 @@ export default function JapaneseEraConverter() {
                 <label className="field-label" htmlFor="era-month-input">
                   月
                 </label>
-                <input
+                <input aria-describedby={eraError ? 'era-error' : undefined}
                   ref={monthInputRef}
                   id="era-month-input"
                   type="text"
@@ -221,7 +221,7 @@ export default function JapaneseEraConverter() {
                 <label className="field-label" htmlFor="era-day-input">
                   日
                 </label>
-                <input
+                <input aria-describedby={eraError ? 'era-error' : undefined}
                   ref={dayInputRef}
                   id="era-day-input"
                   type="text"
@@ -246,7 +246,7 @@ export default function JapaneseEraConverter() {
               </button>
             </div>
 
-            {eraError && <div className="error-box" role="alert">{eraError}</div>}
+            {eraError && <div className="error-box" role="alert" id="era-error">{eraError}</div>}
 
             {eraHasResult && (
               <div className="result-box" role="status" aria-live="polite">

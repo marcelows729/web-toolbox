@@ -42,7 +42,7 @@ export default function SqlInGenerator() {
           <label className="field-label" htmlFor="sql-in-input">
             Input
           </label>
-          <textarea
+          <textarea aria-describedby={error ? 'sql-in-generator-error' : undefined}
             id="sql-in-input"
             value={input}
             onChange={(event) => { setInput(event.target.value); resetResult() }}
@@ -108,7 +108,7 @@ export default function SqlInGenerator() {
           {hasOutput && resultCount !== null && <span className="field-label-sm">件数: {resultCount}件</span>}
         </div>
 
-        {error && <div className="error-box" role="alert">{error}</div>}
+        {error && <div className="error-box" role="alert" id="sql-in-generator-error">{error}</div>}
         {copyFeedback && (
           <div className="copy-feedback" role="status" aria-live="polite">
             {copyFeedback}

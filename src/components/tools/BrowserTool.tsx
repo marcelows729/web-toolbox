@@ -30,7 +30,7 @@ export default function BrowserTool({ title, description, usage, children, resul
           <label className="field-label" htmlFor={outputId}>Output</label>
           <textarea id={outputId} value={result.output ?? ''} readOnly rows={outputRows} spellCheck={false} />
         </div>
-        {result.error && <div className="error-box" role="alert">{result.error}</div>}
+        {result.error && <div className="error-box" role="alert" id="tool-error">{result.error}</div>}
         <div role="status" aria-live="polite">
           {result.busy ? <p>処理中…</p> : result.output !== null ? <p>処理が完了しました。</p> : null}
           {result.feedback && <p className="copy-feedback">{result.feedback}</p>}

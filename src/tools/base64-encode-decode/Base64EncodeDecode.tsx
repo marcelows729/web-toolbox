@@ -35,7 +35,7 @@ export default function Base64EncodeDecode() {
           <label className="field-label" htmlFor="base64-input">
             Input
           </label>
-          <textarea
+          <textarea aria-describedby={error ? 'base64-encode-decode-error' : undefined}
             id="base64-input"
             value={input}
             onChange={(event) => { setInput(event.target.value); resetResult() }}
@@ -62,7 +62,7 @@ export default function Base64EncodeDecode() {
           />
         </div>
 
-        {error && <div className="error-box" role="alert">{error}</div>}
+        {error && <div className="error-box" role="alert" id="base64-encode-decode-error">{error}</div>}
         {copyFeedback && (
           <div className="copy-feedback" role="status" aria-live="polite">
             {copyFeedback}

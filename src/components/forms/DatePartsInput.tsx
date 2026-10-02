@@ -6,6 +6,8 @@ type DatePartsInputProps = {
   value: DatePartsValue
   onChange: (nextValue: DatePartsValue) => void
   label?: string
+  describedBy?: string
+  labelledBy?: string
 }
 
 export default function DatePartsInput({
@@ -13,6 +15,8 @@ export default function DatePartsInput({
   value,
   onChange,
   label,
+  describedBy,
+  labelledBy,
 }: DatePartsInputProps) {
   const pickerRef = useRef<HTMLInputElement | null>(null)
 
@@ -50,13 +54,14 @@ export default function DatePartsInput({
     : ''
 
   return (
-    <div className="date-parts-input" aria-label={label ?? '日付'}>
+    <div role="group" aria-labelledby={labelledBy} className="date-parts-input" aria-label={label ?? '日付'}>
       <div className="date-parts-field">
         <label htmlFor={`${id}-year`} className="field-label-sm">
           年
         </label>
         <input
           id={`${id}-year`}
+          aria-describedby={describedBy}
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
@@ -75,6 +80,7 @@ export default function DatePartsInput({
         </label>
         <input
           id={`${id}-month`}
+          aria-describedby={describedBy}
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"
@@ -93,6 +99,7 @@ export default function DatePartsInput({
         </label>
         <input
           id={`${id}-day`}
+          aria-describedby={describedBy}
           type="text"
           inputMode="numeric"
           pattern="[0-9]*"

@@ -17,11 +17,11 @@ export default function RadixConverter() {
         <p>出力は接頭辞・不要な先頭ゼロなし、英字は小文字です。負数はマイナス表記で、2の補数表現にはしません。-0は0に統一します。小数、指数表記、内部の空白、桁区切り、不正な桁は拒否します。ただし16進数のeは通常の数字として扱います。</p>
       </>}>
       <label className="field-label" htmlFor="radix-base">入力基数</label>
-      <select id="radix-base" value={radix} onChange={event => { setRadix(Number(event.target.value)); result.reset() }}>
+      <select aria-describedby={result.error ? 'tool-error' : undefined} id="radix-base" value={radix} onChange={event => { setRadix(Number(event.target.value)); result.reset() }}>
         {[2, 8, 10, 16].map(base => <option key={base} value={base}>{base}進数</option>)}
       </select>
       <label className="field-label" htmlFor="radix-input">整数</label>
-      <textarea id="radix-input" rows={5} value={input} spellCheck={false} onChange={event => { setInput(event.target.value); result.reset() }} />
+      <textarea aria-describedby={result.error ? 'tool-error' : undefined} id="radix-input" rows={5} value={input} spellCheck={false} onChange={event => { setInput(event.target.value); result.reset() }} />
       <div className="action-row"><button type="button" className="primary-button" disabled={result.busy} onClick={() => void result.run(() => convertRadix(input, radix))}>変換</button></div>
     </BrowserTool>
   )

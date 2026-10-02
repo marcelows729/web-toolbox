@@ -111,9 +111,10 @@ export default function UuidGenerator() {
             step={1}
             value={countInput}
             onChange={(event) => { setCountInput(event.target.value); setOutput(''); setError(''); resetCopy() }}
-            aria-describedby="uuid-count-help"
+            aria-describedby={error ? 'uuid-count-help uuid-count-error' : 'uuid-count-help'}
           />
 
+          <p id="uuid-count-help" className="calculation-help">生成件数は1〜100の整数で指定します。</p>
           <div className="generator-controls">
             <div className="option-group">
               <span className="option-label">大文字 / 小文字</span>
@@ -156,7 +157,7 @@ export default function UuidGenerator() {
           />
         </div>
 
-        {error && <div className="error-box" role="alert">{error}</div>}
+        {error && <div className="error-box" role="alert" id="uuid-count-error">{error}</div>}
         {copyFeedback && (
           <div className="copy-feedback" role="status" aria-live="polite">
             {copyFeedback}

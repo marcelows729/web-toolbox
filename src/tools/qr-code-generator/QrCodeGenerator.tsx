@@ -76,7 +76,7 @@ export default function QrCodeGenerator() {
             <label className="field-label" htmlFor="qr-generator-input">
               URLまたはテキスト
             </label>
-            <textarea
+            <textarea aria-describedby={error ? 'qr-code-generator-error' : undefined}
               id="qr-generator-input"
               value={input}
               onChange={(event) => handleInputChange(event.target.value)}
@@ -93,7 +93,7 @@ export default function QrCodeGenerator() {
               </button>
             </div>
 
-            {error && <div className="error-box" role="alert">{error}</div>}
+            {error && <div className="error-box" role="alert" id="qr-code-generator-error">{error}</div>}
             {status && (
               <div className="copy-feedback" role="status" aria-live="polite">
                 {status}

@@ -6,7 +6,7 @@ import { tools } from '../registry'
 export default function CalculationPage({ title, description, children, usage, related, result, onReset }: { title: string; description: string; children: ReactNode; usage: ReactNode; related: string[]; result: ReturnType<typeof useToolResult>; onReset: () => void }) {
   return <div className="container tool-page everyday-calculation"><header className="tool-header"><h1>{title}</h1><p>{description}</p></header>
     <section className="tool-panel" aria-label={title}>{children}
-      {result.error && <p className="error-box" role="alert">{result.error}</p>}
+      {result.error && <p className="error-box" role="alert" id="calculation-error">{result.error}</p>}
       <div className="action-row calculation-actions"><button id="calculation-copy" type="button" className="secondary-button" disabled={result.output === null || result.busy} onClick={() => void result.copy()}>結果をコピー</button><button id="calculation-reset" type="button" className="secondary-button" onClick={onReset}>リセット</button></div>
       <p className="calculation-status" role="status" aria-live="polite">{result.busy ? '計算しています…' : result.feedback || (result.output !== null ? '計算しました。' : '')}</p>
       {result.output !== null && <details className="calculation-copy-details"><summary>コピー用のテキスト</summary><label className="visually-hidden" htmlFor="calculation-output">計算結果のテキスト</label><textarea id="calculation-output" value={result.output} readOnly rows={7} /></details>}

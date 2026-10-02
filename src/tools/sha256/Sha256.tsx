@@ -46,18 +46,18 @@ export default function Sha256() {
       </>}>
       {!supported && <p className="error-box" role="alert">この環境ではSHA-256を利用できません。HTTPSまたはlocalhostでWeb Crypto API・TextEncoder対応ブラウザを使用してください。</p>}
       <label className="field-label" htmlFor="hash-mode">入力形式</label>
-      <select id="hash-mode" value={mode} onChange={event => { setMode(event.target.value); result.reset() }}>
+      <select aria-describedby={result.error ? 'tool-error' : undefined} id="hash-mode" value={mode} onChange={event => { setMode(event.target.value); result.reset() }}>
         <option value="text">テキスト（UTF-8）</option><option value="file">ファイル</option>
       </select>
       {mode === 'text' ? <>
         <label className="field-label" htmlFor="hash-text">テキスト（空欄も計算可能）</label>
-        <textarea id="hash-text" rows={8} value={text} spellCheck={false} onChange={event => { setText(event.target.value); result.reset() }} />
+        <textarea aria-describedby={result.error ? 'tool-error' : undefined} id="hash-text" rows={8} value={text} spellCheck={false} onChange={event => { setText(event.target.value); result.reset() }} />
       </> : <>
         <label className="field-label" htmlFor="hash-file">ファイル（20 MiBまで）</label>
-        <input id="hash-file" type="file" ref={fileInput} style={{ maxWidth: '100%', minWidth: 0 }} onChange={event => { setFile(event.target.files?.[0] ?? null); result.reset() }} />
+        <input aria-describedby={result.error ? 'tool-error' : undefined} id="hash-file" type="file" ref={fileInput} style={{ maxWidth: '100%', minWidth: 0 }} onChange={event => { setFile(event.target.files?.[0] ?? null); result.reset() }} />
       </>}
       <label className="field-label" htmlFor="hash-expected">期待するSHA-256（任意）</label>
-      <input id="hash-expected" type="text" value={expected} spellCheck={false} onChange={event => { setExpected(event.target.value); result.reset() }} />
+      <input aria-describedby={result.error ? 'tool-error' : undefined} id="hash-expected" type="text" value={expected} spellCheck={false} onChange={event => { setExpected(event.target.value); result.reset() }} />
       <div className="action-row"><button type="button" className="primary-button" disabled={result.busy || !supported} onClick={() => void result.run(calculate)}>ハッシュ生成・照合</button></div>
     </BrowserTool>
   )

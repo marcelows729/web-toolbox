@@ -42,7 +42,7 @@ export default function UrlEncodeDecode() {
           <label className="field-label" htmlFor="url-encode-input">
             Input
           </label>
-          <textarea
+          <textarea aria-describedby={error ? 'url-encode-decode-error' : undefined}
             id="url-encode-input"
             value={input}
             onChange={(event) => { setInput(event.target.value); resetResult() }}
@@ -93,7 +93,7 @@ export default function UrlEncodeDecode() {
           />
         </div>
 
-        {error && <div className="error-box" role="alert">{error}</div>}
+        {error && <div className="error-box" role="alert" id="url-encode-decode-error">{error}</div>}
         {copyFeedback && (
           <div className="copy-feedback" role="status" aria-live="polite">
             {copyFeedback}

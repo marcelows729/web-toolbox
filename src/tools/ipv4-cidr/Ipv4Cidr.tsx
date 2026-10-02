@@ -29,9 +29,9 @@ export default function Ipv4Cidr() {
         <p>/31はポイントツーポイント接続を想定して両方のアドレスを利用可能とし、/32は単一ホストとして扱います。ホスト範囲はCIDR上の計算値であり、予約・特殊用途のアドレスを除外せず、実際の割り当て可否を保証しません。</p>
       </>}>
       <label className="field-label" htmlFor="cidr-address">IPv4アドレス</label>
-      <input id="cidr-address" type="text" placeholder="192.168.1.10" value={address} onChange={event => { setAddress(event.target.value); result.reset() }} />
+      <input aria-describedby={result.error ? 'tool-error' : undefined} id="cidr-address" type="text" placeholder="192.168.1.10" value={address} onChange={event => { setAddress(event.target.value); result.reset() }} />
       <label className="field-label" htmlFor="cidr-prefix">プレフィックス長（0〜32）</label>
-      <input id="cidr-prefix" type="text" inputMode="numeric" value={prefix} onChange={event => { setPrefix(event.target.value); result.reset() }} />
+      <input aria-describedby={result.error ? 'tool-error' : undefined} id="cidr-prefix" type="text" inputMode="numeric" value={prefix} onChange={event => { setPrefix(event.target.value); result.reset() }} />
       <div className="action-row"><button type="button" className="primary-button" disabled={result.busy} onClick={() => void result.run(calculate)}>計算</button></div>
     </BrowserTool>
   )

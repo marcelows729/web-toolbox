@@ -256,12 +256,12 @@ export default function DateCalculator() {
 
             <div className="date-calculator-pair-grid">
               <div className="date-field-group">
-                <label className="field-label" htmlFor="date-start">
+                <label className="field-label" htmlFor="date-start-year" id="date-start-label">
                   開始日
                 </label>
                 <div className="date-input-row">
                   <DatePartsInput
-                    id="date-start"
+                    id="date-start" labelledBy="date-start-label" describedBy={dateError ? 'date-difference-error' : undefined}
                     value={startDate}
                     onChange={(next) => { if (next.year !== startDate.year || next.month !== startDate.month || next.day !== startDate.day) resetDateResult(); setStartDate(next) }}
                   />
@@ -269,12 +269,12 @@ export default function DateCalculator() {
               </div>
 
               <div className="date-field-group">
-                <label className="field-label" htmlFor="date-end">
+                <label className="field-label" htmlFor="date-end-year" id="date-end-label">
                   終了日
                 </label>
                 <div className="date-input-row">
                   <DatePartsInput
-                    id="date-end"
+                    id="date-end" labelledBy="date-end-label" describedBy={dateError ? 'date-difference-error' : undefined}
                     value={endDate}
                     onChange={(next) => { if (next.year !== endDate.year || next.month !== endDate.month || next.day !== endDate.day) resetDateResult(); setEndDate(next) }}
                   />
@@ -303,7 +303,7 @@ export default function DateCalculator() {
                 </div>
               </div>
             )}
-            {dateError && <div className="error-box" role="alert">{dateError}</div>}
+            {dateError && <div className="error-box" role="alert" id="date-difference-error">{dateError}</div>}
           </div>
 
           <div className="converter-card">
@@ -311,12 +311,12 @@ export default function DateCalculator() {
 
             <div className="offset-input-grid">
               <div className="date-field-group">
-                <label className="field-label" htmlFor="base-date">
+                <label className="field-label" htmlFor="base-date-year" id="base-date-label">
                   基準日
                 </label>
                 <div className="date-input-row">
                   <DatePartsInput
-                    id="base-date"
+                    id="base-date" labelledBy="base-date-label" describedBy={offsetError ? 'date-offset-error' : undefined}
                     value={baseDate}
                     onChange={(next) => { if (next.year !== baseDate.year || next.month !== baseDate.month || next.day !== baseDate.day) resetOffsetResult(); setBaseDate(next) }}
                   />
@@ -327,7 +327,7 @@ export default function DateCalculator() {
                 <label className="field-label" htmlFor="day-offset">
                   日数
                 </label>
-                <input
+                <input aria-describedby={offsetError ? 'date-offset-error' : undefined}
                   id="day-offset"
                   type="number"
                   min={0}
@@ -375,7 +375,7 @@ export default function DateCalculator() {
                 </div>
               </div>
             )}
-            {offsetError && <div className="error-box" role="alert">{offsetError}</div>}
+            {offsetError && <div className="error-box" role="alert" id="date-offset-error">{offsetError}</div>}
           </div>
         </div>
       </section>

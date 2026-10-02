@@ -34,7 +34,7 @@ export default function JsonFormatter() {
           <label className="field-label" htmlFor="json-input">
             Input
           </label>
-          <textarea
+          <textarea aria-describedby={error ? 'json-formatter-error' : undefined}
             id="json-input"
             value={input}
             onChange={(event) => { setInput(event.target.value); resetResult() }}
@@ -69,7 +69,7 @@ export default function JsonFormatter() {
           />
         </div>
 
-        {error && <div className="error-box" role="alert">{error}</div>}
+        {error && <div className="error-box" role="alert" id="json-formatter-error">{error}</div>}
         {copyFeedback && (
           <div className="copy-feedback" role="status" aria-live="polite">
             {copyFeedback}
