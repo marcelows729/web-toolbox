@@ -47,3 +47,14 @@
 検証: npm test 75件（整形全32組合せと既存診断全2048回答組合せ）、lint、build、diffcheckと差分レビュー。実Edgeで130 URL・画像回帰・60明暗モバイル表示に加え、ネイティブ貼り付け、CRLF保持、キーボード、実コピー、入力/操作変更時の結果・通知消去、コピー中の変更、上限拒否で元入力保持、HTML文字列、カウンターとの一致、棚のID保存を確認。最大入力は4倍CPU低速化条件で約75ms（当該PCの測定、他端末の保証ではない）。light/dark・1280/320pxの画像を目視。実機Safariは未検証。
 
 ブラウザ確認: 既存の専用Edge CDPとpreviewを起動し node tests/text-formatter-browser.mjs。TEST_BASE_URLで本番、TEST_SCREENSHOT_DIRで画像出力先を指定できる。
+
+
+## 2026-10-02 変換4ツールの古い結果・コピー通知を修正
+
+main 38b2c7fで再現。JSONは {"a":1} をFormat、SQLは 1,2 をGenerate、URLは a b をEncode、Base64は 日本語 をEncodeし、Copy後に入力末尾へ空白を追加すると、旧出力・有効なCopy・コピーしました通知が残る。SQLは旧件数も残る。
+
+4ツールを既存useToolResultへ接続し、入力編集・Clear・再実行時に出力・エラー・通知を無効化。SQLの文字列/数値と重複設定、URLのモード変更も同様。コピーの遅い成功/失敗は入力変更・再実行・Clear・画面離脱後に反映しない。コピー失敗は共通の手動コピー案内を表示する。計算は同期処理のまま、既存関数をconversion.tsへ内容変更なく分離してテスト。共通フック本体・変換の意味・ID・登録・装飾・依存関係に変更なし。
+
+検証: npm test 79件、lint警告0、build、git diff --check。実Edgeで実コピー、38件の遅延コピー成功/失敗競合、実行直後編集、モード・重複変更、入力エラー、Clear、JSON圧縮、SQLエスケープ/数値表記、URL予約文字、Base64の日本語/絵文字/UTF-8拒否を確認。light/darkと1280/320pxの16画面、ネイティブキー入力、画面画像を確認。既存テキスト整形、単価比較、レシピ調整も回帰確認。実機Safariは未検証。
+
+ブラウザ試験: 既存の専用Edge CDPとpreviewを起動し node tests/conversion-browser.mjs。TEST_BASE_URLで本番、TEST_SCREENSHOT_DIRで画像出力先を指定できる。

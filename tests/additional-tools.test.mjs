@@ -618,3 +618,5 @@ test('画像の状態通知: 読み込みの制約と書き出し処理を区別
 await import('./everyday-calculations.test.mjs')
 
 await import('./text-formatting.test.mjs')
+
+await import('./conversion-calculations.test.mjs')
