@@ -594,3 +594,7 @@ PCでの利用を主対象とする。
 共通化が必要に見える場合でも、現在の実装に必要でなければ追加しない。
 
 既存設計を大きく変更する必要がある場合は、実装前に影響を確認する。
+
+## 公開一覧とサイトマップの同期
+
+ツール登録・名前・カテゴリ・URLを変更したら、Node.js 24で `node scripts/sync-catalogue.mjs` を実行してREADMEの生成区間とpublic/sitemap.xmlを更新する。`node scripts/sync-catalogue.mjs --check` と通常のnpm testで一致を確認し、npm run buildでpublicの静的ファイルを配信成果物へコピーする。READMEの生成区間外は保持する。robots.txtの許可/禁止ポリシーは生成スクリプトで変更しない。lastmodなど根拠のない更新日を付けない。
