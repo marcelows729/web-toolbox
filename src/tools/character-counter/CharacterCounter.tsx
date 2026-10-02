@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useClipboardFeedback } from '../../components/tools/useClipboardFeedback'
 import { countLines, getGraphemeLength } from './count'
 
 type CountSummary = {
@@ -27,7 +28,7 @@ const countUtf8Bytes = (text: string) => new TextEncoder().encode(text).length
 
 export default function CharacterCounter() {
   const [input, setInput] = useState('')
-  const [copyFeedback, setCopyFeedback] = useState('')
+  const { feedback: copyFeedback, reset: resetCopy, copy } = useClipboardFeedback()
 
   const summary = useMemo<CountSummary>(() => {
     if (!input) {
@@ -49,18 +50,11 @@ export default function CharacterCounter() {
     }
   }, [input])
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(input)
-      setCopyFeedback('入力テキストをコピーしました')
-    } catch {
-      setCopyFeedback('コピーに失敗しました')
-    }
-  }
+  const handleCopy = () => { void copy(input, '入力テキストをコピーしました') }
 
   const handleClear = () => {
     setInput('')
-    setCopyFeedback('')
+    resetCopy()
   }
 
   return (
@@ -77,7 +71,7 @@ export default function CharacterCounter() {
         <textarea
           id="character-counter-input"
           value={input}
-          onChange={(event) => setInput(event.target.value)}
+          onChange={(event) => { setInput(event.target.value); resetCopy() }}
           placeholder="ここに文字数を数えたいテキストを入力してください。"
           rows={12}
         />

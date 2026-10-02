@@ -7,6 +7,7 @@ export function useToolResult() {
   const [feedback, setFeedback] = useState('')
   const [busy, setBusy] = useState(false)
   const revision = useRef(0)
+  const copyRevision = useRef(0)
 
   useEffect(() => () => { revision.current += 1 }, [])
 
@@ -39,14 +40,15 @@ export function useToolResult() {
   const copy = async () => {
     if (output === null) return
     const current = revision.current
+    const currentCopy = ++copyRevision.current
     setFeedback('')
     setError('')
     try {
       if (!navigator.clipboard?.writeText) throw new Error('Clipboard API unavailable')
       await navigator.clipboard.writeText(output)
-      if (current === revision.current) setFeedback('コピーしました')
+      if (current === revision.current && currentCopy === copyRevision.current) setFeedback('コピーしました')
     } catch {
-      if (current === revision.current) {
+      if (current === revision.current && currentCopy === copyRevision.current) {
         setError('コピーできませんでした。出力欄を選択して手動でコピーしてください。')
       }
     }

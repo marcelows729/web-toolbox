@@ -122,6 +122,9 @@ export default function DateCalculator() {
   const hasDateResult = useMemo(() => dateDifferenceResult.length > 0 || dateInclusiveResult.length > 0, [dateDifferenceResult, dateInclusiveResult])
   const hasOffsetResult = useMemo(() => offsetResult.length > 0, [offsetResult])
 
+  const resetDateResult = () => { setDateDifferenceResult(''); setDateInclusiveResult(''); setDateError('') }
+  const resetOffsetResult = () => { setOffsetResult(''); setOffsetError('') }
+
   const handleDateDifferenceCalculate = () => {
     const startIso = composeIsoDate(startDate)
     const endIso = composeIsoDate(endDate)
@@ -260,7 +263,7 @@ export default function DateCalculator() {
                   <DatePartsInput
                     id="date-start"
                     value={startDate}
-                    onChange={setStartDate}
+                    onChange={(next) => { if (next.year !== startDate.year || next.month !== startDate.month || next.day !== startDate.day) resetDateResult(); setStartDate(next) }}
                   />
                 </div>
               </div>
@@ -273,7 +276,7 @@ export default function DateCalculator() {
                   <DatePartsInput
                     id="date-end"
                     value={endDate}
-                    onChange={setEndDate}
+                    onChange={(next) => { if (next.year !== endDate.year || next.month !== endDate.month || next.day !== endDate.day) resetDateResult(); setEndDate(next) }}
                   />
                 </div>
               </div>
@@ -315,7 +318,7 @@ export default function DateCalculator() {
                   <DatePartsInput
                     id="base-date"
                     value={baseDate}
-                    onChange={setBaseDate}
+                    onChange={(next) => { if (next.year !== baseDate.year || next.month !== baseDate.month || next.day !== baseDate.day) resetOffsetResult(); setBaseDate(next) }}
                   />
                 </div>
               </div>
@@ -330,7 +333,7 @@ export default function DateCalculator() {
                   min={0}
                   step={1}
                   value={dayOffset}
-                  onChange={(event) => setDayOffset(event.target.value)}
+                  onChange={(event) => { setDayOffset(event.target.value); resetOffsetResult() }}
                 />
               </div>
 
@@ -340,7 +343,7 @@ export default function DateCalculator() {
                   <button
                     type="button"
                     className={`toggle-option date-calculator-toggle-option ${direction === 'after' ? 'is-selected date-calculator-toggle-option--selected' : ''}`}
-                    onClick={() => setDirection('after')}
+                    onClick={() => { if (direction !== 'after') { setDirection('after'); resetOffsetResult() } }}
                     aria-pressed={direction === 'after'}
                   >
                     ○日後
@@ -348,7 +351,7 @@ export default function DateCalculator() {
                   <button
                     type="button"
                     className={`toggle-option date-calculator-toggle-option ${direction === 'before' ? 'is-selected date-calculator-toggle-option--selected' : ''}`}
-                    onClick={() => setDirection('before')}
+                    onClick={() => { if (direction !== 'before') { setDirection('before'); resetOffsetResult() } }}
                     aria-pressed={direction === 'before'}
                   >
                     ○日前

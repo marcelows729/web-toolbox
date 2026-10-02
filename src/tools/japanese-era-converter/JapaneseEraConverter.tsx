@@ -32,6 +32,9 @@ export default function JapaneseEraConverter() {
   const gregorianHasResult = useMemo(() => gregorianResult.length > 0, [gregorianResult])
   const eraHasResult = useMemo(() => eraResult.length > 0, [eraResult])
 
+  const resetGregorianResult = () => { setGregorianResult(''); setGregorianError('') }
+  const resetEraResult = () => { setEraResult(''); setEraError('') }
+
   const handleGregorianConvert = () => {
     const isoDate = composeIsoDate(gregorianInput)
     const result = gregorianToJapaneseEra(isoDate)
@@ -97,7 +100,7 @@ export default function JapaneseEraConverter() {
             <DatePartsInput
               id="gregorian-date-input"
               value={gregorianInput}
-              onChange={setGregorianInput}
+              onChange={(next) => { if (next.year !== gregorianInput.year || next.month !== gregorianInput.month || next.day !== gregorianInput.day) resetGregorianResult(); setGregorianInput(next) }}
             />
 
             <div className="action-row">
@@ -137,7 +140,7 @@ export default function JapaneseEraConverter() {
                 <select
                   id="era-select"
                   value={eraForm.era}
-                  onChange={(event) => setEraForm((current) => ({ ...current, era: event.target.value as EraName }))}
+                  onChange={(event) => { setEraForm((current) => ({ ...current, era: event.target.value as EraName })); resetEraResult() }}
                 >
                   {ERA_DEFINITIONS.map((era) => (
                     <option key={era.name} value={era.name}>
@@ -159,6 +162,7 @@ export default function JapaneseEraConverter() {
                   maxLength={4}
                   value={eraForm.year}
                   onChange={(event) => {
+                    resetEraResult()
                     const rawDigits = event.target.value.replace(/\D/g, '')
                     const yearPart = rawDigits.slice(0, 4)
                     const monthPart = rawDigits.slice(4, 6)
@@ -199,6 +203,7 @@ export default function JapaneseEraConverter() {
                   maxLength={2}
                   value={eraForm.month}
                   onChange={(event) => {
+                    resetEraResult()
                     const nextValue = event.target.value.replace(/\D/g, '').slice(0, 2)
 
                     setEraForm((current) => ({ ...current, month: nextValue }))
@@ -227,7 +232,7 @@ export default function JapaneseEraConverter() {
                   max={31}
                   step={1}
                   value={eraForm.day}
-                  onChange={(event) => setEraForm((current) => ({ ...current, day: event.target.value.replace(/\D/g, '').slice(0, 2) }))}
+                  onChange={(event) => { setEraForm((current) => ({ ...current, day: event.target.value.replace(/\D/g, '').slice(0, 2) })); resetEraResult() }}
                 />
               </div>
             </div>

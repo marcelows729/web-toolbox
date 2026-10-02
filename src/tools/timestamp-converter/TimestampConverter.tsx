@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useClipboardFeedback } from '../../components/tools/useClipboardFeedback'
 import DatePartsInput from '../../components/forms/DatePartsInput.tsx'
 import { composeIsoDate, type DatePartsValue } from '../../components/forms/dateParts'
 import { getFourDigitYearError } from '../../utils/dateInputValidation.ts'
@@ -86,21 +87,12 @@ export default function TimestampConverter() {
   const [datetimeInterpretation, setDatetimeInterpretation] = useState<DateInterpretation>('local')
   const [datetimeResult, setDatetimeResult] = useState<DatetimeResult | null>(null)
   const [datetimeError, setDatetimeError] = useState('')
-  const [copyFeedback, setCopyFeedback] = useState('')
-
-  useEffect(() => {
-    if (!copyFeedback) {
-      return
-    }
-
-    const timer = window.setTimeout(() => {
-      setCopyFeedback('')
-    }, 1800)
-
-    return () => window.clearTimeout(timer)
-  }, [copyFeedback])
+  const { feedback: copyFeedback, reset: resetCopy, copy } = useClipboardFeedback(1800)
+  const resetTimestampResult = () => { setTimestampResult(null); setTimestampError(''); resetCopy() }
+  const resetDatetimeResult = () => { setDatetimeResult(null); setDatetimeError(''); resetCopy() }
 
   const handleTimestampConvert = () => {
+    resetTimestampResult()
     const trimmed = timestampInput.trim()
 
     if (!trimmed) {
@@ -133,6 +125,7 @@ export default function TimestampConverter() {
   }
 
   const handleDatetimeConvert = () => {
+    resetDatetimeResult()
     const trimmedDate = composeIsoDate(datetimeDate)
     const trimmedTime = datetimeTime.trim()
 
@@ -175,6 +168,7 @@ export default function TimestampConverter() {
   }
 
   const handleCurrentTime = () => {
+    resetDatetimeResult()
     const now = new Date()
     setDatetimeDate({
       year: String(now.getFullYear()),
@@ -185,25 +179,19 @@ export default function TimestampConverter() {
   }
 
   const handleCurrentTimestamp = () => {
+    resetTimestampResult()
     const currentTimestamp = timestampUnit === 'seconds' ? Math.floor(Date.now() / 1000) : Date.now()
     setTimestampInput(String(currentTimestamp))
   }
 
-  const handleCopy = async (value: string, label: string) => {
-    try {
-      await navigator.clipboard.writeText(value)
-      setCopyFeedback(`${label}をコピーしました`)
-    } catch {
-      setCopyFeedback('コピーに失敗しました')
-    }
-  }
+  const handleCopy = (value: string, label: string) => { void copy(value, `${label}をコピーしました`) }
 
   const handleTimestampClear = () => {
     setTimestampInput('')
     setTimestampUnit('seconds')
     setTimestampResult(null)
     setTimestampError('')
-    setCopyFeedback('')
+    resetCopy()
   }
 
   const handleDatetimeClear = () => {
@@ -212,7 +200,7 @@ export default function TimestampConverter() {
     setDatetimeInterpretation('local')
     setDatetimeResult(null)
     setDatetimeError('')
-    setCopyFeedback('')
+    resetCopy()
   }
 
   const handleClearAll = () => {
@@ -239,7 +227,7 @@ export default function TimestampConverter() {
               id="timestamp-input"
               type="text"
               value={timestampInput}
-              onChange={(event) => setTimestampInput(event.target.value)}
+              onChange={(event) => { setTimestampInput(event.target.value); resetTimestampResult() }}
               placeholder="1704067200"
             />
 
@@ -250,7 +238,7 @@ export default function TimestampConverter() {
                   <button
                     type="button"
                     className={`toggle-option ${timestampUnit === 'seconds' ? 'is-selected' : ''}`}
-                    onClick={() => setTimestampUnit('seconds')}
+                    onClick={() => { if (timestampUnit !== 'seconds') { setTimestampUnit('seconds'); resetTimestampResult() } }}
                     aria-pressed={timestampUnit === 'seconds'}
                   >
                     秒
@@ -258,7 +246,7 @@ export default function TimestampConverter() {
                   <button
                     type="button"
                     className={`toggle-option ${timestampUnit === 'milliseconds' ? 'is-selected' : ''}`}
-                    onClick={() => setTimestampUnit('milliseconds')}
+                    onClick={() => { if (timestampUnit !== 'milliseconds') { setTimestampUnit('milliseconds'); resetTimestampResult() } }}
                     aria-pressed={timestampUnit === 'milliseconds'}
                   >
                     ミリ秒
@@ -324,7 +312,7 @@ export default function TimestampConverter() {
                 <DatePartsInput
                   id="datetime-date-input"
                   value={datetimeDate}
-                  onChange={setDatetimeDate}
+                  onChange={(next) => { if (next.year !== datetimeDate.year || next.month !== datetimeDate.month || next.day !== datetimeDate.day) resetDatetimeResult(); setDatetimeDate(next) }}
                 />
               </div>
 
@@ -334,7 +322,7 @@ export default function TimestampConverter() {
                   id="datetime-time-input"
                   type="time"
                   value={datetimeTime}
-                  onChange={(event) => setDatetimeTime(event.target.value)}
+                  onChange={(event) => { setDatetimeTime(event.target.value); resetDatetimeResult() }}
                   step={60}
                   aria-label="時刻"
                 />
@@ -354,7 +342,7 @@ export default function TimestampConverter() {
                   <button
                     type="button"
                     className={`toggle-option ${datetimeInterpretation === 'local' ? 'is-selected' : ''}`}
-                    onClick={() => setDatetimeInterpretation('local')}
+                    onClick={() => { if (datetimeInterpretation !== 'local') { setDatetimeInterpretation('local'); resetDatetimeResult() } }}
                     aria-pressed={datetimeInterpretation === 'local'}
                   >
                     Local
@@ -362,7 +350,7 @@ export default function TimestampConverter() {
                   <button
                     type="button"
                     className={`toggle-option ${datetimeInterpretation === 'utc' ? 'is-selected' : ''}`}
-                    onClick={() => setDatetimeInterpretation('utc')}
+                    onClick={() => { if (datetimeInterpretation !== 'utc') { setDatetimeInterpretation('utc'); resetDatetimeResult() } }}
                     aria-pressed={datetimeInterpretation === 'utc'}
                   >
                     UTC

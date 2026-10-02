@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import QRCode from 'qrcode'
 
 export default function QrCodeGenerator() {
@@ -6,10 +6,15 @@ export default function QrCodeGenerator() {
   const [qrDataUrl, setQrDataUrl] = useState('')
   const [error, setError] = useState('')
   const [status, setStatus] = useState('')
+  const revision = useRef(0)
+  useEffect(() => () => { revision.current += 1 }, [])
+  const resetResult = () => { revision.current += 1; setQrDataUrl(''); setError(''); setStatus('') }
 
   const canDownload = useMemo(() => qrDataUrl.length > 0, [qrDataUrl])
 
   const handleGenerate = async () => {
+    resetResult()
+    const current = revision.current
     const trimmed = input.trim()
 
     if (!trimmed) {
@@ -31,10 +36,12 @@ export default function QrCodeGenerator() {
         },
       })
 
+      if (current !== revision.current) return
       setQrDataUrl(dataUrl)
       setError('')
       setStatus('QRコードを生成しました。')
     } catch (caughtError) {
+      if (current !== revision.current) return
       const message = caughtError instanceof Error ? caughtError.message : 'QRコードの生成に失敗しました。'
       setQrDataUrl('')
       setStatus('')
@@ -42,25 +49,8 @@ export default function QrCodeGenerator() {
     }
   }
 
-  const handleClear = () => {
-    setInput('')
-    setQrDataUrl('')
-    setError('')
-    setStatus('')
-  }
-
-  const handleInputChange = (nextValue: string) => {
-    setInput(nextValue)
-
-    if (qrDataUrl) {
-      setQrDataUrl('')
-      setStatus('')
-    }
-
-    if (error) {
-      setError('')
-    }
-  }
+  const handleClear = () => { setInput(''); resetResult() }
+  const handleInputChange = (nextValue: string) => { setInput(nextValue); resetResult() }
 
   const handleDownload = () => {
     if (!qrDataUrl) {

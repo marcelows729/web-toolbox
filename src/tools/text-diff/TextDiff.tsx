@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useClipboardFeedback } from '../../components/tools/useClipboardFeedback'
 import { diffLines, diffPrefix, opsToPlainText, splitLines, type DiffOp } from './diff'
 
 export default function TextDiff() {
@@ -6,7 +7,8 @@ export default function TextDiff() {
   const [textB, setTextB] = useState('')
   const [diffResult, setDiffResult] = useState<DiffOp[] | null>(null)
   const [compareError, setCompareError] = useState('')
-  const [copyFeedback, setCopyFeedback] = useState('')
+  const { feedback: copyFeedback, reset: resetCopy, copy } = useClipboardFeedback(1800)
+  const resetResult = () => { setDiffResult(null); setCompareError(''); resetCopy() }
 
   const { addedCount, removedCount } = useMemo(() => {
     if (!diffResult) {
@@ -29,19 +31,8 @@ export default function TextDiff() {
   const isIdentical = diffResult !== null && addedCount === 0 && removedCount === 0
   const hasOutput = diffResult !== null
 
-  useEffect(() => {
-    if (!copyFeedback) {
-      return
-    }
-
-    const timer = window.setTimeout(() => {
-      setCopyFeedback('')
-    }, 1800)
-
-    return () => window.clearTimeout(timer)
-  }, [copyFeedback])
-
   const handleCompare = () => {
+    resetResult()
     try {
       const linesA = splitLines(textA)
       const linesB = splitLines(textB)
@@ -59,21 +50,10 @@ export default function TextDiff() {
     setTextB('')
     setDiffResult(null)
     setCompareError('')
-    setCopyFeedback('')
+    resetCopy()
   }
 
-  const handleCopy = async () => {
-    if (!diffResult) {
-      return
-    }
-
-    try {
-      await navigator.clipboard.writeText(opsToPlainText(diffResult))
-      setCopyFeedback('コピーしました')
-    } catch {
-      setCopyFeedback('コピーに失敗しました')
-    }
-  }
+  const handleCopy = () => { if (diffResult) void copy(opsToPlainText(diffResult)) }
 
   return (
     <div className="container tool-page">
@@ -91,7 +71,7 @@ export default function TextDiff() {
             <textarea
               id="text-diff-input-a"
               value={textA}
-              onChange={(event) => setTextA(event.target.value)}
+              onChange={(event) => { setTextA(event.target.value); resetResult() }}
               placeholder="比較元のテキストを入力してください"
               rows={12}
             />
@@ -104,7 +84,7 @@ export default function TextDiff() {
             <textarea
               id="text-diff-input-b"
               value={textB}
-              onChange={(event) => setTextB(event.target.value)}
+              onChange={(event) => { setTextB(event.target.value); resetResult() }}
               placeholder="比較先のテキストを入力してください"
               rows={12}
             />

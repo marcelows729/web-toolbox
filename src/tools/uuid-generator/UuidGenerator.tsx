@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useClipboardFeedback } from '../../components/tools/useClipboardFeedback'
 
 type CaseMode = 'lower' | 'upper'
 
@@ -32,12 +33,13 @@ export default function UuidGenerator() {
   const [countInput, setCountInput] = useState('1')
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
-  const [copyFeedback, setCopyFeedback] = useState('')
+  const { feedback: copyFeedback, reset: resetCopy, copy } = useClipboardFeedback()
   const [caseMode, setCaseMode] = useState<CaseMode>('lower')
 
   const hasOutput = useMemo(() => output.trim().length > 0, [output])
 
   const handleGenerate = () => {
+    resetCopy()
     const validationResult = validateCount(countInput)
 
     if (typeof validationResult === 'string') {
@@ -61,6 +63,9 @@ export default function UuidGenerator() {
   }
 
   const handleCaseChange = (nextMode: CaseMode) => {
+    if (nextMode === caseMode) return
+    resetCopy()
+    setError('')
     if (!output) {
       setCaseMode(nextMode)
       return
@@ -80,22 +85,11 @@ export default function UuidGenerator() {
     setCountInput('1')
     setOutput('')
     setError('')
-    setCopyFeedback('')
+    resetCopy()
     setCaseMode('lower')
   }
 
-  const handleCopy = async () => {
-    if (!hasOutput) {
-      return
-    }
-
-    try {
-      await navigator.clipboard.writeText(output)
-      setCopyFeedback('コピーしました')
-    } catch {
-      setCopyFeedback('コピーに失敗しました')
-    }
-  }
+  const handleCopy = () => { if (hasOutput) void copy(output) }
 
   return (
     <div className="container tool-page">
@@ -116,7 +110,7 @@ export default function UuidGenerator() {
             max={100}
             step={1}
             value={countInput}
-            onChange={(event) => setCountInput(event.target.value)}
+            onChange={(event) => { setCountInput(event.target.value); setOutput(''); setError(''); resetCopy() }}
             aria-describedby="uuid-count-help"
           />
 
