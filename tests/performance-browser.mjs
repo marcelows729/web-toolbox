@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict'
+import {send,evaluate,wait,navigate,click,input,viewport,assertNoOverflow,screenshot,finish} from './browser-client.mjs'
+const screenshotRoot=(process.env.TEST_SCREENSHOT_DIR||process.env.TEMP||'.').replaceAll('\\','/')+'/'
+async function until(expr){for(let i=0;i<150;i++){if(await evaluate(expr))return;await wait(50)}throw Error('timeout '+expr)}
+await viewport(320);await send('Emulation.setFocusEmulationEnabled',{enabled:true});await send('Page.bringToFront');await send('Network.clearBrowserCache');await send('Network.setCacheDisabled',{cacheDisabled:true});await navigate('/')
+let assets=await evaluate(`performance.getEntriesByType('resource').filter(r=>new URL(r.name).pathname.endsWith('.js')).map(r=>new URL(r.name).pathname)`)
+assert.equal(assets.length,1);assert.match(assets[0],/index-/)
+await send('Network.emulateNetworkConditions',{offline:false,latency:1000,downloadThroughput:200000,uploadThroughput:200000})
+await evaluate(`document.querySelector('a[href="/tools/qr-code-generator"]').click()`);await until(`document.querySelector('main [role="status"]')?.textContent.includes('読み込んでいます')`)
+await assertNoOverflow();await screenshot(screenshotRoot+'performance-loading.png')
+await until(`!!document.querySelector('#qr-generator-input')`);await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1})
+await input('#qr-generator-input','private-qr-test');await click('.primary-button');await until(`!!document.querySelector('.qr-preview-image')`)
+assert.match(await evaluate(`document.querySelector('.qr-preview-image').src`),/^data:image\/png/)
+if(await evaluate(`document.querySelector('.detail-favorite').getAttribute('aria-pressed')`)!=='true')await click('.detail-favorite');await click('.tool-navigation a');await click('a[href="/tools/qr-code-generator"]');await until(`!!document.querySelector('#qr-generator-input')`)
+assert.equal(await evaluate(`document.querySelector('#qr-generator-input').value`),'');assert.equal(await evaluate(`document.querySelector('.detail-favorite').getAttribute('aria-pressed')`),'true')
+await send('Page.navigate',{url:'about:blank'});await wait(150);await send('Network.clearBrowserCache');await send('Network.setBlockedURLs',{urls:['*QrCodeGenerator-*.js']});await navigate('/tools/qr-code-generator');await until(`!!document.querySelector('#tool-load-title')`)
+assert.equal(await evaluate(`document.querySelector('.error-box').getAttribute('role')`),'alert');await assertNoOverflow();assert.ok(await evaluate(`document.querySelector('.tool-load-return').getBoundingClientRect().height>=44`));await screenshot(screenshotRoot+'performance-failure.png')
+await evaluate(`document.querySelector('.error-box + .action-row .primary-button').focus()`);assert.equal(await evaluate('document.activeElement.textContent'),'再読み込み')
+await click('.error-box + .action-row a');await until(`!!document.querySelector('.tool-grid')`)
+await click('a[href="/tools/qr-code-generator"]');await until(`!!document.querySelector('#tool-load-title')`);await send('Network.setBlockedURLs',{urls:[]});await evaluate(`document.querySelector('.error-box + .action-row .primary-button').focus()`);await send('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13,text:'\r'});await send('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});await until(`!!document.querySelector('#qr-generator-input')`)
+await input('#qr-generator-input','recovered');await click('.primary-button');await until(`!!document.querySelector('.qr-preview-image')`)
+await navigate('/tools/image-resizer');await until(`!!document.querySelector('#image-files')`)
+await navigate('/tools/holiday-style');await until(`!!document.querySelector('#quiz-start')`);await click('#quiz-start');assert.ok(await evaluate(`!!document.querySelector('.quiz-options')`))
+await navigate('/tools/character-counter');await until(`!!document.querySelector('textarea')`);await input('textarea','日本語ABC');assert.ok(await evaluate(`document.querySelector('main').textContent.includes('6')`))
+assert.equal(await evaluate(`JSON.stringify(localStorage).includes('private-qr-test')`),false)
+await send('Network.setCacheDisabled',{cacheDisabled:false});finish();console.log('PASS: initial home excludes tool chunks; delayed loading status; QR native generation; cache revisit and shelf; blocked chunk alert/home recovery/reload; direct image/quiz/text routes; input privacy; 320px')

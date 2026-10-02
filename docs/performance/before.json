@@ -1,0 +1,286 @@
+{
+  "conditions": {
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Edg/154.0.4258.48",
+      "revision": "@80bb122d4912059dc0cf309273bbe3191ae80a62",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
+      "jsVersion": "15.4.11.6"
+    },
+    "viewport": "1280x1000",
+    "CPU": 4,
+    "latencyMs": 150,
+    "bytesPerSecond": 200000,
+    "cache": "disabled; cold cache cleared each document; SPA module cache retained",
+    "server": "http://127.0.0.1:5173",
+    "compression": "Vite preview gzip; transfer includes response headers",
+    "runs": 5
+  },
+  "rows": [
+    {
+      "label": "home-cold",
+      "visible": 1763.2000000476837,
+      "fcp": 1768,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 907.6999999880791
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 268.2999999523163
+        }
+      ]
+    },
+    {
+      "label": "qr-first-SPA",
+      "visible": 94.59999996423721,
+      "resources": []
+    },
+    {
+      "label": "home-return-SPA",
+      "visible": 35,
+      "resources": []
+    },
+    {
+      "label": "qr-return-SPA",
+      "visible": 8.800000011920929,
+      "resources": []
+    },
+    {
+      "label": "qr-direct-cold",
+      "visible": 1109.0999999642372,
+      "fcp": 1116,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 900.5
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 246.69999998807907
+        }
+      ]
+    },
+    {
+      "label": "home-cold",
+      "visible": 1146.300000011921,
+      "fcp": 1152,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 910
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 271.10000002384186
+        }
+      ]
+    },
+    {
+      "label": "qr-first-SPA",
+      "visible": 15.599999964237213,
+      "resources": []
+    },
+    {
+      "label": "home-return-SPA",
+      "visible": 37,
+      "resources": []
+    },
+    {
+      "label": "qr-return-SPA",
+      "visible": 10.900000035762787,
+      "resources": []
+    },
+    {
+      "label": "qr-direct-cold",
+      "visible": 1141.300000011921,
+      "fcp": 1148,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 922.8999999761581
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 270.19999998807907
+        }
+      ]
+    },
+    {
+      "label": "home-cold",
+      "visible": 1157.2999999523163,
+      "fcp": 1160,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 916.6999999880791
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 267.5
+        }
+      ]
+    },
+    {
+      "label": "qr-first-SPA",
+      "visible": 15.5,
+      "resources": []
+    },
+    {
+      "label": "home-return-SPA",
+      "visible": 46.09999996423721,
+      "resources": []
+    },
+    {
+      "label": "qr-return-SPA",
+      "visible": 11.600000023841858,
+      "resources": []
+    },
+    {
+      "label": "qr-direct-cold",
+      "visible": 1119.1000000238419,
+      "fcp": 1124,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 905.8000000119209
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 272.4000000357628
+        }
+      ]
+    },
+    {
+      "label": "home-cold",
+      "visible": 1128.800000011921,
+      "fcp": 1136,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 894.5
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 272.5
+        }
+      ]
+    },
+    {
+      "label": "qr-first-SPA",
+      "visible": 15.699999988079071,
+      "resources": []
+    },
+    {
+      "label": "home-return-SPA",
+      "visible": 35.69999998807907,
+      "resources": []
+    },
+    {
+      "label": "qr-return-SPA",
+      "visible": 8.399999976158142,
+      "resources": []
+    },
+    {
+      "label": "qr-direct-cold",
+      "visible": 1116.0999999642372,
+      "fcp": 1124,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 902.6000000238419
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 269.19999998807907
+        }
+      ]
+    },
+    {
+      "label": "home-cold",
+      "visible": 1143.3999999761581,
+      "fcp": 1148,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 908.1999999880791
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 263.5999999642372
+        }
+      ]
+    },
+    {
+      "label": "qr-first-SPA",
+      "visible": 16.19999998807907,
+      "resources": []
+    },
+    {
+      "label": "home-return-SPA",
+      "visible": 38,
+      "resources": []
+    },
+    {
+      "label": "qr-return-SPA",
+      "visible": 7.700000047683716,
+      "resources": []
+    },
+    {
+      "label": "qr-direct-cold",
+      "visible": 1123.4000000357628,
+      "fcp": 1128,
+      "resources": [
+        {
+          "name": "/assets/index-CgMMizH6.js",
+          "decoded": 460531,
+          "transfer": 135741,
+          "duration": 915.1999999880791
+        },
+        {
+          "name": "/assets/index-D9QdEK2l.css",
+          "decoded": 43845,
+          "transfer": 9263,
+          "duration": 275.7000000476837
+        }
+      ]
+    }
+  ]
+}

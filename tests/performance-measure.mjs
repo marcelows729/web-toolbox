@@ -1,0 +1,14 @@
+import fs from 'node:fs/promises'
+import {send,evaluate,wait,finish} from './browser-client.mjs'
+const base=process.env.TEST_BASE_URL||'http://127.0.0.1:5173'
+const out=process.argv[2] || 'performance-measurements.json'
+await send('Emulation.setDeviceMetricsOverride',{width:1280,height:1000,deviceScaleFactor:1,mobile:false})
+await send('Emulation.setCPUThrottlingRate',{rate:4})
+await send('Network.emulateNetworkConditions',{offline:false,latency:150,downloadThroughput:200000,uploadThroughput:200000})
+const rows=[]
+async function ready(path){for(let i=0;i<400;i++){if(await evaluate(`location.pathname===${JSON.stringify(path)}&&!!document.querySelector(${JSON.stringify(path==='/'?'.tool-grid':'.tool-header')})`))return;await wait(25)}throw Error('timeout '+path)}
+async function cold(path,label){await send('Page.navigate',{url:'about:blank'});await wait(100);await send('Network.clearBrowserCache');await send('Network.setCacheDisabled',{cacheDisabled:true});await send('Page.navigate',{url:base+path});await ready(path);const visible=await evaluate('performance.now()');await wait(200);const data=await evaluate(`({visible:${visible},fcp:performance.getEntriesByName('first-contentful-paint')[0]?.startTime,resources:performance.getEntriesByType('resource').filter(x=>/\\.(js|css)(\\?|$)/.test(x.name)).map(x=>({name:new URL(x.name).pathname,decoded:x.decodedBodySize,transfer:x.transferSize,duration:x.duration}))})`);rows.push({label,...data});console.log(label,JSON.stringify(data));}
+async function spa(path,label){await evaluate('performance.clearResourceTimings()');const start=await evaluate('performance.now()');await evaluate(`document.querySelector('a[href="${path}"]').click()`);await ready(path);const visible=await evaluate('performance.now()');await wait(200);const resources=await evaluate(`performance.getEntriesByType('resource').filter(x=>/\\.(js|css)(\\?|$)/.test(x.name)).map(x=>({name:new URL(x.name).pathname,decoded:x.decodedBodySize,transfer:x.transferSize,duration:x.duration}))`);rows.push({label,visible:visible-start,resources});console.log(label,JSON.stringify(rows.at(-1)));}
+for(let i=0;i<5;i++){await cold('/','home-cold');await spa('/tools/qr-code-generator','qr-first-SPA');await spa('/','home-return-SPA');await spa('/tools/qr-code-generator','qr-return-SPA');await cold('/tools/qr-code-generator','qr-direct-cold');}
+await fs.writeFile(out,JSON.stringify({conditions:{browser:await send('Browser.getVersion'),viewport:'1280x1000',CPU:4,latencyMs:150,bytesPerSecond:200000,cache:'disabled; cold cache cleared each document; SPA module cache retained',server:base,compression:'Vite preview gzip; transfer includes response headers',runs:5},rows},null,2));
+await send('Emulation.setCPUThrottlingRate',{rate:1});await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});await send('Network.setCacheDisabled',{cacheDisabled:false});finish()
