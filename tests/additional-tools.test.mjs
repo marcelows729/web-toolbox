@@ -622,3 +622,5 @@ await import('./text-formatting.test.mjs')
 await import('./conversion-calculations.test.mjs')
 
 await import('./duration.test.mjs')
+
+await import('./page-clarity.test.mjs')
