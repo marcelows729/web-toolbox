@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import Header from './Header'
+import ToolLoadBoundary from './ToolLoadBoundary'
 import { pageMetadata } from '../../utils/pageMetadata'
 import { findToolByPath } from '../../utils/toolRoute'
 import { useToolShelf } from '../../state/ToolShelfContext'
@@ -31,7 +32,11 @@ export default function Layout({ theme, setTheme }: LayoutProps) {
           <button className="detail-favorite secondary-button" type="button" aria-pressed={shelf.favorites.includes(currentTool.id)}
             onClick={() => toggleFavorite(currentTool.id)}>{shelf.favorites.includes(currentTool.id) ? '★ お気に入り登録済み' : '☆ お気に入りに追加'}</button>
         </nav>}
-        <Outlet />
+        <ToolLoadBoundary key={pathname}>
+          <Suspense fallback={<div className="container tool-page tool-loading" role="status" aria-live="polite">ツールを読み込んでいます…</div>}>
+            <Outlet />
+          </Suspense>
+        </ToolLoadBoundary>
       </main>
       <footer className="site-footer"><div className="container footer-inner">
         <div><strong>ぽけつる</strong><span>ちょっと便利なツールを、ポケットに。</span></div>

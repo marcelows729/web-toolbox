@@ -1,38 +1,39 @@
-import { useEffect, useState } from 'react'
+import { lazy, useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
 import NotFoundPage from './pages/NotFoundPage'
-import Base64EncodeDecode from './tools/base64-encode-decode/Base64EncodeDecode'
-import CharacterCounter from './tools/character-counter/CharacterCounter'
-import DateCalculator from './tools/date-calculator/DateCalculator'
-import JapaneseEraConverter from './tools/japanese-era-converter/JapaneseEraConverter'
-import JsonFormatter from './tools/json-formatter/JsonFormatter'
-import QrCodeGenerator from './tools/qr-code-generator/QrCodeGenerator'
-import SqlInGenerator from './tools/sql-in-generator/SqlInGenerator'
-import TextDiff from './tools/text-diff/TextDiff'
-import TimestampConverter from './tools/timestamp-converter/TimestampConverter'
-import UrlEncodeDecode from './tools/url-encode-decode/UrlEncodeDecode'
-import UuidGenerator from './tools/uuid-generator/UuidGenerator'
-import Ipv4Cidr from './tools/ipv4-cidr/Ipv4Cidr'
-import Sha256 from './tools/sha256/Sha256'
-import RadixConverter from './tools/radix-converter/RadixConverter'
-import HtmlEscape from './tools/html-escape/HtmlEscape'
-import PercentageCalculator from './tools/percentage-calculator/PercentageCalculator'
 import ToolShelfProvider from './state/ToolShelfProvider'
-import UnitConverter from './tools/unit-converter/UnitConverter'
-import BillSplitter from './tools/bill-splitter/BillSplitter'
-import RoulettePicker from './tools/roulette-picker/RoulettePicker'
-import HolidayStyle from './tools/holiday-style/HolidayStyle'
-import PocketCompanion from './tools/pocket-companion/PocketCompanion'
-import ImageResizer from './tools/image-resizer/ImageResizer'
-import ImageJoiner from './tools/image-joiner/ImageJoiner'
-import UnitPriceComparison from './tools/unit-price-comparison/UnitPriceComparison'
-import RecipeScaler from './tools/recipe-scaler/RecipeScaler'
-import TextFormatter from './tools/text-formatter/TextFormatter'
-import DurationCalculator from './tools/duration-calculator/DurationCalculator'
-import RandomGrouping from './tools/random-grouping/RandomGrouping'
 import './App.css'
+
+const Base64EncodeDecode = lazy(() => import('./tools/base64-encode-decode/Base64EncodeDecode'))
+const CharacterCounter = lazy(() => import('./tools/character-counter/CharacterCounter'))
+const DateCalculator = lazy(() => import('./tools/date-calculator/DateCalculator'))
+const JapaneseEraConverter = lazy(() => import('./tools/japanese-era-converter/JapaneseEraConverter'))
+const JsonFormatter = lazy(() => import('./tools/json-formatter/JsonFormatter'))
+const QrCodeGenerator = lazy(() => import('./tools/qr-code-generator/QrCodeGenerator'))
+const SqlInGenerator = lazy(() => import('./tools/sql-in-generator/SqlInGenerator'))
+const TextDiff = lazy(() => import('./tools/text-diff/TextDiff'))
+const TimestampConverter = lazy(() => import('./tools/timestamp-converter/TimestampConverter'))
+const UrlEncodeDecode = lazy(() => import('./tools/url-encode-decode/UrlEncodeDecode'))
+const UuidGenerator = lazy(() => import('./tools/uuid-generator/UuidGenerator'))
+const Ipv4Cidr = lazy(() => import('./tools/ipv4-cidr/Ipv4Cidr'))
+const Sha256 = lazy(() => import('./tools/sha256/Sha256'))
+const RadixConverter = lazy(() => import('./tools/radix-converter/RadixConverter'))
+const HtmlEscape = lazy(() => import('./tools/html-escape/HtmlEscape'))
+const PercentageCalculator = lazy(() => import('./tools/percentage-calculator/PercentageCalculator'))
+const UnitConverter = lazy(() => import('./tools/unit-converter/UnitConverter'))
+const BillSplitter = lazy(() => import('./tools/bill-splitter/BillSplitter'))
+const RoulettePicker = lazy(() => import('./tools/roulette-picker/RoulettePicker'))
+const HolidayStyle = lazy(() => import('./tools/holiday-style/HolidayStyle'))
+const PocketCompanion = lazy(() => import('./tools/pocket-companion/PocketCompanion'))
+const ImageResizer = lazy(() => import('./tools/image-resizer/ImageResizer'))
+const ImageJoiner = lazy(() => import('./tools/image-joiner/ImageJoiner'))
+const UnitPriceComparison = lazy(() => import('./tools/unit-price-comparison/UnitPriceComparison'))
+const RecipeScaler = lazy(() => import('./tools/recipe-scaler/RecipeScaler'))
+const TextFormatter = lazy(() => import('./tools/text-formatter/TextFormatter'))
+const DurationCalculator = lazy(() => import('./tools/duration-calculator/DurationCalculator'))
+const RandomGrouping = lazy(() => import('./tools/random-grouping/RandomGrouping'))
 
 type ThemeMode = 'light' | 'dark'
 

@@ -1229,3 +1229,5 @@ button, a, input, select, textarea { scroll-margin: 24px; }
 @media (max-width: 480px) { .grouping-group { padding: 16px; } .grouping-members li { gap: 8px; } }
 
 .grouping-members li > span:last-child { white-space: pre-wrap; }
+
+.tool-load-return { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 20px; border-radius: 12px; text-decoration: none; }
