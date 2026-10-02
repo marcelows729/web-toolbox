@@ -38,3 +38,12 @@
 検証: npm test 64件（既存の診断全2048回答組合せを含む）、lint警告0、build、git diff --check。実Edgeで125 URL確認・画像処理回帰・58 light/dark mobile表示と、新ツールの追加削除上限、0価格、g/kg・mL/L・個、次元混在拒否、人数/倍率、小数・適量・少々、入力更新・リセット、実コピー、キーボードとフォーカス、お気に入り復元・保存IDのみを確認。light/dark・1280/320px画像を目視。実機Safariは未検証。
 
 新ツールのブラウザ確認は既存の専用Edge CDPとpreviewを起動して node tests/everyday-browser.mjs。TEST_BASE_URLで本番にも対応し、TEST_SCREENSHOT_DIRでスクリーンショット出力先を指定できる。
+
+
+## 2026-10-02 テキスト整形
+
+テキスト整形を追加し、26ツールへ。5操作を選択式・既定OFFとし、元入力と結果を分離。改行・全角空白・タブ・Unicode・末尾改行の仕様と上限は画面とdecisions.mdに記載。既存文字数カウンターの定義を共通関数へ抽出し、見た目の文字数とfallbackを維持。
+
+検証: npm test 75件（整形全32組合せと既存診断全2048回答組合せ）、lint、build、diffcheckと差分レビュー。実Edgeで130 URL・画像回帰・60明暗モバイル表示に加え、ネイティブ貼り付け、CRLF保持、キーボード、実コピー、入力/操作変更時の結果・通知消去、コピー中の変更、上限拒否で元入力保持、HTML文字列、カウンターとの一致、棚のID保存を確認。最大入力は4倍CPU低速化条件で約75ms（当該PCの測定、他端末の保証ではない）。light/dark・1280/320pxの画像を目視。実機Safariは未検証。
+
+ブラウザ確認: 既存の専用Edge CDPとpreviewを起動し node tests/text-formatter-browser.mjs。TEST_BASE_URLで本番、TEST_SCREENSHOT_DIRで画像出力先を指定できる。

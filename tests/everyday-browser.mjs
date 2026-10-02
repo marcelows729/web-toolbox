@@ -15,7 +15,7 @@ const fillIngredient = async (id,n,a,u='') => { await input(`#ingredient-name-${
 
 await send('Emulation.setFocusEmulationEnabled',{enabled:true});await send('Page.bringToFront');await send('Browser.grantPermissions',{permissions:['clipboardReadWrite','clipboardSanitizedWrite'],origin})
 await viewport(1280);await navigate('/');await evaluate('localStorage.clear()');await navigate('/')
-assert.equal(await evaluate('document.querySelectorAll(".tool-card").length'),25)
+assert.equal(await evaluate('document.querySelectorAll(".tool-card").length'),26)
 for(const [query,id] of [['どっちが安い','unit-price-comparison'],['何人分','recipe-scaler']]){await input('#tool-search',query);assert.ok(await evaluate(`!!document.querySelector('.tool-card[data-tool-id="${id}"]')`));await input('#tool-search','')}
 await navigate('/tools/unit-price-comparison');await theme('light');await absent();await click('#price-calculate');await error('数値')
 await fillProduct(1,'２９８','５００','g','比較A');await fillProduct(2,'500','1','kg','比較B');await click('#price-calculate')
