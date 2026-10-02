@@ -1,6 +1,7 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
+  { id: 'random-grouping', name: 'ランダム組み分け', description: 'イベントやゲームの候補全員を、人数差1以内の組に分けます。', category: 'general', keywords: ['組み分け', 'グループ分け', 'チーム分け', '班分け', 'ランダム', '抽選', 'イベント', 'ゲーム', 'random', 'group', 'team'], path: '/tools/random-grouping', relatedTools: ['roulette-picker'] },
   { id: 'duration-calculator', name: '時間の足し算・引き算', description: '動画や作業の時間を足し引きし、合計時間・分・秒を計算します。', category: 'general', keywords: ['時間', '足し算', '引き算', '時間計算', '動画時間', '作業時間', 'duration', 'hours', 'minutes', 'seconds'], path: '/tools/duration-calculator', relatedTools: ['date-calculator', 'timestamp-converter', 'unit-converter'] },
   { id: 'text-formatter', name: 'テキスト整形', description: '文章や一覧の空白・空行・重複を、選んだ操作だけで整えます。', category: 'text', keywords: ['テキスト', '文章', '整形', '空白', '空行', '重複', '改行', '削除', 'trim', 'format', 'dedupe', '空白を消す', '行をまとめる', '文章整理'], path: '/tools/text-formatter', relatedTools: ['character-counter', 'text-diff', 'html-escape'] },
   { id: 'unit-price-comparison', name: '買い物の単価比較', description: '2〜4商品の価格を100g・100mL・1個など同じ量で比べます。', category: 'general', keywords: ['単価', '買い物', '価格', '比較', '安い', 'お得', '送料', '100g', '100mL', '個数', 'unit price', 'price comparison', 'どっちが安い', '値段'], path: '/tools/unit-price-comparison', relatedTools: ['bill-splitter', 'unit-converter', 'recipe-scaler'] },

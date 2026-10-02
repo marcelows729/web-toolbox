@@ -31,6 +31,7 @@ import UnitPriceComparison from './tools/unit-price-comparison/UnitPriceComparis
 import RecipeScaler from './tools/recipe-scaler/RecipeScaler'
 import TextFormatter from './tools/text-formatter/TextFormatter'
 import DurationCalculator from './tools/duration-calculator/DurationCalculator'
+import RandomGrouping from './tools/random-grouping/RandomGrouping'
 import './App.css'
 
 type ThemeMode = 'light' | 'dark'
@@ -121,6 +122,7 @@ function App() {
           <Route path="/tools/recipe-scaler" element={<RecipeScaler />} />
           <Route path="/tools/text-formatter" element={<TextFormatter />} />
           <Route path="/tools/duration-calculator" element={<DurationCalculator />} />
+          <Route path="/tools/random-grouping" element={<RandomGrouping />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

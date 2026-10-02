@@ -1216,3 +1216,16 @@ button, a, input, select, textarea { scroll-margin: 24px; }
 @media (max-width: 480px) { .duration-fields { gap: 8px; } .duration-total { font-size: 1.25rem; } }
 
 @media (min-width: 768px) { .duration-row { display: grid; grid-template-columns: 180px minmax(0, 1fr) auto; gap: 20px; align-items: end; } .duration-row .duration-fields { margin-top: 0; } .duration-row .row-remove { margin-top: 0; } }
+
+.grouping-count-field { display: block; max-width: 240px; margin: 20px 0; }
+.grouping-duplicate-note { padding: 12px 16px; background: var(--surface-alt); border-left: 3px solid var(--accent); border-radius: 4px; }
+.grouping-status { min-height: 24px; margin: 16px 0; }
+.grouping-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+.grouping-group { min-width: 0; padding: 20px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px; }
+.grouping-group h3 { margin: 0 0 16px; font-size: 1rem; }
+.grouping-members { list-style: none; margin: 0; padding: 0; }
+.grouping-members li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; margin: 12px 0; overflow-wrap: anywhere; }
+.grouping-member-number { color: var(--text-soft); font-size: 0.8rem; padding-top: 2px; }
+@media (max-width: 480px) { .grouping-group { padding: 16px; } .grouping-members li { gap: 8px; } }
+
+.grouping-members li > span:last-child { white-space: pre-wrap; }
