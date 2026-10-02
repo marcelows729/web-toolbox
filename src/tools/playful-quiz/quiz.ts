@@ -24,5 +24,5 @@ export function calculateQuiz(definition: QuizDefinition, answers: string[]): Qu
 }
 
 export function quizResultText(definition: QuizDefinition, result: QuizResult): string {
-  return `${definition.title}\n${result.outcome.title}\n${result.outcome.description}\n小さな一歩：${result.outcome.action}\n回答の手がかり：${result.matched.map(label => `「${label}」`).join('、')}\n${PLAY_NOTICE}`
+  return `${definition.title}\n${result.outcome.title}\n${result.outcome.description}\n小さな一歩：${result.outcome.action}\n${PLAY_NOTICE}`
 }

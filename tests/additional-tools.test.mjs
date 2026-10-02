@@ -426,6 +426,8 @@ for (const definition of [holidayDefinition, companionDefinition]) {
       assert.deepEqual(result.matched, chosen.filter(choice => choice.type === result.outcome.id).map(choice => choice.label))
       const copy = quizResultText(definition, result)
       assert.ok(copy.includes(result.outcome.title) && copy.includes(result.outcome.action) && copy.includes(PLAY_NOTICE))
+      assert.ok(!/配点|同点|紹介順|手がかり|1点/.test(copy))
+      for (const other of definition.outcomes) if (other.id !== result.outcome.id) assert.ok(!copy.includes(other.title))
       reached[result.outcome.id]++
     }
     for (const count of Object.values(reached)) assert.ok(count > 0)
