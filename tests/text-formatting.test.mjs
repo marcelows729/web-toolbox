@@ -60,7 +60,7 @@ test('共有カウント: 空文字・末尾改行・CRLF/LF/CRと見た目の�
   assert.deepEqual(textCounts('a\r\n'),{characters:2,lines:2})
   for(const text of ['😀','e\u0301','👩‍👩‍👧‍👦','🇯🇵'])assert.equal(getGraphemeLength(text),1)
   const result=transform('😀\n😀\ne\u0301',{dedupeLines:true});assert.deepEqual(result.before,{characters:5,lines:3});assert.deepEqual(result.after,{characters:3,lines:2})
-  const source=readFileSync(new URL('../src/tools/character-counter/CharacterCounter.tsx',import.meta.url),'utf8');assert.ok(source.includes("import { countLines, getGraphemeLength } from './count'"))
+  const source=readFileSync(new URL('../src/tools/character-counter/CharacterCounter.tsx',import.meta.url),'utf8');assert.ok(source.includes("from './summary'"));assert.ok(readFileSync(new URL('../src/tools/character-counter/summary.ts',import.meta.url),'utf8').includes("import { countLines, getGraphemeLength } from './count'"))
 })
 test('共有カウント: Segmenterが使えない場合の既存コードポイントfallback', () => {
   const original=Object.getOwnPropertyDescriptor(Intl,'Segmenter')

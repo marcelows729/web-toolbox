@@ -634,3 +634,5 @@ await import('./catalogue.test.mjs')
 await import('./text-replace.test.mjs')
 
 await import('./aspect-ratio.test.mjs')
+
+await import('./character-counter.test.mjs')
