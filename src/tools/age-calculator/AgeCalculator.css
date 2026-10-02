@@ -1,0 +1,8 @@
+.age-date-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.age-date-fields > div { min-width: 0; }
+.age-result { margin: 24px 0 16px; padding: 16px 20px; border-radius: 8px; background: var(--surface-alt); }
+.age-result p { margin: 8px 0; }
+.age-result span, .age-result strong { display: block; }
+.age-result span { color: var(--text-soft); font-size: 13px; margin-bottom: 4px; }
+.age-result strong { font-size: 20px; font-weight: 600; overflow-wrap: anywhere; }
+@media (max-width: 760px) { .age-date-fields { grid-template-columns: 1fr; } }

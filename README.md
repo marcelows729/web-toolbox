@@ -67,7 +67,7 @@
 レジストリから生成しています。ツール追加時は `node scripts/sync-catalogue.mjs`、確認は `node scripts/sync-catalogue.mjs --check` を実行してください。サイトマップも同時に更新します。
 
 <!-- public-tools:start -->
-公開ツール：36件。現在ツールが登録されているカテゴリ：5種類。
+公開ツール：37件。現在ツールが登録されているカテゴリ：5種類。
 
 ### 開発
 
@@ -91,6 +91,7 @@
 
 ### 日時
 
+- [経過年月・年齢計算](https://poketsuru.com/tools/age-calculator)
 - [日付・日数計算](https://poketsuru.com/tools/date-calculator)
 
 ### ネットワーク
