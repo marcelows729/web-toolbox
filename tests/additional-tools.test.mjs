@@ -628,3 +628,5 @@ await import('./page-clarity.test.mjs')
 await import('./grouping.test.mjs')
 
 await import('./rotation.test.mjs')
+
+await import('./catalogue.test.mjs')

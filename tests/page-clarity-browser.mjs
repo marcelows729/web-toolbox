@@ -4,6 +4,7 @@ import {navigate,evaluate,send,input,click,wait,viewport,assertNoOverflow,screen
 const root=(process.env.TEST_SCREENSHOT_DIR||process.env.TEMP||'.').replaceAll('\\','/')+'/'
 const key=async(key,code,text)=>{await send('Input.dispatchKeyEvent',{type:'keyDown',key,code:key,windowsVirtualKeyCode:code,...(text?{text}:{})});await send('Input.dispatchKeyEvent',{type:'keyUp',key,code:key,windowsVirtualKeyCode:code});await wait(100)}
 await send('Emulation.setFocusEmulationEnabled',{enabled:true});await send('Page.bringToFront');await viewport(320)
+await navigate('/');await evaluate(`history.replaceState({...history.state,usr:null},'',location.href)`);await navigate('/')
 const home='ぽけつる - ちょっと便利なWebツール集'
 for(const theme of ['light','dark']){
  await navigate('/');await click(theme==='light'?'.theme-option:first-child':'.theme-option:last-child');await wait(500)

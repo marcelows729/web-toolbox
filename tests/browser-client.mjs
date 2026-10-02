@@ -7,11 +7,12 @@ let id = 0
 const pending = new Map()
 const errors = []
 const external = []
+export const requests = []
 const baseUrl = process.env.TEST_BASE_URL || 'http://127.0.0.1:5173'
 const allowedOrigins = new Set([new URL(baseUrl).origin])
 if (new URL(baseUrl).hostname === 'poketsuru.com') allowedOrigins.add('https://static.cloudflareinsights.com')
 export const allowOrigin = origin => allowedOrigins.add(origin)
-ws.addEventListener('message', e => { const m = JSON.parse(e.data); if (m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.text); if (m.method === 'Network.requestWillBeSent' && /^https?:/.test(m.params.request.url) && !allowedOrigins.has(new URL(m.params.request.url).origin)) external.push(new URL(m.params.request.url).origin); if (m.id) { const p = pending.get(m.id); pending.delete(m.id); if (m.error) p.reject(m.error); else p.resolve(m.result) } })
+ws.addEventListener('message', e => { const m = JSON.parse(e.data); if (m.method === 'Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.text); if (m.method === 'Network.requestWillBeSent' && /^https?:/.test(m.params.request.url) && !allowedOrigins.has(new URL(m.params.request.url).origin)) external.push(new URL(m.params.request.url).origin); if (m.method === 'Network.requestWillBeSent' && /^https?:/.test(m.params.request.url)) requests.push({ url: m.params.request.url, body: m.params.request.postData || '' }); if (m.id) { const p = pending.get(m.id); pending.delete(m.id); if (m.error) p.reject(m.error); else p.resolve(m.result) } })
 export const send = (method, params = {}) => new Promise((resolve, reject) => { const n = ++id; pending.set(n, { resolve, reject }); ws.send(JSON.stringify({ id: n, method, params })) })
 export const evaluate = async expression => { const r = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw new Error(JSON.stringify(r.exceptionDetails)); return r.result.value }
 export const wait = ms => new Promise(r => setTimeout(r, ms))
