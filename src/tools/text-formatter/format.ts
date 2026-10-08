@@ -12,6 +12,7 @@ export const TEXT_OPERATIONS = [
 export type TextOperation = typeof TEXT_OPERATIONS[number]['id']
 export type TextOptions = Record<TextOperation, boolean>
 export const defaultTextOptions = (): TextOptions => ({ trimLines: false, removeBlankLines: false, collapseBlankLines: false, dedupeLines: false, joinLines: false })
+export type TextSort = 'none' | 'ascending' | 'descending'
 export type TextFormatting = { output: string; before: ReturnType<typeof textCounts>; after: ReturnType<typeof textCounts> }
 
 export function validateTextInput(input: string): void {
@@ -19,9 +20,10 @@ export function validateTextInput(input: string): void {
   if (countLines(input) > MAX_TEXT_LINES) throw new Error('入力は5,000行までにしてください。末尾の改行も1行分を増やします。')
 }
 
-export function formatText(input: string, options: TextOptions): TextFormatting {
+export function formatText(input: string, options: TextOptions, order: TextSort = 'none'): TextFormatting {
   validateTextInput(input)
   for (const operation of TEXT_OPERATIONS) if (typeof options[operation.id] !== 'boolean') throw new Error('整形する操作を確認してください。')
+  if (!['none', 'ascending', 'descending'].includes(order)) throw new Error('行の並べ替え順を確認してください。')
   const parts = input.split(/(\r\n|\r|\n)/)
   let lines: Array<{ text: string; ending: string }> = []
   for (let index = 0; index < parts.length; index += 2) lines.push({ text: options.trimLines ? parts[index].trim() : parts[index], ending: parts[index + 1] || '' })
@@ -33,6 +35,18 @@ export function formatText(input: string, options: TextOptions): TextFormatting 
   if (options.dedupeLines) {
     const seen = new Set<string>()
     lines = lines.filter(line => { if (seen.has(line.text)) return false; seen.add(line.text); return true })
+  }
+  if (order !== 'none' && lines.length > 1) {
+    // Keep the terminal empty line and each position's delimiter in place.
+    const count = lines.length - (lines[lines.length - 1].text === '' ? 1 : 0)
+    const endings = lines.map(line => line.ending)
+    let compare: (first: string, second: string) => number
+    try { compare = new Intl.Collator('ja-JP', { numeric: true, sensitivity: 'variant' }).compare }
+    catch { throw new Error('このブラウザでは行の並べ替えを使えません。対応するモダンブラウザで確認してください。') }
+    const direction = order === 'ascending' ? 1 : -1
+    const sorted = lines.slice(0, count).map((line, index) => ({ text: line.text, index }))
+      .sort((first, second) => direction * compare(first.text, second.text) || first.index - second.index)
+    lines = [...sorted.map((line, index) => ({ text: line.text, ending: endings[index] })), ...lines.slice(count)]
   }
   const output = options.joinLines ? lines.map(line => line.text).join(' ') : lines.map((line, index) => line.text + (index < lines.length - 1 ? line.ending : '')).join('')
   return { output, before: textCounts(input), after: textCounts(output) }

@@ -1,0 +1,22 @@
+.aion2-checklist .tool-panel + .tool-panel { margin-top: 24px; }
+.aion2-checklist form { margin: 18px 0; }
+.aion2-checklist .field-label { display: block; margin-bottom: 16px; }
+.aion2-checklist input[type='text'], .aion2-checklist input[type='file'] { width: 100%; min-width: 0; margin-top: 8px; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; }
+.aion2-checklist .field-label select { display: block; width: 100%; margin-top: 8px; }
+.aion2-checklist input[type='file']::file-selector-button { margin-right: 8px; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: 8px; background: var(--surface-alt); color: var(--text); font: inherit; cursor: pointer; }
+.aion2-task-fields { display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 16px; }
+.aion2-periods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 24px; }
+.aion2-periods > section { min-width: 0; }
+.aion2-progress-text { font-size: .9rem; font-weight: 500; color: var(--text-muted); }
+.aion2-periods progress { width: 100%; accent-color: var(--accent); }
+.aion2-task-list { list-style: none; padding: 0; }
+.aion2-task-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.aion2-task-row label, .aion2-confirm { display: flex; align-items: start; gap: 10px; overflow-wrap: anywhere; }
+.aion2-task-row input, .aion2-confirm input { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 3px; accent-color: var(--accent); }
+.aion2-task-actions { display: flex; gap: 10px; }
+.aion2-task-actions button { min-width: 44px; min-height: 44px; padding: 4px; }
+.aion2-checklist h2, .aion2-checklist h3, .aion2-restore-preview { overflow-wrap: anywhere; }
+.aion2-restore-preview { margin: 20px 0; padding: 16px; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--surface-muted); }
+.aion2-checklist #aion2-export { margin: 16px 0; }
+@media (max-width: 700px) { .aion2-task-fields, .aion2-periods { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 480px) { .aion2-task-row { grid-template-columns: minmax(0, 1fr); } .aion2-task-actions { justify-content: flex-end; } }

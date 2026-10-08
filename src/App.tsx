@@ -40,6 +40,8 @@ const TextFormatter = lazy(() => import('./tools/text-formatter/TextFormatter'))
 const DurationCalculator = lazy(() => import('./tools/duration-calculator/DurationCalculator'))
 const ImageCrop = lazy(() => import('./tools/image-crop/ImageCrop'))
 const ImageRotate = lazy(() => import('./tools/image-rotate/ImageRotate'))
+const Aion2Checklist = lazy(() => import('./tools/aion2-checklist/Aion2Checklist'))
+const WorldClock = lazy(() => import('./tools/world-clock/WorldClock'))
 const FractionCalculator = lazy(() => import('./tools/fraction-calculator/FractionCalculator'))
 const ColorConverter = lazy(() => import('./tools/color-converter/ColorConverter'))
 const AgeCalculator = lazy(() => import('./tools/age-calculator/AgeCalculator'))
@@ -141,6 +143,8 @@ function App() {
           <Route path="/tools/text-replace" element={<TextReplace />} />
           <Route path="/tools/text-formatter" element={<TextFormatter />} />
           <Route path="/tools/duration-calculator" element={<DurationCalculator />} />
+          <Route path="/tools/aion2-checklist" element={<Aion2Checklist />} />
+          <Route path="/tools/world-clock" element={<WorldClock />} />
           <Route path="/tools/fraction-calculator" element={<FractionCalculator />} />
           <Route path="/tools/color-converter" element={<ColorConverter />} />
           <Route path="/tools/age-calculator" element={<AgeCalculator />} />

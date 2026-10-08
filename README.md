@@ -67,7 +67,7 @@
 レジストリから生成しています。ツール追加時は `node scripts/sync-catalogue.mjs`、確認は `node scripts/sync-catalogue.mjs --check` を実行してください。サイトマップも同時に更新します。
 
 <!-- public-tools:start -->
-公開ツール：39件。現在ツールが登録されているカテゴリ：5種類。
+公開ツール：41件。現在ツールが登録されているカテゴリ：6種類。
 
 ### 開発
 
@@ -91,6 +91,7 @@
 
 ### 日時
 
+- [世界時計](https://poketsuru.com/tools/world-clock)
 - [経過年月・年齢計算](https://poketsuru.com/tools/age-calculator)
 - [日付・日数計算](https://poketsuru.com/tools/date-calculator)
 
@@ -122,4 +123,8 @@
 - [西暦・和暦変換](https://poketsuru.com/tools/japanese-era-converter)
 - [QRコード生成](https://poketsuru.com/tools/qr-code-generator)
 - [割合・増減率計算](https://poketsuru.com/tools/percentage-calculator)
+
+### AION2
+
+- [AION2 日課・週課チェック](https://poketsuru.com/tools/aion2-checklist)
 <!-- public-tools:end -->

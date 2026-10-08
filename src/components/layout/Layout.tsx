@@ -52,7 +52,7 @@ export default function Layout({ theme, setTheme }: LayoutProps) {
       </main>
       <footer className="site-footer"><div className="container footer-inner">
         <div><strong>ぽけつる</strong><span>ちょっと便利なツールを、ポケットに。</span></div>
-        <p>入力データは、このブラウザの中で。<br /><span>お気に入り・履歴はこの端末に保存されます。</span></p>
+        <p>入力データは、このブラウザの中で。<br /><span>お気に入り・履歴とAION2のチェック表はこの端末に保存されます。</span></p>
       </div></footer>
     </div>
   )

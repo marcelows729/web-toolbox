@@ -8,7 +8,7 @@ import { categoryLabels, type ToolCategory } from '../types/tool'
 import { useToolShelf } from '../state/ToolShelfContext'
 import { filterToolList, normalizeToolSearch } from '../utils/toolSearch'
 
-const filterOptions: Array<'all' | ToolCategory> = ['all', 'developer', 'text', 'datetime', 'network', 'general', 'other']
+const filterOptions: Array<'all' | ToolCategory> = ['all', 'developer', 'text', 'datetime', 'network', 'general', 'other', 'aion2']
 type Collection = 'all' | 'favorites' | 'recent'
 const collectionLabels = { all: 'すべての道具', favorites: 'お気に入り', recent: '最近使った道具' }
 export default function HomePage() {
@@ -75,7 +75,7 @@ export default function HomePage() {
             <p>{hasFilters ? 'キーワードやカテゴリを変えて探してみてください。' : collection === 'favorites' ? '各道具の星ボタンで、お気に入りに登録できます。' : '道具を開くと、次回はここからすぐに使えます。'}</p>
             <div className="action-row empty-recovery">{searchText && <button type="button" className="secondary-button" onClick={clearSearch}>検索をクリア</button>}{selectedCategory !== 'all' && <button type="button" className="secondary-button" onClick={clearCategory}>カテゴリを解除</button>}<button type="button" className="secondary-button" onClick={showAll}>すべての道具を見る</button></div>
           </div>}
-        <div className="shelf-footnote"><span aria-hidden="true">↳</span><p>お気に入りと最近使用は、この端末のブラウザにだけ保存。<br className="mobile-break" /> ツールへの入力内容は保存しません。</p></div>
+        <div className="shelf-footnote"><span aria-hidden="true">↳</span><p>お気に入りと最近使用は、この端末のブラウザにだけ保存。<br className="mobile-break" /> ツールへの入力内容は原則保存しません。AION2のチェック表はこのブラウザに保存します。</p></div>
       </section>
     </div>
   )

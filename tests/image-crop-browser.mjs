@@ -11,6 +11,16 @@ async function pixels(){return evaluate(`(async()=>window.readFixture(await(awai
 async function setRect(x,y,width,height){for(const[key,value]of Object.entries({x:0,y:0,width,height}))await input('#crop-'+key,String(value));await input('#crop-x',String(x));await input('#crop-y',String(y))}
 async function writeCrop(){await click('#image-process');await ready();return pixels()}
 async function select(ratio){await evaluate(`(()=>{const e=document.querySelector('#crop-ratio');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(e,${JSON.stringify(ratio)});e.dispatchEvent(new Event('change',{bubbles:true}))})()`);await wait(100)}
+async function assertCropErrorDescription(hasError){
+ const error=await evaluate(`document.querySelector('#crop-validation')?.textContent||''`);assert.equal(!!error,hasError)
+ const tree=hasError?await send('Accessibility.getFullAXTree'):null,{root:dom}=await send('DOM.getDocument')
+ for(const selector of ['#crop-ratio','#crop-x','#crop-y','#crop-width','#crop-height']){
+  const refs=await evaluate(String.raw`(document.querySelector(${JSON.stringify(selector)}).getAttribute('aria-describedby')||'').split(/\s+/).filter(Boolean)`)
+  assert.equal(refs.includes('crop-validation'),hasError,selector+' validation relationship')
+  assert.ok(await evaluate(`document.querySelector(${JSON.stringify(selector)}).getAttribute('aria-describedby').split(/\\s+/).every(id=>!!document.getElementById(id))`),selector+' live description targets')
+  if(tree){const{nodeId}=await send('DOM.querySelector',{nodeId:dom.nodeId,selector}),{node}=await send('DOM.describeNode',{nodeId});const ax=tree.nodes.find(item=>!item.ignored&&item.backendDOMNodeId===node.backendNodeId);assert.ok(ax?.description?.value.includes(error),selector+' AX error description')}
+ }
+}
 function expected(source,rect){const out=[];for(let y=rect.y;y<rect.y+rect.height;y++)for(let x=rect.x;x<rect.x+rect.width;x++)out.push(...source.data.slice((y*source.width+x)*4,(y*source.width+x+1)*4));return {width:rect.width,height:rect.height,data:out}}
 async function fixtures(){await evaluate(`(async()=>{window.cropFixtures=[];window.fixturePixels=[];const read=async blob=>{const b=await createImageBitmap(blob);const c=document.createElement('canvas');c.width=b.width;c.height=b.height;const x=c.getContext('2d');x.drawImage(b,0,0);const result={width:b.width,height:b.height,data:[...x.getImageData(0,0,b.width,b.height).data]};b.close();c.width=0;c.height=0;return result};window.readFixture=read;
  for(const [w,h,mime,name]of[[7,5,'image/png','private-asymmetric.png'],[8192,1,'image/png','wide.png'],[1,8192,'image/png','tall.png'],[64,40,'image/jpeg','base.jpg'],[7,5,'image/webp','still.webp'],[128,80,'image/png','letters.png']]){const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');for(let yy=0;yy<h;yy++)for(let xx=0;xx<w;xx++){x.fillStyle='rgb('+((xx*37+yy*19)%256)+','+((xx*11+yy*53)%256)+','+((xx*71+yy*7)%256)+')';x.fillRect(xx,yy,1,1)}if(mime!=='image/jpeg'){x.clearRect(0,0,1,1);x.clearRect(2,1,1,1);x.fillStyle='rgba(255,0,0,0.5)';x.fillRect(2,1,1,1)}if(w===128){x.fillStyle='white';x.fillRect(0,0,w,h);for(const[col,xx,yy]of[['#e33',0,0],['#1a5',80,0],['#25c',0,50],['#e9b500',80,50]]){x.fillStyle=col;x.fillRect(xx,yy,48,30)}x.fillStyle='black';x.fillRect(52,10,5,45);x.fillRect(52,10,25,5);x.fillRect(52,30,20,5)}const b=await new Promise(r=>c.toBlob(r,mime,1));window.cropFixtures.push(new File([b],name,{type:mime}));window.fixturePixels.push(await read(b));c.width=0;c.height=0}
@@ -26,12 +36,12 @@ for(const index of [0,1,2,4]){
  assert.deepEqual(await writeCrop(),expected(source,rect))
  await assertNoOverflow()
 }
-await load(0);const source=await evaluate('window.fixturePixels[0]')
+await load(0);await assertCropErrorDescription(false);const source=await evaluate('window.fixturePixels[0]')
 await setRect(1,1,4,3);assert.deepEqual(await writeCrop(),expected(source,{x:1,y:1,width:4,height:3}))
 assert.ok(await evaluate(`document.querySelector('#image-download').download.endsWith('-cropped.png')`))
-await input('#crop-x','7');assert.equal(await evaluate(`document.querySelector('#image-process').disabled`),true);assert.ok(await evaluate(`!!document.querySelector('#crop-validation')`));assert.equal(await evaluate(`!!document.querySelector('#image-download')`),false)
-await input('#crop-x','1');await input('#crop-width','0');assert.equal(await evaluate(`document.querySelector('#image-process').disabled`),true)
-await load(3);const jpeg=await evaluate('window.fixturePixels[3]')
+await input('#crop-x','7');assert.equal(await evaluate(`document.querySelector('#image-process').disabled`),true);assert.ok(await evaluate(`!!document.querySelector('#crop-validation')`));assert.equal(await evaluate(`!!document.querySelector('#image-download')`),false);await assertCropErrorDescription(true)
+await input('#crop-x','1');await input('#crop-width','0');assert.equal(await evaluate(`document.querySelector('#image-process').disabled`),true);await assertCropErrorDescription(true)
+await load(3);await assertCropErrorDescription(false);const jpeg=await evaluate('window.fixturePixels[3]')
 for(const[ratio,a,b]of[['1:1',1,1],['4:3',4,3],['16:9',16,9]]){
  await select(ratio);const units=Math.floor(Math.min(jpeg.width/a,jpeg.height/b)),rect={width:units*a,height:units*b,x:Math.floor((jpeg.width-units*a)/2),y:Math.floor((jpeg.height-units*b)/2)}
  assert.deepEqual(await writeCrop(),expected(jpeg,rect))
@@ -39,8 +49,9 @@ for(const[ratio,a,b]of[['1:1',1,1],['4:3',4,3],['16:9',16,9]]){
  await input('#crop-width',String(a*2));assert.equal(await evaluate(`document.querySelector('#crop-height').value`),String(b*2))
  assert.equal(await evaluate(`!!document.querySelector('#image-download')`),false)
 }
-await input('#crop-width','17');assert.equal(await evaluate(`document.querySelector('#image-process').disabled`),true)
-await load(1);await select('16:9');assert.equal(await evaluate(`document.querySelector('#crop-ratio').value`),'free');assert.ok(await evaluate(`!!document.querySelector('#crop-validation')`));await input('#crop-width','1');assert.equal(await evaluate(`!!document.querySelector('#crop-validation')`),false)
+await input('#crop-width','17');assert.equal(await evaluate(`document.querySelector('#image-process').disabled`),true);await assertCropErrorDescription(true)
+await load(1);await select('16:9');assert.equal(await evaluate(`document.querySelector('#crop-ratio').value`),'free');assert.ok(await evaluate(`!!document.querySelector('#crop-validation')`));await assertCropErrorDescription(true);await input('#crop-width','1');assert.equal(await evaluate(`!!document.querySelector('#crop-validation')`),false);await assertCropErrorDescription(false)
+console.log('PASS: crop input/preset errors describe all five controls in the AX tree; valid corrections and new files remove error references')
 // Independently orient decoded JPEG pixels before selecting its bottom-right corner.
 function orient(src,op){const w=src.width,h=src.height,ow=op==='right'||op==='left'?h:w,oh=op==='right'||op==='left'?w:h,out=Array(w*h*4).fill(0);for(let y=0;y<h;y++)for(let x=0;x<w;x++){let xx=x,yy=y;if(op==='right'){xx=h-1-y;yy=x}else if(op==='left'){xx=y;yy=w-1-x}else if(op==='horizontal')xx=w-1-x;else if(op==='vertical')yy=h-1-y;else if(op==='half'){xx=w-1-x;yy=h-1-y}for(let k=0;k<4;k++)out[(yy*ow+xx)*4+k]=src.data[(y*w+x)*4+k]}return{width:ow,height:oh,data:out}}
 const ops=[[],['horizontal'],['half'],['vertical'],['right','horizontal'],['right'],['right','vertical'],['left']]

@@ -1,6 +1,8 @@
 import type { Tool } from '../../types/tool'
 
 const marks: Record<string, string> = {
+  'aion2-checklist': '✓',
+  'world-clock': '時',
   'fraction-calculator': '1/2',
   'color-converter': '#',
   'image-crop': '⌗',

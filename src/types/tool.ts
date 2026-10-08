@@ -1,4 +1,4 @@
-export type ToolCategory = 'developer' | 'text' | 'datetime' | 'network' | 'general' | 'other'
+export type ToolCategory = 'developer' | 'text' | 'datetime' | 'network' | 'general' | 'other' | 'aion2'
 
 export type Tool = {
   id: string
@@ -17,4 +17,5 @@ export const categoryLabels: Record<ToolCategory, string> = {
   network: 'ネットワーク',
   general: '一般',
   other: 'その他',
+  aion2: 'AION2',
 }

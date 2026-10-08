@@ -1,4 +1,8 @@
 import assert from 'node:assert/strict'
+import { checkAion2Checklist } from './aion2-checklist-browser.mjs'
+import { checkAion2Safety } from './aion2-checklist-safety-browser.mjs'
+import { checkWorldClock } from './world-clock-browser.mjs'
+import { checkTextLineSort } from './text-line-sort-browser.mjs'
 import { checkFractionCalculator } from './fraction-calculator-browser.mjs'
 import { checkColorConverter } from './color-converter-browser.mjs'
 import {checkAgeCalculator} from './age-calculator-browser.mjs'
@@ -173,5 +177,9 @@ await checkSequenceGenerator()
 await checkAgeCalculator()
 await checkColorConverter()
 await checkFractionCalculator()
+await checkWorldClock()
+await checkTextLineSort()
+await checkAion2Checklist()
+await checkAion2Safety()
 finish()
 console.log(`PASS: ${mobileChecks} light/dark mobile layout checks; no runtime exceptions/unexpected requests`)
