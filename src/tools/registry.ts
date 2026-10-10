@@ -1,7 +1,7 @@
 import type { Tool } from '../types/tool'
 
 export const tools: Tool[] = [
-  { id: 'aion2-checklist', name: 'AION2 日課・週課チェック', description: 'キャラクター別のやることと完了チェックを、このブラウザに保存します。', category: 'aion2', keywords: ['AION2', 'AION 2', 'アイオン2', '日課', '週課', 'チェックリスト', 'キャラクター', '進捗', 'チェック表', 'daily', 'weekly', 'checklist'], path: '/tools/aion2-checklist' },
+  { id: 'aion2-checklist', name: 'AION2 日課・週課チェック', description: '日課・週課の回数・残数とキャラクター別のチェックを、このブラウザに保存します。', category: 'aion2', keywords: ['AION2', 'AION 2', 'アイオン2', '日課', '週課', 'チェックリスト', 'キャラクター', '進捗', 'チェック表', '残数', '補充', 'オードエネルギー', 'daily', 'weekly', 'checklist'], path: '/tools/aion2-checklist' },
   { id: 'world-clock', name: '世界時計', description: '東京・UTCと海外の都市の現在時刻、日付・曜日・時差を比較します。', category: 'datetime', keywords: ['日付・時間', '世界時計', '時差', '時計', '現在時刻', '夏時間', '東京', 'UTC', 'ニューヨーク', 'ロサンゼルス', 'ロンドン', 'パリ', 'シドニー', '海外', '連絡', 'ゲーム', 'world clock', 'timezone', 'time zone'], path: '/tools/world-clock', relatedTools: ['timestamp-converter', 'date-calculator'] },
   { id: 'fraction-calculator', name: '分数計算', description: '2つの分数を足す・引く・掛ける・割る。約分した答えを正確に求めます。', category: 'general', keywords: ['分数', '約分', '帯分数', '通分', '分子', '分母', '足し算', '引き算', '掛け算', '割り算', '算数', '学習', 'ぶんすう', 'fraction', 'calculator'], path: '/tools/fraction-calculator', relatedTools: ['percentage-calculator', 'aspect-ratio'] },
   { id: 'color-converter', name: 'カラーコード変換', description: 'HEX・RGB・HSLを相互変換し、色見本を確認できます。', category: 'general', keywords: ['カラーコード', 'カラー', '色', '色変換', '色見本', 'hex', 'rgb', 'hsl', 'color', 'colour', 'convert', '16進数'], path: '/tools/color-converter' },

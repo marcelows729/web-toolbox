@@ -7,9 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "test": "node --test tests/additional-tools.test.mjs",
+    "test": "node --test tests/additional-tools.test.mjs tests/aion2-checklist.test.mjs tests/aion2-content.test.mjs",
     "preview": "vite preview",
-    "test:browser": "node tests/browser-regressions.mjs"
+    "test:browser": "node tests/browser-regressions.mjs",
+    "test:aion2:browser": "node tests/aion2-browser.mjs"
   },
   "dependencies": {
     "qrcode": "^1.5.4",

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { checkedText, CONFLICT_WARNING, decodeChecklist, encodeChecklist, loadSaved, MAX_JSON_BYTES, resetTasks, saveSaved, STORAGE_KEY, taskProgress, validateChecklist } from './checklist'
 import type { Character, Checklist, Period } from './checklist'
 import './checklist.css'
+import ContentChecklist from './ContentChecklist'
 const periods: [Period, string][] = [['daily', '日課'], ['weekly', '週課']]
 export default function Aion2Checklist() {
   const [initial] = useState(loadSaved)
@@ -66,7 +67,9 @@ export default function Aion2Checklist() {
   const characterDescription = 'aion2-character-help' + (characterError ? ' aion2-character-error' : '')
   const taskDescription = 'aion2-task-help' + (taskError ? ' aion2-task-error' : '')
   return <div className="container tool-page aion2-checklist">
-    <header className="tool-header"><h1>AION2 日課・週課チェック</h1><p>キャラクターごとに、やることを自由に登録して進捗を確認します。</p></header>
+    <header className="tool-header"><h1>AION2 日課・週課チェック</h1><p>日課・週課の回数・残数と、自分で登録したやることを管理します。</p></header>
+    <nav className="action-row" aria-label="チェック表の領域"><a href="#aion2-content-title">コンテンツ別の回数管理</a><a href="#aion2-characters-title">自由入力チェック表</a></nav>
+    <ContentChecklist />
     <section className="tool-panel" aria-labelledby="aion2-characters-title">
       <h2 id="aion2-characters-title">キャラクター</h2>
       {data.characters.length > 0 && <><label className="field-label" htmlFor="aion2-character-select">表示するキャラクター<select id="aion2-character-select" value={selected} onChange={event => { setSelected(event.target.value); clearDraft() }}>{data.characters.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></label><div className="action-row"><button id="aion2-rename" type="button" className="secondary-button" onClick={() => { setRename(character?.name ?? ''); setCharacterError('') }}>名前を編集</button><button id="aion2-character-delete" type="button" className="secondary-button" onClick={() => { if (character) { deleteTarget.current = character.id; setDeleteCharacter(character.id) } }}>キャラクターを削除</button></div></>}

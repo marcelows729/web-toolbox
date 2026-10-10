@@ -5,14 +5,20 @@ const root=(process.env.TEST_SCREENSHOT_DIR||process.env.TEMP||'.').replaceAll('
 const stored=()=>evaluate(`localStorage.getItem(${key})`),read=async()=>decodeChecklist(await stored())
 const select=async id=>{await evaluate(`(()=>{const el=document.querySelector('#aion2-character-select');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(el,${JSON.stringify(id)});el.dispatchEvent(new Event('change',{bubbles:true}));})()`);await wait(100)}
 const fixture=()=>({version:1,characters:[{id:'a',name:'メイン',tasks:[{id:'t1',title:'日課1',period:'daily',done:false},{id:'t2',title:'週課1',period:'weekly',done:false}]},{id:'b',name:'サブ',tasks:[{id:'t3',title:'サブ日課',period:'daily',done:false}]}]})
-const load=async data=>{await navigate('/');await evaluate(`localStorage.setItem(${key},${JSON.stringify(JSON.stringify(data))})`);await navigate(route)}
+const load=async data=>{
+ await navigate('/')
+ // Native reloads release the previous document's locks asynchronously.
+ for(let i=0;i<100;i++){if(await evaluate(`(async()=>!(await navigator.locks.query()).held.some(lock=>lock.name===${JSON.stringify(STORAGE_KEY+'-writer')}))()`))break;await wait(50)}
+ await evaluate(`localStorage.setItem(${key},${JSON.stringify(JSON.stringify(data))})`);await navigate(route)
+ for(let i=0;i<100;i++){if(await evaluate(`(async()=>(await navigator.locks.query()).held.some(lock=>lock.name===${JSON.stringify(STORAGE_KEY+'-writer')}))()`))break;await wait(50)}
+}
 const importText=async text=>{await evaluate(`(()=>{const dt=new DataTransfer();dt.items.add(new File([${JSON.stringify(text)}],'review.json',{type:'application/json'}));const el=document.querySelector('#aion2-import');el.files=dt.files;el.dispatchEvent(new Event('change',{bubbles:true}));})()`);await wait(150)}
 async function anotherTab(){
  const{targetId}=await send('Target.createTarget',{url:'http://127.0.0.1:5173'+route}),targets=await(await fetch('http://127.0.0.1:9222/json')).json(),ws=new WebSocket(targets.find(item=>item.id===targetId).webSocketDebuggerUrl);await new Promise(resolve=>ws.addEventListener('open',resolve,{once:true}));let id=0;const pending=new Map(),errors=[]
  ws.addEventListener('message',event=>{const message=JSON.parse(event.data);if(message.method==='Runtime.exceptionThrown')errors.push(message.params.exceptionDetails.text);if(message.id){const callback=pending.get(message.id);pending.delete(message.id);if(message.error)callback.reject(message.error);else callback.resolve(message.result)}})
  const command=(method,params={})=>new Promise((resolve,reject)=>{const token=++id;pending.set(token,{resolve,reject});ws.send(JSON.stringify({id:token,method,params}))})
  const run=async expression=>{const result=await command('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value}
- await command('Runtime.enable');for(let i=0;i<100;i++){if(await run(`!!document.querySelector('#aion2-character-add')`))break;await wait(30)}await wait(150)
+ await command('Runtime.enable');await command('Emulation.setFocusEmulationEnabled',{enabled:true});for(let i=0;i<100;i++){if(await run(`!!document.querySelector('#aion2-storage-error')`))break;await wait(50)}
  return {run,close:async()=>{ws.close();await send('Target.closeTarget',{targetId});assert.deepEqual(errors,[])}}
 }
 export async function checkAion2Safety(){
@@ -47,7 +53,7 @@ export async function checkAion2Safety(){
  await evaluate(`Storage.prototype.setItem=window.reviewNativeSet;document.querySelector('#aion2-save-retry').click();document.querySelector('.aion2-task-check').click()`);await wait(150)
  assert.equal((await read()).characters[0].tasks[0].done,true);assert.equal((await read()).characters[0].tasks.length,3);assert.equal((await read()).characters[0].tasks[2].title,'保存失敗後の追加')
  console.log('PASS: failed saving retains all data; asynchronous retry cannot overwrite a newer completion change')
- await load(fixture());const pendingBaseline=await stored(),pendingLock=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.reviewWriterQueue=[];window.reviewWriterSettled=0;Object.defineProperty(navigator,'locks',{value:{request:(name,options,callback)=>new Promise((resolve,reject)=>{window.reviewWriterQueue.push(async()=>{try{await callback({name});window.reviewWriterSettled++;resolve()}catch(error){reject(error)}})})}})`});await navigate(route)
+ await load(fixture());const pendingBaseline=await stored(),pendingLock=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.reviewWriterQueue=[];window.reviewWriterSettled=0;Object.defineProperty(navigator,'locks',{value:{request:(name,options,callback)=>name==='poketsuru-aion2-content-v1'?Promise.resolve(callback(null)):new Promise((resolve,reject)=>{window.reviewWriterQueue.push(async()=>{try{await callback({name});window.reviewWriterSettled++;resolve()}catch(error){reject(error)}})})}})`});await navigate(route)
  await input('#aion2-task-title','ロック待ちの変更');await click('#aion2-task-add');await click('#aion2-save-retry');assert.equal(await evaluate(`window.reviewWriterQueue.length`),2)
  await input('#aion2-task-title','再試行中の変更');await click('#aion2-task-add');await evaluate(`(()=>{void window.reviewWriterQueue[1]()})()`);await wait(100);assert.equal(await stored(),pendingBaseline)
  await click('#aion2-save-retry');assert.deepEqual((await read()).characters[0].tasks.slice(2).map(task=>task.title),['ロック待ちの変更','再試行中の変更']);const pendingLatest=await stored()

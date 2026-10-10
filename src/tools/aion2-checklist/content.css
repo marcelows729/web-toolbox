@@ -1,0 +1,12 @@
+.aion2-content-settings, .aion2-content-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.aion2-content input:not([type='checkbox']), .aion2-content select { display:block; width:100%; min-width:0; margin-top:8px; padding:12px 14px; border:1px solid var(--border-strong); border-radius:12px; background:var(--surface); color:var(--text); font:inherit; }
+.aion2-content-card { min-width:0; padding:18px; border:1px solid var(--border); border-radius:12px; background:var(--surface); overflow-wrap:anywhere; }
+.aion2-content-card h3 { margin-top:0; }
+.aion2-content-check { display:flex; align-items:flex-start; gap:10px; margin:16px 0; }
+.aion2-content-check input { width:20px; height:20px; flex-shrink:0; accent-color:var(--accent); }
+.aion2-content button, .aion2-content summary { min-height:44px; }
+.aion2-content .toggle-group, .aion2-content .action-row { flex-wrap:wrap; }
+.aion2-content .toggle-option[aria-pressed='true'] { background:var(--accent); color:var(--primary-contrast); border-color:var(--accent); }
+.aion2-content details { margin:20px 0; }
+.aion2-content details button { margin:4px; }
+@media(max-width:700px) { .aion2-content-settings, .aion2-content-grid { grid-template-columns:minmax(0,1fr); } }
