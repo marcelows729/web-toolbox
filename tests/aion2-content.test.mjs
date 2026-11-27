@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import {test} from 'node:test'
 import {TASKS} from '../src/tools/aion2-checklist/master.ts'
-import {DEFAULT,change,configure,project,periodKey,nextReset,entryKey,readStore,capacity} from '../src/tools/aion2-checklist/logic.ts'
+import {DEFAULT,change,configure,project,periodKey,nextReset,entryKey,readStore,capacity,contentVisibility} from '../src/tools/aion2-checklist/logic.ts'
 const task=id=>TASKS.find(t=>t.id===id)
 const config={...DEFAULT.config,automatic:true}
 const at=s=>Date.parse(s)
@@ -66,4 +66,26 @@ test('時計設定変更は全キャラを旧設定で精算、無効期間は�
   store=configure(store,{automatic:true},boundary+10*86400000)
   assert.deepEqual(Object.values(store.entries).map(e=>e.value),[4,5])
   for(const e of Object.values(store.entries))assert.equal(project(nightmare,e,boundary+10*86400000,store.config).value,e.value)
+})
+test('完了済みの絞り込みはチェック・固定回数だけを隠し集計・保存データを変えない',()=>{
+  let store={...structuredClone(DEFAULT),config}
+  for(const id of ['attendance','duty','nightmare','od-energy']) store=change(task(id),store,capacity(task(id),config),before)
+  const snapshot=structuredClone(store)
+  const all=contentVisibility(store,before,false), remaining=contentVisibility(store,before,true)
+  const ids=result=>result.visibleRows.map(row=>row.task.id)
+  for(const id of ['attendance','duty','nightmare','od-energy','explore-krao']) assert.ok(ids(all).includes(id))
+  for(const id of ['nightmare','od-energy','explore-krao']) assert.ok(ids(remaining).includes(id))
+  for(const id of ['attendance','duty']) assert.ok(!ids(remaining).includes(id))
+  assert.deepEqual([remaining.matched,remaining.eligible,remaining.done],[all.matched,all.eligible,2])
+  assert.deepEqual(store,snapshot)
+})
+test('完了済みの絞り込みは検索と区分を維持し、リセット後に対象を再表示する',()=>{
+  let store={...structuredClone(DEFAULT),config}
+  store=change(task('duty'),store,5,before)
+  store={...store,view:{...store.view,search:'指令任務',tab:'daily'}}
+  assert.deepEqual(contentVisibility(store,before,true),{visibleRows:[],matched:1,eligible:1,done:1})
+  const reset=contentVisibility(store,boundary,true)
+  assert.deepEqual(reset.visibleRows.map(row=>[row.task.id,row.value]),[['duty',0]])
+  assert.equal(reset.done,0)
+  assert.deepEqual(contentVisibility({...store,view:{...store.view,tab:'weekly'}},before,true),{visibleRows:[],matched:0,eligible:0,done:0})
 })

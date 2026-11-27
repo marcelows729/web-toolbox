@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react'
 import {TASKS, DATA_SOURCE, NAME_SOURCE, CONFIRMED_DUNGEONS, MASTER_BUILD} from './master'
-import {DEFAULT, readStore, project, change, configure, capacity, entryKey, nextReset, type Store, type Config} from './logic'
+import {DEFAULT, readStore, contentVisibility, change, configure, nextReset, type Store, type Config} from './logic'
 import './content.css'
 export const CONTENT_STORAGE = 'poketsuru-aion2-content-v1'
 const labels = {all:'すべて',daily:'日課・蓄積',weekly:'週課',timer:'資源'}
@@ -12,6 +12,7 @@ function load() {
 export default function ContentChecklist() {
   const [initial]=useState(load), [data,setData]=useState(initial.data), [now,setNow]=useState(Date.now)
   const [error,setError]=useState(initial.error), [notice,setNotice]=useState(''), [preview,setPreview]=useState<Store|null>(null)
+  const [hideCompleted,setHideCompleted]=useState(false), completionFilter=useRef<HTMLInputElement>(null)
   const [locked,setLocked]=useState(false), baseline=useRef(initial.raw), ready=useRef(false), revision=useRef(0), blocked=useRef(!!initial.error)
   useEffect(()=>{
     let active=true, release:(()=>void)|undefined
@@ -38,9 +39,7 @@ export default function ContentChecklist() {
   function config(part:Partial<Config>) {
     commit(configure(data,part,Date.now()))
   }
-  const tasks=TASKS.filter(t=>(data.view.optional||t.enabled)&&!data.disabled.includes(t.id)&&t.level<=data.config.level&&(data.view.tab==='all'||t.cycle===data.view.tab)&&t.title.includes(data.view.search))
-  const eligible=tasks.filter(t=>t.mode==='check'||t.mode==='progress')
-  const done=eligible.filter(t=>project(t,data.entries[entryKey(t,data.config)],now,data.config).value>=capacity(t,data.config)).length
+  const {visibleRows,matched,eligible,done}=contentVisibility(data,now,hideCompleted)
   const date=(n:number)=>new Date(n).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'})
   return <section className="tool-panel aion2-content" aria-labelledby="aion2-content-title">
     <h2 id="aion2-content-title">コンテンツ別の回数管理</h2>
@@ -60,10 +59,14 @@ export default function ContentChecklist() {
     <div className="toggle-group" aria-label="コンテンツ区分">{(Object.keys(labels) as (keyof typeof labels)[]).map(tab=><button type="button" key={tab} className={'toggle-option'+(data.view.tab===tab?' is-active':'')} aria-pressed={data.view.tab===tab} onClick={()=>commit({...data,view:{...data.view,tab}})}>{labels[tab]}</button>)}</div>
     <label className="field-label">コンテンツ検索<input maxLength={120} value={data.view.search} onChange={e=>commit({...data,view:{...data.view,search:e.target.value}})} /></label>
     <label className="aion2-content-check"><input type="checkbox" checked={data.view.optional} onChange={e=>commit({...data,view:{...data.view,optional:e.target.checked}})} />任意項目も表示</label>
-    <p>表示中のチェック・固定回数：{done} / {eligible.length} 完了（蓄積枠・資源は対象外）</p>
-    <div className="aion2-content-grid">{tasks.map(task=>{
-      const key=entryKey(task,data.config), entered=!!data.entries[key], value=project(task,data.entries[key],now,data.config).value, cap=capacity(task,data.config), stock=task.mode==='stock'||task.mode==='resource'
-      const update=(n:number)=>commit(change(task,data,n,Date.now()))
+    <label className="aion2-content-check"><input ref={completionFilter} type="checkbox" aria-describedby="aion2-completion-filter-note" checked={hideCompleted} onChange={e=>setHideCompleted(e.target.checked)} />完了済みを隠す</label>
+    <p id="aion2-completion-filter-note" className="calculation-help">蓄積枠・資源は引き続き表示します。</p>
+    <p>条件に一致するチェック・固定回数：{done} / {eligible} 完了（蓄積枠・資源は対象外）</p>
+    <div className="aion2-content-grid">{visibleRows.map(({task,entered,value,cap,stock})=>{
+      const update=(n:number)=>{
+        if(hideCompleted&&!stock&&n>=cap&&document.activeElement?.closest<HTMLElement>('[data-content-id]')?.dataset.contentId===task.id) completionFilter.current?.focus()
+        commit(change(task,data,n,Date.now()))
+      }
       return <article key={task.id} className="aion2-content-card" data-content-id={task.id}>
         <h3>{task.title}</h3><p className="calculation-help">{task.category} · Lv.{task.level}+ · {task.scope==='server'?'同一アカウントのサーバー共有（候補）':task.scope==='account'?'アカウント共有（候補）':'キャラクター別（候補）'}<br />{CONFIRMED_DUNGEONS.some(name=>task.title.endsWith(name))?'ダンジョン名は公式表記と照合済み・区分名は要確認':'日本語名は要確認'} · 数値は非公式資料</p>
         {task.note&&<p>{task.note}</p>}
@@ -74,7 +77,7 @@ export default function ContentChecklist() {
         <button type="button" className="text-button" onClick={()=>commit({...data,disabled:[...data.disabled,task.id]})}>{task.title}を非表示</button>
       </article>
     })}</div>
-    {tasks.length===0&&<p>表示条件に一致するコンテンツはありません。</p>}
+    {visibleRows.length===0&&<p role="status">{matched===0?'表示条件に一致するコンテンツはありません。':'条件に一致する項目はすべて完了しています。「完了済みを隠す」をオフにすると表示できます。'}</p>}
     <details className="aion2-content-hidden"><summary>非表示項目の再表示（{data.disabled.length}件）</summary>{TASKS.filter(t=>data.disabled.includes(t.id)).map(t=><button type="button" className="secondary-button" key={t.id} onClick={()=>commit({...data,disabled:data.disabled.filter(id=>id!==t.id)})}>{t.title}を再表示</button>)}</details>
     <div className="action-row"><button type="button" className="secondary-button" onClick={()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})); const a=document.createElement('a'); a.href=url; a.download='poketsuru-aion2-content.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000)}}>コンテンツ管理JSONを書き出す</button></div>
     <label className="field-label">コンテンツ管理JSONから復元<input type="file" accept=".json,application/json" onChange={async e=>{const file=e.target.files?.[0]; e.target.value=''; const token=++revision.current; setPreview(null); if(!file)return; try{if(file.size>1048576)throw Error('JSONは1 MiBまでです。'); const parsed=readStore(await file.text()); if(token===revision.current)setPreview(parsed)}catch(cause){if(token===revision.current)setError((cause as Error).message)}}} /></label>

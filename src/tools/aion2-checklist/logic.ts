@@ -42,6 +42,18 @@ export function project(task:Task,entry:Entry|undefined,now:number,c:Config):Ent
  }
  return {...entry,value,anchor,period};
 }
+export function contentVisibility(store:Store,now:number,hideCompleted:boolean) {
+ const {config,entries,disabled,view}=store;
+ const tasks=TASKS.filter(t=>(view.optional||t.enabled)&&!disabled.includes(t.id)&&t.level<=config.level&&(view.tab==='all'||t.cycle===view.tab)&&t.title.includes(view.search));
+ const rows=tasks.map(task=>{
+   const entry=entries[entryKey(task,config)], value=project(task,entry,now,config).value, cap=capacity(task,config);
+   const stock=task.mode==='stock'||task.mode==='resource';
+   return {task,entered:!!entry,value,cap,stock,completed:!stock&&value>=cap};
+ });
+ const eligible=rows.filter(row=>!row.stock);
+ const visibleRows=hideCompleted?rows.filter(row=>!row.completed):rows;
+ return {visibleRows,matched:rows.length,eligible:eligible.length,done:eligible.filter(row=>row.completed).length};
+}
 export function change(task:Task,store:Store,newValue:number,now:number):Store {
  const key=entryKey(task,store.config),base=project(task,store.entries[key],now,store.config);
  return {...store,entries:{...store.entries,[key]:{...base,value:Math.floor(safeNum(newValue,0,capacity(task,store.config))),updatedAt:new Date(now).toISOString()}}};
